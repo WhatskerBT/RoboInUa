@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Наші проєкти — Федерація робототехніки Прилуччини</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header Component -->
+  <div id="header"></div>
+
+  <main>
+    <section class="page-hero">
+      <span class="section-label">Проєкти</span>
+      <h1>Наші проєкти</h1>
+      <p>Освітні, соціальні та інженерні ініціативи для розвитку робототехніки та STEM-освіти в Прилуках</p>
+    </section>
+
+    <section class="projects-section">
+      <div class="projects-wrapper">
+        <div class="info-box" style="margin-bottom: 40px;">
+          <h3>Що таке проєкти Федерації</h3>
+          <p>Проєкти ГО «Федерація робототехніки та програмування Прилуччини» — це освітні, соціальні та інженерні ініціативи, спрямовані на розвиток робототехніки, програмування, STEM-освіти та цифрової грамотності в місті Прилуки та громаді.</p>
+        </div>
+
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">Усі</button>
+          <button class="filter-btn" data-filter="курс">Курси</button>
+          <button class="filter-btn" data-filter="подія">Події</button>
+          <button class="filter-btn" data-filter="освіта">Освіта</button>
+          <button class="filter-btn" data-filter="соціальний">Соціальні</button>
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+          <div class="project-card" data-category="подія">
+            <div class="project-tags">
+              <span class="tag">Подія</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>RepRapUA2024</h3>
+            <p>Презентація освітніх рішень, 3D-друку та моніторингу БПЛА на всеукраїнському фестивалі.</p>
+            <a href="project-reprapua.html" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="курс">
+            <div class="project-tags">
+              <span class="tag">Курс</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>Безкоштовний курс з паяння</h3>
+            <p>Навчання дорослих основам електроніки та паяння у місті Прилуки за підтримки Nova Ukraine.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="курс">
+            <div class="project-tags">
+              <span class="tag">Курс</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>Перший крок у кібербезпеку</h3>
+            <p>Курс з основ кібербезпеки для школярів і студентів Прилук у межах Meet and Code.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="освіта">
+            <div class="project-tags">
+              <span class="tag">Освітня програма</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>RE-SAFE: STEM-лабораторія</h3>
+            <p>Супровід ліцею №5 у створенні STEM-лабораторії «Я-дослідник» за грантом ООН.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="курс">
+            <div class="project-tags">
+              <span class="tag">Курс</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>Робототехніка в моїй школі (онлайн)</h3>
+            <p>Навчання вчителів і керівників гуртків робототехніці та 3D-моделюванню.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="курс">
+            <div class="project-tags">
+              <span class="tag">Курс</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>Робототехніка в моїй школі (вчителі)</h3>
+            <p>Практичне навчання вчителів інформатики з 3D-друку та Arduino.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="подія">
+            <div class="project-tags">
+              <span class="tag">Подія</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>Kyiv Maker Faire 2024</h3>
+            <p>Презентація програми впровадження робототехніки в школах громад.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="соціальний">
+            <div class="project-tags">
+              <span class="tag">Соціальний проєкт</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>ІТ-благодійність</h3>
+            <p>Відновлення та передача комп'ютерів учням шкіл міста.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+
+          <div class="project-card" data-category="соціальний">
+            <div class="project-tags">
+              <span class="tag">Освітня програма</span>
+              <span class="tag status">Завершено</span>
+            </div>
+            <h3>Навчання дітей загиблих військових</h3>
+            <p>Безкоштовне навчання з 3D-моделювання та електроніки для дітей героїв.</p>
+            <a href="#" class="project-link">Детальніше →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner Component -->
+    <div id="cta-banner"></div>
+  </main>
+
+  <!-- Footer Component -->
+  <div id="footer"></div>
+
+  <script src="components.js"></script>
+  <script src="script.js"></script>
+  <script>
+    initComponents('projects');
+  </script>
+</body>
+</html>
