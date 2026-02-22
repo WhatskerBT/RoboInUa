@@ -58,7 +58,7 @@ function renderHeader(activePage = '') {
 
         if (item.isButton) {
             return `<a href="${href}" class="btn-nav ${isActive ? 'active' : ''}">
-        <span class="material-symbols-rounded" style="font-size:18px">${item.icon}</span>
+        <span class="material-symbols-rounded m3-icon-18">${item.icon}</span>
         ${item.label}
       </a>`;
         }
@@ -76,7 +76,7 @@ function renderHeader(activePage = '') {
     <nav class="nav-links" id="nav-links">
       ${navLinks}
     </nav>
-    <button class="theme-toggle" onclick="toggleTheme()" title="Перемкнути тему" aria-label="Перемкнути тему">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme (double-click for auto)" aria-label="Toggle theme">
       <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
     </button>
     <button class="mobile-toggle" onclick="toggleNav()" aria-label="Меню">
@@ -86,8 +86,8 @@ function renderHeader(activePage = '') {
   `;
 
     // Update theme icon after render
-    const saved = localStorage.getItem('theme');
-    const isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const currentTheme = document.documentElement.dataset.theme;
+    const isDark = currentTheme === 'dark';
     const icon = document.getElementById('theme-icon');
     if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
 }
@@ -103,7 +103,7 @@ function renderBreadcrumbs(items) {
             return `<span class="breadcrumb-current">${item.label}</span>`;
         }
         return `<a href="${item.href}" class="breadcrumb-link">${item.label}</a>`;
-    }).join('<span class="breadcrumb-sep"><span class="material-symbols-rounded" style="font-size:16px">chevron_right</span></span>');
+    }).join('<span class="breadcrumb-sep"><span class="material-symbols-rounded m3-icon-16">chevron_right</span></span>');
 
     container.innerHTML = crumbs;
 }
@@ -126,23 +126,23 @@ function renderFooter() {
       <div>
         <h4>Навігація</h4>
         <div class="footer-links">
-          <a href="${url('index.html')}"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">home</span>Головна</a>
-          <a href="${url('projects/index.html')}"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">folder_open</span>Проєкти</a>
-          <a href="${url('events/index.html')}"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">event</span>Заходи</a>
-          <a href="${url('donate/index.html')}"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">favorite</span>Підтримати</a>
+          <a href="${url('index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">home</span>Головна</a>
+          <a href="${url('projects/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">folder_open</span>Проєкти</a>
+          <a href="${url('events/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">event</span>Заходи</a>
+          <a href="${url('donate/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">favorite</span>Підтримати</a>
         </div>
       </div>
       <div>
         <h4>Контакти</h4>
         <div class="footer-links">
-          <span><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">mail</span>robofederation.pryluky@gmail.com</span>
-          <a href="https://facebook.com/roboinua" target="_blank"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">public</span>Facebook</a>
+          <span><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">mail</span>robofederation.pryluky@gmail.com</span>
+          <a href="https://facebook.com/roboinua" target="_blank"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">public</span>Facebook</a>
         </div>
       </div>
       <div>
         <h4>Локація</h4>
         <div class="footer-links">
-          <span><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">location_on</span>м. Прилуки</span>
+          <span><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">location_on</span>м. Прилуки</span>
           <span>Чернігівська область</span>
           <span>Україна</span>
         </div>
@@ -164,12 +164,12 @@ function renderCtaBanner(containerId = 'cta-banner') {
   <section class="cta-section">
     <div class="cta-banner">
       <div class="cta-content">
-        <span class="material-symbols-rounded icon-filled" style="font-size:40px;opacity:0.85;margin-bottom:8px">volunteer_activism</span>
+        <span class="material-symbols-rounded icon-filled m3-icon-40" style="opacity:0.85;margin-bottom:8px">volunteer_activism</span>
         <h2>Підтримайте розвиток робототехніки в громаді</h2>
         <p>Кожен внесок — це обладнання, витратні матеріали та нові можливості для дітей.</p>
       </div>
       <a href="${url('donate/index.html')}" class="btn">
-        <span class="material-symbols-rounded" style="font-size:20px">arrow_forward</span>
+        <span class="material-symbols-rounded m3-icon-20">arrow_forward</span>
         Допомогти
       </a>
     </div>
@@ -191,3 +191,5 @@ function initComponents(activePage = '', options = {}) {
         renderBreadcrumbs(options.breadcrumbs);
     }
 }
+
+

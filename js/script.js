@@ -4,15 +4,41 @@
  */
 
 // ============ THEME TOGGLE ============
-function getPreferredTheme() {
-  const saved = localStorage.getItem('theme');
-  if (saved) return saved;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const THEME_STORAGE_KEY = 'theme';
+const THEME_MANUAL_KEY = 'theme_manual';
+const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+function getStoredTheme() {
+  if (localStorage.getItem(THEME_MANUAL_KEY) !== '1') {
+    return null;
+  }
+  const saved = localStorage.getItem(THEME_STORAGE_KEY);
+  return saved === 'dark' || saved === 'light' ? saved : null;
 }
 
-function applyTheme(theme) {
+function getSystemTheme() {
+  return systemDarkQuery.matches ? 'dark' : 'light';
+}
+
+function updateBrowserThemeColor(theme) {
+  const color = theme === 'dark' ? '#0f141c' : '#f8f9ff';
+  let meta = document.querySelector('meta[name="theme-color"][data-dynamic-theme]');
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.setAttribute('name', 'theme-color');
+    meta.setAttribute('data-dynamic-theme', '1');
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute('content', color);
+}
+
+function applyTheme(theme, { persist = false } = {}) {
   document.documentElement.dataset.theme = theme;
-  localStorage.setItem('theme', theme);
+  if (persist) {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    localStorage.setItem(THEME_MANUAL_KEY, '1');
+  }
+  updateBrowserThemeColor(theme);
 
   // Update toggle icon if exists
   const icon = document.getElementById('theme-icon');
@@ -22,12 +48,46 @@ function applyTheme(theme) {
 }
 
 function toggleTheme() {
-  const current = document.documentElement.dataset.theme || getPreferredTheme();
-  applyTheme(current === 'dark' ? 'light' : 'dark');
+  const current = document.documentElement.dataset.theme || getSystemTheme();
+  applyTheme(current === 'dark' ? 'light' : 'dark', { persist: true });
+}
+
+function resetThemeToAuto() {
+  localStorage.removeItem(THEME_STORAGE_KEY);
+  localStorage.removeItem(THEME_MANUAL_KEY);
+  applyTheme(getSystemTheme());
 }
 
 // Init theme on page load
-applyTheme(getPreferredTheme());
+function initTheme() {
+  // Migration from older logic that always persisted theme.
+  if (localStorage.getItem(THEME_MANUAL_KEY) !== '1') {
+    localStorage.removeItem(THEME_STORAGE_KEY);
+  }
+
+  const stored = getStoredTheme();
+  applyTheme(stored || getSystemTheme());
+
+  // Follow system only while user has not selected a manual override.
+  systemDarkQuery.addEventListener('change', () => {
+    if (!getStoredTheme()) {
+      applyTheme(getSystemTheme());
+    }
+  });
+}
+
+initTheme();
+
+// Reveal icon ligatures only after icon font is ready.
+if (document.fonts && document.fonts.load) {
+  document.fonts.load("24px 'Material Symbols Rounded'").then(() => {
+    document.documentElement.classList.add('icons-ready');
+  }).catch(() => {
+    document.documentElement.classList.add('icons-ready');
+  });
+} else {
+  document.documentElement.classList.add('icons-ready');
+}
 
 // ============ MOBILE NAV ============
 function toggleNav() {
@@ -39,8 +99,16 @@ function toggleNav() {
 document.addEventListener('click', function (e) {
   const nav = document.getElementById('nav-links');
   const toggle = document.querySelector('.mobile-toggle');
-  if (nav && nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
+  if (nav && toggle && nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
     nav.classList.remove('open');
+  }
+});
+
+// Double-click on the theme button resets to automatic mode (system theme).
+document.addEventListener('dblclick', function (e) {
+  if (e.target.closest('.theme-toggle')) {
+    e.preventDefault();
+    resetThemeToAuto();
   }
 });
 
@@ -81,8 +149,17 @@ function initHeaderScroll() {
   const header = document.querySelector('header');
   if (!header) return;
 
+  const mobileQuery = window.matchMedia('(max-width: 768px)');
   let lastScroll = 0;
   let ticking = false;
+
+  function setHeaderTransform(hidden) {
+    if (mobileQuery.matches) {
+      header.style.transform = hidden ? 'translateY(-120%)' : 'translateY(0)';
+      return;
+    }
+    header.style.transform = hidden ? 'translateX(-50%) translateY(-120%)' : 'translateX(-50%) translateY(0)';
+  }
 
   window.addEventListener('scroll', () => {
     if (!ticking) {
@@ -96,11 +173,7 @@ function initHeaderScroll() {
         }
 
         // Hide header on fast scroll down, show on scroll up
-        if (scrollY > lastScroll && scrollY > 200) {
-          header.style.transform = 'translateX(-50%) translateY(-120%)';
-        } else {
-          header.style.transform = 'translateX(-50%) translateY(0)';
-        }
+        setHeaderTransform(scrollY > lastScroll && scrollY > 200);
 
         lastScroll = scrollY;
         ticking = false;
@@ -108,6 +181,8 @@ function initHeaderScroll() {
       ticking = true;
     }
   });
+
+  mobileQuery.addEventListener('change', () => setHeaderTransform(false));
 }
 
 // ============ PROJECT FILTERING ============
@@ -137,7 +212,7 @@ document.addEventListener('click', function (e) {
     btn.classList.add('selected');
 
     const amount = btn.dataset.amount;
-    const customInput = document.getElementById('customAmount');
+    const customInput = document.getElementById('customAmount') || document.getElementById('custom-amount');
     if (customInput && amount) {
       customInput.value = amount;
     }
