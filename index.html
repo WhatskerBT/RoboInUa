@@ -1,48 +1,68 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0061a4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
   <title>Федерація робототехніки Прилуччини</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description"
+    content="Громадська організація, що розвиває робототехніку, STEM-освіту та технічне мислення у дітей і молоді Прилуччини.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-  <!-- Header Component -->
+  <!-- Header -->
   <div id="header"></div>
 
   <main>
-    <!-- HERO -->
+    <!-- ═══════════════ HERO ═══════════════ -->
     <section class="hero">
+      <!-- Floating decorative shapes -->
+      <div class="hero-shape hero-shape--circle"></div>
+      <div class="hero-shape hero-shape--squircle"></div>
+      <div class="hero-shape hero-shape--diamond"></div>
+
       <div class="hero-inner">
         <div class="hero-content">
           <div class="hero-badge">
-            <span></span>
+            <span class="material-symbols-rounded" style="font-size:16px">emoji_objects</span>
             Громадська організація
           </div>
           <h1>Робототехніка для кожної дитини <span class="highlight">Прилуччини</span></h1>
-          <p class="hero-text">Відкриваємо безкоштовні гуртки, навчаємо вчителів, проводимо змагання та допомагаємо школам отримати сучасне STEM-обладнання.</p>
+          <p class="hero-text">Відкриваємо безкоштовні гуртки, навчаємо вчителів, проводимо змагання та допомагаємо
+            школам отримати сучасне STEM-обладнання.</p>
           <div class="hero-buttons">
-            <a href="events.html#form" class="btn btn-primary">Долучитись →</a>
-            <a href="donate.html" class="btn btn-secondary">Підтримати</a>
+            <a href="events/index.html#form" class="btn btn-primary">
+              <span class="material-symbols-rounded" style="font-size:20px">volunteer_activism</span>
+              Долучитись
+            </a>
+            <a href="donate/index.html" class="btn btn-secondary">
+              <span class="material-symbols-rounded" style="font-size:20px">favorite</span>
+              Підтримати
+            </a>
           </div>
         </div>
         <div class="hero-stats">
-          <div class="stat-card">
-            <div class="stat-icon">🎓</div>
+          <div class="stat-card" data-reveal>
+            <div class="stat-icon"><span class="material-symbols-rounded icon-filled">school</span></div>
             <div>
               <h3>9+</h3>
               <p>реалізованих проєктів</p>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon">👥</div>
+          <div class="stat-card" data-reveal>
+            <div class="stat-icon"><span class="material-symbols-rounded icon-filled">groups</span></div>
             <div>
               <h3>100+</h3>
               <p>учасників навчання</p>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon">🏫</div>
+          <div class="stat-card" data-reveal>
+            <div class="stat-icon"><span class="material-symbols-rounded icon-filled">domain</span></div>
             <div>
               <h3>5+</h3>
               <p>шкіл-партнерів</p>
@@ -52,147 +72,168 @@
       </div>
     </section>
 
-    <!-- ПРО ОРГАНІЗАЦІЮ -->
+    <!-- ═══════════════ ПРО ОРГАНІЗАЦІЮ ═══════════════ -->
     <section class="about-section">
-      <div class="section-header" style="max-width: 1200px; margin: 0 auto 60px;">
+      <div class="section-header" style="max-width:1200px;margin:0 auto 60px">
         <span class="section-label">Про нас</span>
         <h2>Федерація робототехніки Прилуччини</h2>
         <p>Громадська організація, що розвиває технічну освіту та інженерне мислення у дітей і молоді.</p>
       </div>
-      <div class="about-split" style="max-width: 1200px; margin: 0 auto;">
+      <div class="about-split" style="max-width:1200px;margin:0 auto">
         <div class="about-left">
-          <h3>Наша місія</h3>
-          <p>Зробити сучасну технічну освіту доступною кожній дитині незалежно від доходу родини чи місця проживання.</p>
-          
-          <h3>Що ми робимо</h3>
+          <h3><span class="material-symbols-rounded icon-filled"
+              style="font-size:22px;vertical-align:middle;color:var(--md-primary);margin-right:8px">rocket_launch</span>Наша
+            місія</h3>
+          <p>Зробити сучасну технічну освіту доступною кожній дитині незалежно від доходу родини чи місця проживання.
+          </p>
+
+          <h3><span class="material-symbols-rounded icon-filled"
+              style="font-size:22px;vertical-align:middle;color:var(--md-primary);margin-right:8px">checklist</span>Що
+            ми робимо</h3>
           <div class="check-list">
-            <div class="check-item">Відкриваємо безкоштовні гуртки з робототехніки</div>
-            <div class="check-item">Проводимо навчання для вчителів</div>
-            <div class="check-item">Організовуємо змагання, фестивалі та хакатони</div>
-            <div class="check-item">Співпрацюємо зі школами та громадами</div>
-            <div class="check-item">Допомагаємо дітям створювати технічні проєкти</div>
+            <div class="check-item" data-reveal>Відкриваємо безкоштовні гуртки з робототехніки</div>
+            <div class="check-item" data-reveal>Проводимо навчання для вчителів</div>
+            <div class="check-item" data-reveal>Організовуємо змагання, фестивалі та хакатони</div>
+            <div class="check-item" data-reveal>Співпрацюємо зі школами та громадами</div>
+            <div class="check-item" data-reveal>Допомагаємо дітям створювати технічні проєкти</div>
           </div>
-          
-          <h3>Наша мета</h3>
-          <p>Формувати покоління дітей, які вміють програмувати, створюють власні проєкти, працюють у командах і мислять як інженери та винахідники.</p>
+
+          <h3><span class="material-symbols-rounded icon-filled"
+              style="font-size:22px;vertical-align:middle;color:var(--md-primary);margin-right:8px">flag</span>Наша мета
+          </h3>
+          <p>Формувати покоління дітей, які вміють програмувати, створюють власні проєкти, працюють у командах і мислять
+            як інженери та винахідники.</p>
         </div>
         <div class="about-right">
           <h3>Для кого працюємо</h3>
           <div class="target-list">
-            <div class="target-item">
-              <div class="target-icon">👦</div>
+            <div class="target-item" data-reveal>
+              <div class="target-icon"><span class="material-symbols-rounded icon-filled">face</span></div>
               <span>Школярі 7–18 років</span>
             </div>
-            <div class="target-item">
-              <div class="target-icon">👩‍🏫</div>
+            <div class="target-item" data-reveal>
+              <div class="target-icon"><span class="material-symbols-rounded icon-filled">person_book</span></div>
               <span>Вчителі та керівники гуртків</span>
             </div>
-            <div class="target-item">
-              <div class="target-icon">🏛️</div>
+            <div class="target-item" data-reveal>
+              <div class="target-icon"><span class="material-symbols-rounded icon-filled">account_balance</span></div>
               <span>Освітні заклади</span>
             </div>
-            <div class="target-item">
-              <div class="target-icon">🏘️</div>
+            <div class="target-item" data-reveal>
+              <div class="target-icon"><span class="material-symbols-rounded icon-filled">location_city</span></div>
               <span>Громада міста та району</span>
             </div>
           </div>
-          <div style="margin-top: 24px; padding: 16px 20px; background: var(--md-tertiary-container); border-radius: var(--md-radius-lg);">
-            <strong style="color: var(--md-on-tertiary-container);">📍 Географія</strong>
-            <p style="margin-top: 8px; font-size: 13px; color: var(--md-on-tertiary-container); opacity: 0.9;">м. Прилуки, Прилуцька громада, Прилуцький район</p>
+          <div class="geo-badge"
+            style="margin-top:24px;padding:16px 20px;background:var(--md-tertiary-container);border-radius:var(--md-shape-xl);display:flex;align-items:center;gap:12px">
+            <span class="material-symbols-rounded icon-filled"
+              style="font-size:28px;color:var(--md-on-tertiary-container)">location_on</span>
+            <div>
+              <strong style="color:var(--md-on-tertiary-container)">Географія</strong>
+              <p style="margin-top:4px;font-size:13px;color:var(--md-on-tertiary-container);opacity:0.9">м. Прилуки,
+                Прилуцька громада, Прилуцький район</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
-    
-    <!-- НАПРЯМИ - BENTO -->
+
+    <!-- ═══════════════ НАПРЯМИ — BENTO ═══════════════ -->
     <section class="bento-section">
-      <div class="section-header center" style="max-width: 1200px; margin: 0 auto 60px;">
+      <div class="section-header center" style="max-width:1200px;margin:0 auto 60px">
         <span class="section-label">Напрями роботи</span>
         <h2>Що робить Федерація</h2>
         <p>Системна робота з розвитку технічної освіти в місті та громаді</p>
       </div>
       <div class="bento-grid">
-        <div class="bento-card large">
-          <div class="bento-icon">📚</div>
+        <div class="bento-card large" data-reveal>
+          <div class="bento-icon"><span class="material-symbols-rounded icon-filled">menu_book</span></div>
           <h3>Освітні програми</h3>
           <p>Курси для вчителів та учнів, методична підтримка й навчальні матеріали з робототехніки та STEM.</p>
         </div>
-        <div class="bento-card large">
-          <div class="bento-icon">🤖</div>
+        <div class="bento-card large" data-reveal>
+          <div class="bento-icon"><span class="material-symbols-rounded icon-filled">smart_toy</span></div>
           <h3>Робототехніка для школярів</h3>
           <p>Гуртки, лабораторії та практичні заняття з Arduino, 3D-друку та моделювання.</p>
         </div>
-        <div class="bento-card small">
-          <div class="bento-icon">🏫</div>
+        <div class="bento-card small" data-reveal>
+          <div class="bento-icon"><span class="material-symbols-rounded icon-filled">domain</span></div>
           <h3>Співпраця зі школами</h3>
           <p>Запуск STEM-просторів та консультації.</p>
         </div>
-        <div class="bento-card small">
-          <div class="bento-icon">🏆</div>
+        <div class="bento-card small" data-reveal>
+          <div class="bento-icon"><span class="material-symbols-rounded icon-filled">emoji_events</span></div>
           <h3>Заходи та змагання</h3>
           <p>Хакатони, фестивалі, майстер-класи.</p>
         </div>
-        <div class="bento-card small">
-          <div class="bento-icon">🔧</div>
+        <div class="bento-card small" data-reveal>
+          <div class="bento-icon"><span class="material-symbols-rounded icon-filled">hardware</span></div>
           <h3>Безкоштовні гуртки</h3>
-          <p>Гуртки для дітей громади з супроводом менторів та волонтерів. Доступ незалежно від доходу родини.</p>
+          <p>Гуртки для дітей громади з супроводом менторів та волонтерів.</p>
         </div>
-        <div class="bento-card small">
-          <div class="bento-icon">💻</div>
+        <div class="bento-card small" data-reveal>
+          <div class="bento-icon"><span class="material-symbols-rounded icon-filled">devices</span></div>
           <h3>ІТ-благодійність</h3>
-          <p>Ремонт та передача комп'ютерної техніки школам і учням. Зменшення цифрової нерівності.</p>
+          <p>Ремонт та передача комп'ютерної техніки школам і учням.</p>
         </div>
       </div>
     </section>
 
-    <!-- УЧАСТЬ У ЗАХОДАХ (тизер) -->
+    <!-- ═══════════════ ЗАХОДИ (тизер) ═══════════════ -->
     <section class="events-teaser-section">
       <div class="events-teaser-wrapper">
         <div class="section-header">
           <span class="section-label">Заходи</span>
           <h2>Участь у заходах</h2>
-          <p>Беремо участь у міських, освітніх та всеукраїнських заходах — фестивалях, хакатонах, воркшопах</p>
+          <p>Беремо участь у міських, освітніх та всеукраїнських заходах</p>
         </div>
         <div class="events-teaser-grid">
-          <div class="event-teaser-card">
-            <div class="event-teaser-icon">🎪</div>
+          <div class="event-teaser-card" data-reveal>
+            <div class="event-teaser-icon"><span class="material-symbols-rounded icon-filled"
+                style="font-size:36px;color:var(--md-primary)">festival</span></div>
             <h3>RepRapUA2024</h3>
             <p>Всеукраїнський фестиваль мейкерів</p>
           </div>
-          <div class="event-teaser-card">
-            <div class="event-teaser-icon">🔧</div>
+          <div class="event-teaser-card" data-reveal>
+            <div class="event-teaser-icon"><span class="material-symbols-rounded icon-filled"
+                style="font-size:36px;color:var(--md-tertiary)">build</span></div>
             <h3>Kyiv Maker Faire</h3>
             <p>Найбільший мейкер-фестиваль України</p>
           </div>
-          <div class="event-teaser-card">
-            <div class="event-teaser-icon">🏫</div>
+          <div class="event-teaser-card" data-reveal>
+            <div class="event-teaser-icon"><span class="material-symbols-rounded icon-filled"
+                style="font-size:36px;color:var(--md-secondary)">school</span></div>
             <h3>Шкільні заходи</h3>
             <p>Майстер-класи та тренінги для вчителів</p>
           </div>
-          <div class="event-teaser-card">
-            <div class="event-teaser-icon">💻</div>
+          <div class="event-teaser-card" data-reveal>
+            <div class="event-teaser-icon"><span class="material-symbols-rounded icon-filled"
+                style="font-size:36px;color:var(--md-primary)">terminal</span></div>
             <h3>Meet and Code</h3>
             <p>Грантові освітні програми</p>
           </div>
         </div>
         <div class="events-teaser-cta">
-          <a href="events.html" class="btn btn-secondary">Наша участь у заходах →</a>
+          <a href="events/index.html" class="btn btn-secondary">
+            <span class="material-symbols-rounded" style="font-size:20px">arrow_forward</span>
+            Наша участь у заходах
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- CTA Banner Component -->
+    <!-- CTA Banner -->
     <div id="cta-banner"></div>
   </main>
 
-  <!-- Footer Component -->
+  <!-- Footer -->
   <div id="footer"></div>
 
-  <script src="components.js"></script>
-  <script src="script.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/script.js"></script>
   <script>
-    // Initialize components with active page
     initComponents('home');
   </script>
 </body>
+
 </html>

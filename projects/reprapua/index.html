@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepRapUA2024 — Федерація робототехніки Прилуччини</title>
+    <meta name="description"
+        content="Участь Федерації робототехніки Прилуччини у всеукраїнському фестивалі RepRapUA2024.">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+
+<body>
+    <!-- Header Component -->
+    <div id="header"></div>
+
+    <main>
+        <section class="page-hero">
+            <nav id="breadcrumbs" class="breadcrumbs" aria-label="Навігаційний ланцюжок"></nav>
+            <h1>RepRapUA2024</h1>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+                <span class="tag">Подія</span>
+                <span class="tag status">Завершено</span>
+                <span class="tag">21.09.2024</span>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="about-split" style="max-width: 1200px; margin: 0 auto;">
+                <div class="about-left">
+                    <h3 style="margin-top: 0;">Опис проєкту</h3>
+                    <p>У вересні 2024 року ГО «Федерація робототехніки та програмування Прилуччини» взяла участь у
+                        фестивалі RepRapUA2024, присвяченому мейкерству, робототехніці та 3D-друку.</p>
+                    <p style="margin-top: 16px;">Під час заходу було порушено питання розвитку інженерної освіти в
+                        школах України. Голова організації презентував напрацювання з моніторингу БПЛА, яке може
+                        працювати на будь-якому ноутбуці, а також ініціював обговорення проблем нестачі обладнання та
+                        фахівців у закладах освіти.</p>
+                    <p style="margin-top: 16px;">Окрему увагу приділено ролі грантової підтримки освітніх ініціатив.</p>
+
+                    <h3>Цілі участі</h3>
+                    <div class="check-list">
+                        <div class="check-item">Популяризація інженерної та STEM-освіти</div>
+                        <div class="check-item">Обмін досвідом у сфері робототехніки та 3D-друку</div>
+                        <div class="check-item">Привернення уваги до проблем матеріально-технічного забезпечення шкіл
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-right">
+                    <h3>Для кого</h3>
+                    <div class="target-list">
+                        <div class="target-item">
+                            <div class="target-icon">👩‍🏫</div>
+                            <span>Освітяни</span>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-icon">👦</div>
+                            <span>Учні старших класів</span>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-icon">🔧</div>
+                            <span>Мейкери та інженери</span>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-icon">🏛️</div>
+                            <span>Представники ГО</span>
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 32px; padding: 20px; background: var(--md-tertiary-container); border-radius: var(--md-radius-lg);">
+                        <strong style="color: var(--md-on-tertiary-container);">🤝 Партнери</strong>
+                        <p
+                            style="margin-top: 8px; font-size: 14px; color: var(--md-on-tertiary-container); opacity: 0.9;">
+                            RepRapUA2024, Прилуцький ліцей №5 імені В.А. Затолокіна</p>
+                    </div>
+
+                    <div style="margin-top: 16px;">
+                        <a href="https://www.facebook.com/share/p/SCs87x3kwrN92NXF/" target="_blank"
+                            class="btn btn-secondary" style="width: 100%;">Публікація у Facebook →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bento-section">
+            <div class="section-header center" style="max-width: 1200px; margin: 0 auto 60px;">
+                <span class="section-label">Підсумки</span>
+                <h2>Результати участі</h2>
+            </div>
+            <div class="bento-grid" style="grid-template-rows: 160px; max-width: 800px; margin: 0 auto;">
+                <div class="bento-card medium">
+                    <div class="bento-icon">🎤</div>
+                    <h3>Поширення досвіду</h3>
+                    <p>Поширення досвіду організації серед освітніх спільнот України.</p>
+                </div>
+                <div class="bento-card medium accent">
+                    <div class="bento-icon">🤝</div>
+                    <h3>Нові партнерства</h3>
+                    <p>Налагодження нових партнерств для майбутніх освітніх проєктів.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Banner Component -->
+        <div id="cta-banner"></div>
+    </main>
+
+    <!-- Footer Component -->
+    <div id="footer"></div>
+
+    <script src="../../js/components.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        initComponents('projects', {
+            breadcrumbs: [
+                { label: 'Головна', href: url('index.html') },
+                { label: 'Проєкти', href: url('projects/index.html') },
+                { label: 'RepRapUA2024' }
+            ]
+        });
+    </script>
+</body>
+
+</html>
