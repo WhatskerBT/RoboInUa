@@ -2103,7 +2103,7 @@ footer h4 {
   position: relative;
 }
 
-/* Accent picker button — hidden by default (zero width), slides in on hover */
+/* Accent picker button — always visible */
 .accent-picker-wrap {
   position: relative;
   display: flex;
@@ -2111,11 +2111,8 @@ footer h4 {
 }
 
 .accent-toggle {
-  width: 0;
-  /* takes NO space when hidden */
+  width: 40px;
   height: 40px;
-  overflow: hidden;
-  /* clip icon during collapse */
   border-radius: var(--md-shape-full);
   border: none;
   background: transparent;
@@ -2125,28 +2122,16 @@ footer h4 {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  opacity: 0;
-  pointer-events: none;
   transition:
-    width var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized-decelerate),
-    opacity var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized-decelerate),
-    background var(--md-motion-duration-short4) var(--md-motion-easing-standard);
-}
-
-/* Show on hover of the whole controls group, or when popup is open */
-.header-controls:hover .accent-toggle,
-.accent-picker-wrap:focus-within .accent-toggle,
-.accent-popup.open~.accent-toggle,
-/* keep visible while popup open */
-.accent-picker-wrap:has(.accent-popup.open) .accent-toggle {
-  width: 40px;
-  opacity: 1;
-  pointer-events: auto;
+    background var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
 }
 
 .accent-toggle:hover {
   background: var(--md-surface-container-high);
   color: var(--md-on-surface);
+  transform: scale(1.1) rotate(15deg);
 }
 
 .accent-toggle:active {
