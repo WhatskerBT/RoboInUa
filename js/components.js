@@ -8,66 +8,66 @@
 let _cachedBasePath = null;
 
 function getBasePath() {
-    if (_cachedBasePath !== null) return _cachedBasePath;
+  if (_cachedBasePath !== null) return _cachedBasePath;
 
-    const rootMarker = document.documentElement.dataset.siteRoot;
-    if (rootMarker) {
-        _cachedBasePath = rootMarker;
-        return _cachedBasePath;
-    }
-
-    const scripts = document.querySelectorAll('script[src]');
-    for (const script of scripts) {
-        const src = script.getAttribute('src');
-        if (src && src.includes('components.js')) {
-            const parts = src.split('/');
-            const prefixParts = parts.slice(0, -2);
-            if (prefixParts.length === 0) {
-                _cachedBasePath = './';
-            } else {
-                _cachedBasePath = prefixParts.join('/') + '/';
-            }
-            return _cachedBasePath;
-        }
-    }
-
-    _cachedBasePath = './';
+  const rootMarker = document.documentElement.dataset.siteRoot;
+  if (rootMarker) {
+    _cachedBasePath = rootMarker;
     return _cachedBasePath;
+  }
+
+  const scripts = document.querySelectorAll('script[src]');
+  for (const script of scripts) {
+    const src = script.getAttribute('src');
+    if (src && src.includes('components.js')) {
+      const parts = src.split('/');
+      const prefixParts = parts.slice(0, -2);
+      if (prefixParts.length === 0) {
+        _cachedBasePath = './';
+      } else {
+        _cachedBasePath = prefixParts.join('/') + '/';
+      }
+      return _cachedBasePath;
+    }
+  }
+
+  _cachedBasePath = './';
+  return _cachedBasePath;
 }
 
 function url(path) {
-    return getBasePath() + path;
+  return getBasePath() + path;
 }
 
 // ============ NAVIGATION CONFIG ============
 const NAV_ITEMS = [
-    { href: 'index.html', label: 'Головна', page: 'home', icon: 'home' },
-    { href: 'projects/index.html', label: 'Проєкти', page: 'projects', icon: 'folder_open' },
-    { href: 'events/index.html', label: 'Заходи', page: 'events', icon: 'event' },
-    { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
+  { href: 'index.html', label: 'Головна', page: 'home', icon: 'home' },
+  { href: 'projects/index.html', label: 'Проєкти', page: 'projects', icon: 'folder_open' },
+  { href: 'events/index.html', label: 'Заходи', page: 'events', icon: 'event' },
+  { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
 ];
 
 // ============ HEADER ============
 function renderHeader(activePage = '') {
-    const header = document.getElementById('header');
-    if (!header) return;
+  const header = document.getElementById('header');
+  if (!header) return;
 
-    const navLinks = NAV_ITEMS.map(item => {
-        const href = url(item.href);
-        const isActive = activePage === item.page;
+  const navLinks = NAV_ITEMS.map(item => {
+    const href = url(item.href);
+    const isActive = activePage === item.page;
 
-        if (item.isButton) {
-            return `<a href="${href}" class="btn-nav ${isActive ? 'active' : ''}">
+    if (item.isButton) {
+      return `<a href="${href}" class="btn-nav ${isActive ? 'active' : ''}">
         <span class="material-symbols-rounded m3-icon-18">${item.icon}</span>
         ${item.label}
       </a>`;
-        }
-        return `<a href="${href}" ${isActive ? 'class="active"' : ''}>
+    }
+    return `<a href="${href}" ${isActive ? 'class="active"' : ''}>
       ${item.label}
     </a>`;
-    }).join('\n      ');
+  }).join('\n      ');
 
-    header.outerHTML = `
+  header.outerHTML = `
   <header>
     <a class="logo" href="${url('index.html')}">
       <span class="logo-dot"></span>
@@ -76,44 +76,60 @@ function renderHeader(activePage = '') {
     <nav class="nav-links" id="nav-links">
       ${navLinks}
     </nav>
-    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme (double-click for auto)" aria-label="Toggle theme">
-      <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
-    </button>
+    <div class="header-controls">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Змінити тему (подвійний клік — авто)" aria-label="Toggle theme">
+        <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
+      </button>
+      <div class="accent-picker-wrap">
+        <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="Акцентний колір" aria-label="Accent color">
+          <span class="material-symbols-rounded">palette</span>
+        </button>
+        <div class="accent-popup" id="accent-popup" role="dialog" aria-label="Оберіть акцентний колір">
+          <p class="accent-popup-label">Material You — колір</p>
+          <div class="accent-swatches" id="accent-swatches"></div>
+        </div>
+      </div>
+    </div>
     <button class="mobile-toggle" onclick="toggleNav()" aria-label="Меню">
       <span class="material-symbols-rounded">menu</span>
     </button>
   </header>
   `;
 
-    // Update theme icon after render
-    const currentTheme = document.documentElement.dataset.theme;
-    const isDark = currentTheme === 'dark';
-    const icon = document.getElementById('theme-icon');
-    if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+  // Update theme icon after render
+  const currentTheme = document.documentElement.dataset.theme;
+  const isDark = currentTheme === 'dark';
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+
+  // Init accent swatches after render
+  if (typeof initAccentSwatches === 'function') {
+    initAccentSwatches();
+  }
 }
 
 // ============ BREADCRUMBS ============
 function renderBreadcrumbs(items) {
-    const container = document.getElementById('breadcrumbs');
-    if (!container) return;
+  const container = document.getElementById('breadcrumbs');
+  if (!container) return;
 
-    const crumbs = items.map((item, i) => {
-        const isLast = i === items.length - 1;
-        if (isLast) {
-            return `<span class="breadcrumb-current">${item.label}</span>`;
-        }
-        return `<a href="${item.href}" class="breadcrumb-link">${item.label}</a>`;
-    }).join('<span class="breadcrumb-sep"><span class="material-symbols-rounded m3-icon-16">chevron_right</span></span>');
+  const crumbs = items.map((item, i) => {
+    const isLast = i === items.length - 1;
+    if (isLast) {
+      return `<span class="breadcrumb-current">${item.label}</span>`;
+    }
+    return `<a href="${item.href}" class="breadcrumb-link">${item.label}</a>`;
+  }).join('<span class="breadcrumb-sep"><span class="material-symbols-rounded m3-icon-16">chevron_right</span></span>');
 
-    container.innerHTML = crumbs;
+  container.innerHTML = crumbs;
 }
 
 // ============ FOOTER ============
 function renderFooter() {
-    const footer = document.getElementById('footer');
-    if (!footer) return;
+  const footer = document.getElementById('footer');
+  if (!footer) return;
 
-    footer.outerHTML = `
+  footer.outerHTML = `
   <footer>
     <div class="footer-grid">
       <div>
@@ -157,10 +173,10 @@ function renderFooter() {
 
 // ============ CTA BANNER ============
 function renderCtaBanner(containerId = 'cta-banner') {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-    container.outerHTML = `
+  container.outerHTML = `
   <section class="cta-section">
     <div class="cta-banner">
       <div class="cta-content">
@@ -179,17 +195,15 @@ function renderCtaBanner(containerId = 'cta-banner') {
 
 // ============ INIT ============
 function initComponents(activePage = '', options = {}) {
-    renderHeader(activePage);
-    renderFooter();
+  renderHeader(activePage);
+  renderFooter();
 
-    const ctaBanner = document.getElementById('cta-banner');
-    if (ctaBanner) {
-        renderCtaBanner();
-    }
+  const ctaBanner = document.getElementById('cta-banner');
+  if (ctaBanner) {
+    renderCtaBanner();
+  }
 
-    if (options.breadcrumbs) {
-        renderBreadcrumbs(options.breadcrumbs);
-    }
+  if (options.breadcrumbs) {
+    renderBreadcrumbs(options.breadcrumbs);
+  }
 }
-
-

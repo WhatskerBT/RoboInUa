@@ -486,7 +486,9 @@ header:hover {
   padding: 100px 24px 64px;
   background: var(--md-surface);
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
+  /* allow image to bleed right, hide horizontal scroll */
+  overflow-y: visible;
 }
 
 .hero::before {
@@ -633,68 +635,98 @@ header:hover {
   animation: fade-up var(--md-motion-duration-long4) var(--md-motion-easing-emphasized-decelerate) 0.3s both;
 }
 
-/* Hero Stats */
+/* Hero Stats Wrap: image + overlapping compact cards */
+.hero-stats-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: row-reverse;
+  /* image right, cards left */
+  align-items: center;
+  z-index: 2;
+  animation: fade-up var(--md-motion-duration-long2) var(--md-motion-easing-emphasized-decelerate) 0.15s both;
+}
+
+.hero-stats-img {
+  width: auto;
+  max-width: none;
+  /* override global img { max-width: 100% } */
+  height: 480px;
+  object-fit: contain;
+  /* show full image, no cropping at all */
+  border-radius: var(--md-shape-2xl);
+  flex-shrink: 0;
+  box-shadow: var(--md-elevation-4);
+  position: relative;
+  z-index: 1;
+  margin-right: -48px;
+  margin-left: -20px;
+}
+
 .hero-stats {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   position: relative;
   z-index: 2;
+  margin-right: -32px;
+  /* overlap the LEFT side of the image */
 }
 
 .stat-card {
   background: var(--md-surface-container);
   border-radius: var(--md-shape-xl);
-  padding: 20px 24px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   transition: transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring),
     box-shadow var(--md-motion-duration-medium1) var(--md-motion-easing-standard);
+  box-shadow: var(--md-elevation-2);
+  min-width: 210px;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: var(--md-elevation-2);
+  transform: translateX(-4px) scale(1.02);
+  /* slide left on hover */
+  box-shadow: var(--md-elevation-3);
 }
 
 .stat-card:nth-child(1) {
-  margin-left: 0;
   animation: fade-up var(--md-motion-duration-long2) var(--md-motion-easing-emphasized-decelerate) 0.2s both;
 }
 
 .stat-card:nth-child(2) {
-  margin-left: 40px;
   background: var(--md-primary-container);
   animation: fade-up var(--md-motion-duration-long2) var(--md-motion-easing-emphasized-decelerate) 0.35s both;
 }
 
 .stat-card:nth-child(3) {
-  margin-left: 20px;
   background: var(--md-tertiary-container);
   animation: fade-up var(--md-motion-duration-long2) var(--md-motion-easing-emphasized-decelerate) 0.5s both;
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   background: var(--md-surface);
-  border-radius: var(--md-shape-md);
+  border-radius: var(--md-shape-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
 .stat-card h3 {
-  font: var(--md-typescale-headline-medium);
+  font: var(--md-typescale-title-large);
   color: var(--md-on-surface);
+  line-height: 1.1;
 }
 
 .stat-card p {
   font: var(--md-typescale-body-small);
   color: var(--md-on-surface-variant);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 /* ============ BUTTONS — M3 Expressive ============ */
@@ -1022,7 +1054,7 @@ section {
   font-size: 20px;
 }
 
-.target-item > span {
+.target-item>span {
   font: var(--md-typescale-label-large);
 }
 
@@ -1706,8 +1738,8 @@ footer h4 {
   gap: 10px;
 }
 
-.footer-links > a,
-.footer-links > span {
+.footer-links>a,
+.footer-links>span {
   font: var(--md-typescale-body-small);
   opacity: 0.86;
   transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
@@ -1873,6 +1905,26 @@ footer h4 {
 
   .hero-buttons {
     flex-direction: column;
+  }
+
+  .hero-stats-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-stats-img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: var(--md-shape-xl);
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .hero-stats {
+    margin-right: 0;
+    margin-left: 0;
+    margin-top: -16px;
   }
 
   .btn {
@@ -2041,6 +2093,145 @@ footer h4 {
 
 .theme-toggle:active {
   transform: rotate(0deg) scale(0.9);
+}
+
+/* ============ HEADER CONTROLS GROUP ============ */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+/* Accent picker button — hidden by default (zero width), slides in on hover */
+.accent-picker-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.accent-toggle {
+  width: 0;
+  /* takes NO space when hidden */
+  height: 40px;
+  overflow: hidden;
+  /* clip icon during collapse */
+  border-radius: var(--md-shape-full);
+  border: none;
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    width var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized-decelerate),
+    opacity var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized-decelerate),
+    background var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+/* Show on hover of the whole controls group, or when popup is open */
+.header-controls:hover .accent-toggle,
+.accent-picker-wrap:focus-within .accent-toggle,
+.accent-popup.open~.accent-toggle,
+/* keep visible while popup open */
+.accent-picker-wrap:has(.accent-popup.open) .accent-toggle {
+  width: 40px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.accent-toggle:hover {
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+}
+
+.accent-toggle:active {
+  transform: scale(0.9);
+}
+
+/* ============ ACCENT POPUP ============ */
+.accent-popup {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: var(--md-surface-container-lowest);
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-xl);
+  box-shadow: var(--md-elevation-3);
+  padding: 16px;
+  min-width: 224px;
+  z-index: 200;
+
+  opacity: 0;
+  transform: translateY(-8px) scale(0.96);
+  pointer-events: none;
+  transform-origin: top right;
+  transition:
+    opacity var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized-decelerate),
+    transform var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized-decelerate);
+}
+
+.accent-popup.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.accent-popup-label {
+  font: var(--md-typescale-label-small);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--md-on-surface-variant);
+  margin-bottom: 12px;
+}
+
+/* ============ ACCENT SWATCHES ============ */
+.accent-swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.accent-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--md-shape-full);
+  border: 3px solid transparent;
+  background: var(--swatch-color);
+  cursor: pointer;
+  position: relative;
+  transition:
+    transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring),
+    border-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    box-shadow var(--md-motion-duration-medium1) var(--md-motion-easing-standard);
+}
+
+.accent-swatch:hover {
+  transform: scale(1.18);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--swatch-color) 50%, transparent);
+}
+
+.accent-swatch.active {
+  border-color: var(--md-on-surface);
+  transform: scale(1.12);
+}
+
+.accent-swatch.active::after {
+  content: 'check';
+  font-family: 'Material Symbols Rounded';
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+  font-size: 18px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 /* ============ HEADER SCROLL STATE ============ */
