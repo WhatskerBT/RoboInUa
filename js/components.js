@@ -52,18 +52,22 @@ function renderHeader(activePage = '') {
   const header = document.getElementById('header');
   if (!header) return;
 
+  const supportItem = NAV_ITEMS.find(item => item.isButton);
+
   const navLinks = NAV_ITEMS.map(item => {
     const href = url(item.href);
     const isActive = activePage === item.page;
 
     if (item.isButton) {
-      return `<a href="${href}" class="btn-nav ${isActive ? 'active' : ''}">
+      return `<a href="${href}" class="btn-nav nav-support-link ${isActive ? 'active' : ''}">
         <span class="material-symbols-rounded m3-icon-18">${item.icon}</span>
-        ${item.label}
+        <span class="nav-label">${item.label}</span>
       </a>`;
     }
-    return `<a href="${href}" ${isActive ? 'class="active"' : ''}>
-      ${item.label}
+
+    return `<a href="${href}" class="${isActive ? 'active' : ''}">
+      <span class="material-symbols-rounded m3-icon-20 nav-icon">${item.icon}</span>
+      <span class="nav-label">${item.label}</span>
     </a>`;
   }).join('\n      ');
 
@@ -77,37 +81,52 @@ function renderHeader(activePage = '') {
       ${navLinks}
     </nav>
     <div class="header-controls">
-      <button class="theme-toggle" onclick="toggleTheme()" title="Змінити тему (подвійний клік — авто)" aria-label="Toggle theme">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Р—РјС–РЅРёС‚Рё С‚РµРјСѓ (РїРѕРґРІС–Р№РЅРёР№ РєР»С–Рє вЂ” Р°РІС‚Рѕ)" aria-label="Toggle theme">
         <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
       </button>
       <div class="accent-picker-wrap">
-        <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="Акцентний колір" aria-label="Accent color">
+        <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="РђРєС†РµРЅС‚РЅРёР№ РєРѕР»С–СЂ" aria-label="Accent color">
           <span class="material-symbols-rounded">palette</span>
         </button>
-        <div class="accent-popup" id="accent-popup" role="dialog" aria-label="Оберіть акцентний колір">
-          <p class="accent-popup-label">Material You — колір</p>
+        <div class="accent-popup" id="accent-popup" role="dialog" aria-label="РћР±РµСЂС–С‚СЊ Р°РєС†РµРЅС‚РЅРёР№ РєРѕР»С–СЂ">
+          <p class="accent-popup-label">Material You вЂ” РєРѕР»С–СЂ</p>
           <div class="accent-swatches" id="accent-swatches"></div>
         </div>
       </div>
     </div>
-    <button class="mobile-toggle" onclick="toggleNav()" aria-label="Меню">
-      <span class="material-symbols-rounded">menu</span>
-    </button>
   </header>
+  <div class="header-controls floating-controls">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Р вЂ”Р СРЎвЂ“Р Р…Р С‘РЎвЂљР С‘ РЎвЂљР ВµР СРЎС“ (Р С—Р С•Р Т‘Р Р†РЎвЂ“Р в„–Р Р…Р С‘Р в„– Р С”Р В»РЎвЂ“Р С” РІР‚вЂќ Р В°Р Р†РЎвЂљР С•)" aria-label="Toggle theme">
+      <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
+    </button>
+    <div class="accent-picker-wrap">
+      <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="Р С’Р С”РЎвЂ Р ВµР Р…РЎвЂљР Р…Р С‘Р в„– Р С”Р С•Р В»РЎвЂ“РЎР‚" aria-label="Accent color">
+        <span class="material-symbols-rounded">palette</span>
+      </button>
+      <div class="accent-popup" id="accent-popup" role="dialog" aria-label="Р С›Р В±Р ВµРЎР‚РЎвЂ“РЎвЂљРЎРЉ Р В°Р С”РЎвЂ Р ВµР Р…РЎвЂљР Р…Р С‘Р в„– Р С”Р С•Р В»РЎвЂ“РЎР‚">
+        <p class="accent-popup-label">Material You РІР‚вЂќ Р С”Р С•Р В»РЎвЂ“РЎР‚</p>
+        <div class="accent-swatches" id="accent-swatches"></div>
+      </div>
+    </div>
+  </div>
+  ${supportItem ? `
+  <a class="mobile-support-fab ${activePage === supportItem.page ? 'active' : ''}" href="${url(supportItem.href)}" aria-label="${supportItem.label}" title="${supportItem.label}">
+    <span class="material-symbols-rounded m3-icon-24">${supportItem.icon}</span>
+  </a>
+  ` : ''}
   `;
 
-  // Update theme icon after render
+  // Theme icon update is no-op while controls are hidden.
   const currentTheme = document.documentElement.dataset.theme;
   const isDark = currentTheme === 'dark';
   const icon = document.getElementById('theme-icon');
   if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
 
-  // Init accent swatches after render
+  // Accent swatches init is no-op while controls are hidden.
   if (typeof initAccentSwatches === 'function') {
     initAccentSwatches();
   }
 }
-
 // ============ BREADCRUMBS ============
 function renderBreadcrumbs(items) {
   const container = document.getElementById('breadcrumbs');
@@ -207,3 +226,6 @@ function initComponents(activePage = '', options = {}) {
     renderBreadcrumbs(options.breadcrumbs);
   }
 }
+
+
+
