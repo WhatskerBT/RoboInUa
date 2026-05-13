@@ -39,6 +39,8 @@ function applyTheme(theme, { persist = false } = {}) {
   updateBrowserThemeColor(theme);
   const icon = document.getElementById('theme-icon');
   if (icon) icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+  const iconMobile = document.getElementById('theme-icon-mobile');
+  if (iconMobile) iconMobile.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
 }
 
 function toggleTheme() {
@@ -440,17 +442,14 @@ function applyAccent(paletteId, { persist = false } = {}) {
   root.dataset.accent = paletteId;
   if (persist) localStorage.setItem(ACCENT_STORAGE_KEY, paletteId);
 
-  // Refresh swatch active states
+  // Refresh swatch active states (desktop + mobile)
   document.querySelectorAll('.accent-swatch').forEach(el => {
     el.classList.toggle('active', el.dataset.accent === paletteId);
   });
 }
 
-function initAccentSwatches() {
-  const container = document.getElementById('accent-swatches');
-  if (!container) return;
-  const currentId = getStoredAccent();
-  container.innerHTML = ACCENT_PALETTES.map(p => `
+function buildSwatchesHTML(currentId) {
+  return ACCENT_PALETTES.map(p => `
     <button
       class="accent-swatch${p.id === currentId ? ' active' : ''}"
       data-accent="${p.id}"
@@ -460,6 +459,14 @@ function initAccentSwatches() {
       onclick="selectAccent('${p.id}')"
     ></button>
   `).join('');
+}
+
+function initAccentSwatches() {
+  const currentId = getStoredAccent();
+  const container = document.getElementById('accent-swatches');
+  if (container) container.innerHTML = buildSwatchesHTML(currentId);
+  const containerMobile = document.getElementById('accent-swatches-mobile');
+  if (containerMobile) containerMobile.innerHTML = buildSwatchesHTML(currentId);
 }
 
 function selectAccent(id) {
@@ -472,11 +479,21 @@ function toggleAccentPicker(e) {
   if (popup) popup.classList.toggle('open');
 }
 
-// Close accent popup when clicking outside
+function toggleAccentPickerMobile(e) {
+  e.stopPropagation();
+  const popup = document.getElementById('accent-popup-mobile');
+  if (popup) popup.classList.toggle('open');
+}
+
+// Close accent popups when clicking outside
 document.addEventListener('click', (e) => {
   const popup = document.getElementById('accent-popup');
   if (popup && popup.classList.contains('open') && !e.target.closest('.accent-picker-wrap')) {
     popup.classList.remove('open');
+  }
+  const popupMobile = document.getElementById('accent-popup-mobile');
+  if (popupMobile && popupMobile.classList.contains('open') && !e.target.closest('.accent-picker-wrap')) {
+    popupMobile.classList.remove('open');
   }
 });
 

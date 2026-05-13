@@ -81,31 +81,31 @@ function renderHeader(activePage = '') {
       ${navLinks}
     </nav>
     <div class="header-controls">
-      <button class="theme-toggle" onclick="toggleTheme()" title="Р—РјС–РЅРёС‚Рё С‚РµРјСѓ (РїРѕРґРІС–Р№РЅРёР№ РєР»С–Рє вЂ” Р°РІС‚Рѕ)" aria-label="Toggle theme">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Змінити тему (подвійний клік — авто)" aria-label="Змінити тему">
         <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
       </button>
       <div class="accent-picker-wrap">
-        <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="РђРєС†РµРЅС‚РЅРёР№ РєРѕР»С–СЂ" aria-label="Accent color">
+        <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="Акцентний колір" aria-label="Акцентний колір">
           <span class="material-symbols-rounded">palette</span>
         </button>
-        <div class="accent-popup" id="accent-popup" role="dialog" aria-label="РћР±РµСЂС–С‚СЊ Р°РєС†РµРЅС‚РЅРёР№ РєРѕР»С–СЂ">
-          <p class="accent-popup-label">Material You вЂ” РєРѕР»С–СЂ</p>
+        <div class="accent-popup" id="accent-popup" role="dialog" aria-label="Оберіть акцентний колір">
+          <p class="accent-popup-label">Material You — колір</p>
           <div class="accent-swatches" id="accent-swatches"></div>
         </div>
       </div>
     </div>
   </header>
   <div class="header-controls floating-controls">
-    <button class="theme-toggle" onclick="toggleTheme()" title="Р вЂ”Р СРЎвЂ“Р Р…Р С‘РЎвЂљР С‘ РЎвЂљР ВµР СРЎС“ (Р С—Р С•Р Т‘Р Р†РЎвЂ“Р в„–Р Р…Р С‘Р в„– Р С”Р В»РЎвЂ“Р С” РІР‚вЂќ Р В°Р Р†РЎвЂљР С•)" aria-label="Toggle theme">
-      <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Змінити тему (подвійний клік — авто)" aria-label="Змінити тему">
+      <span class="material-symbols-rounded" id="theme-icon-mobile">dark_mode</span>
     </button>
     <div class="accent-picker-wrap">
-      <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="Р С’Р С”РЎвЂ Р ВµР Р…РЎвЂљР Р…Р С‘Р в„– Р С”Р С•Р В»РЎвЂ“РЎР‚" aria-label="Accent color">
+      <button class="accent-toggle" onclick="toggleAccentPickerMobile(event)" title="Акцентний колір" aria-label="Акцентний колір">
         <span class="material-symbols-rounded">palette</span>
       </button>
-      <div class="accent-popup" id="accent-popup" role="dialog" aria-label="Р С›Р В±Р ВµРЎР‚РЎвЂ“РЎвЂљРЎРЉ Р В°Р С”РЎвЂ Р ВµР Р…РЎвЂљР Р…Р С‘Р в„– Р С”Р С•Р В»РЎвЂ“РЎР‚">
-        <p class="accent-popup-label">Material You РІР‚вЂќ Р С”Р С•Р В»РЎвЂ“РЎР‚</p>
-        <div class="accent-swatches" id="accent-swatches"></div>
+      <div class="accent-popup" id="accent-popup-mobile" role="dialog" aria-label="Оберіть акцентний колір">
+        <p class="accent-popup-label">Material You — колір</p>
+        <div class="accent-swatches" id="accent-swatches-mobile"></div>
       </div>
     </div>
   </div>

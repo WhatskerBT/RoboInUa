@@ -30,106 +30,15 @@
                         цифрової грамотності в місті Прилуки та громаді.</p>
                 </div>
 
-                <div class="filter-bar">
-                    <button class="filter-btn active" data-filter="all">Усі</button>
-                    <button class="filter-btn" data-filter="курс">Курси</button>
-                    <button class="filter-btn" data-filter="подія">Події</button>
-                    <button class="filter-btn" data-filter="освіта">Освіта</button>
-                    <button class="filter-btn" data-filter="соціальний">Соціальні</button>
+                <div class="filter-bar" id="filter-bar">
+                    <button class="filter-btn active" onclick="filterProjectCards('all', event)">Усі</button>
+                    <button class="filter-btn" onclick="filterProjectCards('курс', event)">Курси</button>
+                    <button class="filter-btn" onclick="filterProjectCards('подія', event)">Події</button>
+                    <button class="filter-btn" onclick="filterProjectCards('освіта', event)">Освіта</button>
+                    <button class="filter-btn" onclick="filterProjectCards('соціальний', event)">Соціальні</button>
                 </div>
 
-                <div class="projects-grid" id="projects-grid">
-                    <div class="project-card" data-category="подія">
-                        <div class="project-tags">
-                            <span class="tag">Подія</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>RepRapUA2024</h3>
-                        <p>Презентація освітніх рішень, 3D-друку та моніторингу БПЛА на всеукраїнському фестивалі.</p>
-                        <a href="reprapua/index.html" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="курс">
-                        <div class="project-tags">
-                            <span class="tag">Курс</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>Безкоштовний курс з паяння</h3>
-                        <p>Навчання дорослих основам електроніки та паяння у місті Прилуки за підтримки Nova Ukraine.
-                        </p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="курс">
-                        <div class="project-tags">
-                            <span class="tag">Курс</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>Перший крок у кібербезпеку</h3>
-                        <p>Курс з основ кібербезпеки для школярів і студентів Прилук у межах Meet and Code.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="освіта">
-                        <div class="project-tags">
-                            <span class="tag">Освітня програма</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>RE-SAFE: STEM-лабораторія</h3>
-                        <p>Супровід ліцею №5 у створенні STEM-лабораторії «Я-дослідник» за грантом ООН.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="курс">
-                        <div class="project-tags">
-                            <span class="tag">Курс</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>Робототехніка в моїй школі (онлайн)</h3>
-                        <p>Навчання вчителів і керівників гуртків робототехніці та 3D-моделюванню.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="курс">
-                        <div class="project-tags">
-                            <span class="tag">Курс</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>Робототехніка в моїй школі (вчителі)</h3>
-                        <p>Практичне навчання вчителів інформатики з 3D-друку та Arduino.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="подія">
-                        <div class="project-tags">
-                            <span class="tag">Подія</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>Kyiv Maker Faire 2024</h3>
-                        <p>Презентація програми впровадження робототехніки в школах громад.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="соціальний">
-                        <div class="project-tags">
-                            <span class="tag">Соціальний проєкт</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>ІТ-благодійність</h3>
-                        <p>Відновлення та передача комп'ютерів учням шкіл міста.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-
-                    <div class="project-card" data-category="соціальний">
-                        <div class="project-tags">
-                            <span class="tag">Освітня програма</span>
-                            <span class="tag status">Завершено</span>
-                        </div>
-                        <h3>Навчання дітей загиблих військових</h3>
-                        <p>Безкоштовне навчання з 3D-моделювання та електроніки для дітей героїв.</p>
-                        <a href="#" class="project-link">Детальніше →</a>
-                    </div>
-                </div>
+                <div class="projects-grid" id="projects-grid"></div>
             </div>
         </section>
 
@@ -140,10 +49,50 @@
     <!-- Footer Component -->
     <div id="footer"></div>
 
+    <script src="../js/projects-data.js"></script>
     <script src="../js/components.js"></script>
     <script src="../js/script.js"></script>
     <script>
         initComponents('projects');
+
+        // Render cards from data
+        (function renderProjectCards() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            grid.innerHTML = PROJECTS.map(p => {
+                const statusClass = p.status === 'Активний' ? 'status active' : 'status';
+                const href = p.id + '/index.html';
+                return `
+                <div class="project-card" data-category="${p.category}" data-reveal>
+                    <div class="project-tags">
+                        <span class="tag">${p.tagLabel}</span>
+                        <span class="tag ${statusClass}">${p.status}</span>
+                    </div>
+                    <div class="project-card-icon" style="font-size:28px;margin-bottom:12px;">
+                        <span class="material-symbols-rounded icon-filled" style="color:var(--md-primary)">${p.icon}</span>
+                    </div>
+                    <h3>${p.title}</h3>
+                    <p>${p.excerpt}</p>
+                    <a href="${href}" class="project-link">Детальніше →</a>
+                </div>`;
+            }).join('');
+
+            // Re-init scroll reveal for newly added cards
+            if (typeof initScrollReveal === 'function') initScrollReveal();
+        })();
+
+        function filterProjectCards(category, event) {
+            const cards = document.querySelectorAll('.project-card');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+
+            cards.forEach(card => {
+                const cat = card.dataset.category;
+                const show = category === 'all' || cat === category;
+                card.style.display = show ? '' : 'none';
+                if (show) card.style.animation = 'fade-up 0.4s cubic-bezier(0.05,0.7,0.1,1) forwards';
+            });
+        }
     </script>
 </body>
 
