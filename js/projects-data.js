@@ -61,6 +61,15 @@ const PROJECTS = [
         links: [
             { label: 'Сайт RepRapUA', url: 'https://reprap.org.ua', icon: 'open_in_new' },
         ],
+        gallery: [
+            'FB_IMG_1727192382753.jpg',
+            'IMG_20240921_090525.jpg',
+            'IMG_20240921_110337.jpg',
+            'IMG_20240921_110607.jpg',
+            'IMG_20240921_110608_1.jpg',
+            'IMG_20240921_134123.jpg',
+            'IMG_20240921_150406.jpg',
+        ],
     },
 
     {
@@ -163,6 +172,13 @@ const PROJECTS = [
             { icon: 'person', value: '8', label: 'Навчених педагогів' },
             { icon: 'groups', value: '120+', label: 'Учнів на рік' },
         ],
+        gallery: [
+            'IMG_20240615_105316.jpg',
+            'IMG_20240823_191928.jpg',
+            'IMG_20240911_125021.jpg',
+            'IMG_20241002_091712.jpg',
+            'IMG_20241022_144408.jpg',
+        ],
     },
 
     {
@@ -220,6 +236,32 @@ const PROJECTS = [
             { icon: 'school', value: '18', label: 'Учителів навчено' },
             { icon: 'print', value: '18', label: 'Налаштованих принтерів' },
             { icon: 'description', value: '12', label: 'Авторських модулів' },
+        ],
+        materials: [
+            {
+                title: '3D-моделювання: повний набір уроків',
+                description: 'Архів із матеріалами, прикладами та конспектами для серії занять з 3D-моделювання.',
+                url: '../../materials/3d-modeling-course.rar',
+                format: 'RAR',
+                size: '49 МБ',
+                icon: 'view_in_ar',
+            },
+            {
+                title: 'Arduino: 10 занять для гуртка',
+                description: 'Готові навчальні заняття для старту практичних курсів з Arduino в школі або гуртку.',
+                url: '../../materials/arduino-lessons.zip',
+                format: 'ZIP',
+                size: '12 МБ',
+                icon: 'memory',
+            },
+            {
+                title: 'BBC micro:bit: 8 PDF-занять',
+                description: 'Підбірка занять з основ програмування, датчиків, радіо та роботи з масивами на micro:bit.',
+                url: '../../materials/bbc-microbit-course.rar',
+                format: 'RAR',
+                size: '5.8 МБ',
+                icon: 'developer_board',
+            },
         ],
     },
 

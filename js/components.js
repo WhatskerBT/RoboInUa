@@ -1,10 +1,8 @@
 /**
- * Спільні компоненти сайту — Material 3 Expressive
- * Підтримує вкладені підсторінки з автоматичним визначенням шляхів
- * Працює коректно як через file://, так і на веб-сервері
+ * Shared site components.
+ * Works for nested pages and local previews via automatic base-path detection.
  */
 
-// ============ PATH UTILITIES ============
 let _cachedBasePath = null;
 
 function getBasePath() {
@@ -19,16 +17,12 @@ function getBasePath() {
   const scripts = document.querySelectorAll('script[src]');
   for (const script of scripts) {
     const src = script.getAttribute('src');
-    if (src && src.includes('components.js')) {
-      const parts = src.split('/');
-      const prefixParts = parts.slice(0, -2);
-      if (prefixParts.length === 0) {
-        _cachedBasePath = './';
-      } else {
-        _cachedBasePath = prefixParts.join('/') + '/';
-      }
-      return _cachedBasePath;
-    }
+    if (!src || !src.includes('components.js')) continue;
+
+    const parts = src.split('/');
+    const prefixParts = parts.slice(0, -2);
+    _cachedBasePath = prefixParts.length ? `${prefixParts.join('/')}/` : './';
+    return _cachedBasePath;
   }
 
   _cachedBasePath = './';
@@ -39,7 +33,6 @@ function url(path) {
   return getBasePath() + path;
 }
 
-// ============ NAVIGATION CONFIG ============
 const NAV_ITEMS = [
   { href: 'index.html', label: 'Головна', page: 'home', icon: 'home' },
   { href: 'projects/index.html', label: 'Проєкти', page: 'projects', icon: 'folder_open' },
@@ -47,14 +40,12 @@ const NAV_ITEMS = [
   { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
 ];
 
-// ============ HEADER ============
 function renderHeader(activePage = '') {
   const header = document.getElementById('header');
   if (!header) return;
 
-  const supportItem = NAV_ITEMS.find(item => item.isButton);
-
-  const navLinks = NAV_ITEMS.map(item => {
+  const supportItem = NAV_ITEMS.find((item) => item.isButton);
+  const navLinks = NAV_ITEMS.map((item) => {
     const href = url(item.href);
     const isActive = activePage === item.page;
 
@@ -80,70 +71,31 @@ function renderHeader(activePage = '') {
     <nav class="nav-links" id="nav-links">
       ${navLinks}
     </nav>
-    <div class="header-controls">
-      <button class="theme-toggle" onclick="toggleTheme()" title="Змінити тему (подвійний клік — авто)" aria-label="Змінити тему">
-        <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
-      </button>
-      <div class="accent-picker-wrap">
-        <button class="accent-toggle" onclick="toggleAccentPicker(event)" title="Акцентний колір" aria-label="Акцентний колір">
-          <span class="material-symbols-rounded">palette</span>
-        </button>
-        <div class="accent-popup" id="accent-popup" role="dialog" aria-label="Оберіть акцентний колір">
-          <p class="accent-popup-label">Material You — колір</p>
-          <div class="accent-swatches" id="accent-swatches"></div>
-        </div>
-      </div>
-    </div>
   </header>
-  <div class="header-controls floating-controls">
-    <button class="theme-toggle" onclick="toggleTheme()" title="Змінити тему (подвійний клік — авто)" aria-label="Змінити тему">
-      <span class="material-symbols-rounded" id="theme-icon-mobile">dark_mode</span>
-    </button>
-    <div class="accent-picker-wrap">
-      <button class="accent-toggle" onclick="toggleAccentPickerMobile(event)" title="Акцентний колір" aria-label="Акцентний колір">
-        <span class="material-symbols-rounded">palette</span>
-      </button>
-      <div class="accent-popup" id="accent-popup-mobile" role="dialog" aria-label="Оберіть акцентний колір">
-        <p class="accent-popup-label">Material You — колір</p>
-        <div class="accent-swatches" id="accent-swatches-mobile"></div>
-      </div>
-    </div>
-  </div>
   ${supportItem ? `
   <a class="mobile-support-fab ${activePage === supportItem.page ? 'active' : ''}" href="${url(supportItem.href)}" aria-label="${supportItem.label}" title="${supportItem.label}">
     <span class="material-symbols-rounded m3-icon-24">${supportItem.icon}</span>
   </a>
   ` : ''}
   `;
-
-  // Theme icon update is no-op while controls are hidden.
-  const currentTheme = document.documentElement.dataset.theme;
-  const isDark = currentTheme === 'dark';
-  const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
-
-  // Accent swatches init is no-op while controls are hidden.
-  if (typeof initAccentSwatches === 'function') {
-    initAccentSwatches();
-  }
 }
-// ============ BREADCRUMBS ============
+
 function renderBreadcrumbs(items) {
   const container = document.getElementById('breadcrumbs');
   if (!container) return;
 
-  const crumbs = items.map((item, i) => {
-    const isLast = i === items.length - 1;
+  const crumbs = items.map((item, index) => {
+    const isLast = index === items.length - 1;
     if (isLast) {
       return `<span class="breadcrumb-current">${item.label}</span>`;
     }
+
     return `<a href="${item.href}" class="breadcrumb-link">${item.label}</a>`;
   }).join('<span class="breadcrumb-sep"><span class="material-symbols-rounded m3-icon-16">chevron_right</span></span>');
 
   container.innerHTML = crumbs;
 }
 
-// ============ FOOTER ============
 function renderFooter() {
   const footer = document.getElementById('footer');
   if (!footer) return;
@@ -171,7 +123,7 @@ function renderFooter() {
         <h4>Контакти</h4>
         <div class="footer-links">
           <span><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">mail</span>robofederation.pryluky@gmail.com</span>
-          <a href="https://facebook.com/roboinua" target="_blank"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">public</span>Facebook</a>
+          <a href="https://facebook.com/roboinua" target="_blank" rel="noopener"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">public</span>Facebook</a>
         </div>
       </div>
       <div>
@@ -190,7 +142,6 @@ function renderFooter() {
   `;
 }
 
-// ============ CTA BANNER ============
 function renderCtaBanner(containerId = 'cta-banner') {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -212,13 +163,11 @@ function renderCtaBanner(containerId = 'cta-banner') {
   `;
 }
 
-// ============ INIT ============
 function initComponents(activePage = '', options = {}) {
   renderHeader(activePage);
   renderFooter();
 
-  const ctaBanner = document.getElementById('cta-banner');
-  if (ctaBanner) {
+  if (document.getElementById('cta-banner')) {
     renderCtaBanner();
   }
 
@@ -226,6 +175,3 @@ function initComponents(activePage = '', options = {}) {
     renderBreadcrumbs(options.breadcrumbs);
   }
 }
-
-
-

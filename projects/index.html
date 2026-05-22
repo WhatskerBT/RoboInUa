@@ -30,13 +30,7 @@
                         цифрової грамотності в місті Прилуки та громаді.</p>
                 </div>
 
-                <div class="filter-bar" id="filter-bar">
-                    <button class="filter-btn active" onclick="filterProjectCards('all', event)">Усі</button>
-                    <button class="filter-btn" onclick="filterProjectCards('курс', event)">Курси</button>
-                    <button class="filter-btn" onclick="filterProjectCards('подія', event)">Події</button>
-                    <button class="filter-btn" onclick="filterProjectCards('освіта', event)">Освіта</button>
-                    <button class="filter-btn" onclick="filterProjectCards('соціальний', event)">Соціальні</button>
-                </div>
+                <div class="filter-bar" id="filter-bar" aria-label="Фільтр проєктів"></div>
 
                 <div class="projects-grid" id="projects-grid"></div>
             </div>
@@ -55,6 +49,43 @@
     <script>
         initComponents('projects');
 
+        const PROJECT_FILTERS = [
+            { id: 'all', label: 'Усі' },
+            { id: 'курс', label: 'Курси' },
+            { id: 'подія', label: 'Події' },
+            { id: 'освіта', label: 'Освіта' },
+            { id: 'соціальний', label: 'Соціальні' },
+        ];
+
+        function getProjectCount(category) {
+            if (category === 'all') return PROJECTS.length;
+            return PROJECTS.filter(project => project.category === category).length;
+        }
+
+        (function renderFilterControls() {
+            const bar = document.getElementById('filter-bar');
+            if (!bar) return;
+
+            bar.innerHTML = PROJECT_FILTERS.map(filter => `
+                <button
+                    class="filter-btn${filter.id === 'all' ? ' active' : ''}"
+                    type="button"
+                    data-filter="${filter.id}"
+                    aria-pressed="${filter.id === 'all' ? 'true' : 'false'}"
+                >
+                    <span class="filter-btn-check" aria-hidden="true">
+                        <span class="material-symbols-rounded m3-icon-18">check</span>
+                    </span>
+                    <span class="filter-btn-label">${filter.label}</span>
+                    <span class="filter-btn-count">${getProjectCount(filter.id)}</span>
+                </button>
+            `).join('');
+
+            bar.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', () => filterProjectCards(button.dataset.filter, button));
+            });
+        })();
+
         // Render cards from data
         (function renderProjectCards() {
             const grid = document.getElementById('projects-grid');
@@ -63,7 +94,7 @@
                 const statusClass = p.status === 'Активний' ? 'status active' : 'status';
                 const href = p.id + '/index.html';
                 return `
-                <div class="project-card" data-category="${p.category}" data-reveal>
+                <article class="project-card" data-category="${p.category}" data-reveal aria-hidden="false">
                     <div class="project-tags">
                         <span class="tag">${p.tagLabel}</span>
                         <span class="tag ${statusClass}">${p.status}</span>
@@ -74,23 +105,29 @@
                     <h3>${p.title}</h3>
                     <p>${p.excerpt}</p>
                     <a href="${href}" class="project-link">Детальніше →</a>
-                </div>`;
+                </article>`;
             }).join('');
 
             // Re-init scroll reveal for newly added cards
             if (typeof initScrollReveal === 'function') initScrollReveal();
         })();
 
-        function filterProjectCards(category, event) {
+        function filterProjectCards(category, button) {
             const cards = document.querySelectorAll('.project-card');
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            if (event && event.target) event.target.classList.add('active');
+            const buttons = document.querySelectorAll('.filter-btn');
 
-            cards.forEach(card => {
-                const cat = card.dataset.category;
-                const show = category === 'all' || cat === category;
-                card.style.display = show ? '' : 'none';
-                if (show) card.style.animation = 'fade-up 0.4s cubic-bezier(0.05,0.7,0.1,1) forwards';
+            buttons.forEach(item => {
+                const active = item === button;
+                item.classList.toggle('active', active);
+                item.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+
+            requestAnimationFrame(() => {
+                cards.forEach(card => {
+                    const show = category === 'all' || card.dataset.category === category;
+                    card.classList.toggle('is-hidden', !show);
+                    card.setAttribute('aria-hidden', show ? 'false' : 'true');
+                });
             });
         }
     </script>
