@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fdf8fb" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15131a" media="(prefers-color-scheme: dark)">
+    <title>Навчальні матеріали — Федерація робототехніки Прилуччини</title>
+    <meta name="description"
+        content="Безкоштовні навчальні матеріали Федерації робототехніки Прилуччини: уроки 3D-моделювання, Arduino та BBC micro:bit для вчителів і гуртків.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+    <a href="#main" class="skip-link">Перейти до вмісту</a>
+
+    <!-- Header Component -->
+    <div id="header"></div>
+
+    <main id="main">
+        <section class="page-hero">
+            <span class="section-label">Навчальні матеріали</span>
+            <h1>Уроки та конспекти</h1>
+            <p>Безкоштовні матеріали наших курсів для вчителів, керівників гуртків і всіх, хто хоче навчати робототехніки. Уроки BBC micro:bit відкриваються прямо в браузері, конспекти 3D та Arduino — у форматі для завантаження.</p>
+        </section>
+
+        <section class="projects-section" aria-label="Каталог матеріалів">
+            <div class="projects-wrapper">
+                <div class="info-box" style="margin-bottom: 32px;">
+                    <h2>Як користуватися матеріалами</h2>
+                    <p>Усі матеріали створені та апробовані ГО «Федерація робототехніки та програмування Прилуччини» під час очних і онлайн-курсів. Ви можете вільно використовувати їх у школах, гуртках та для самонавчання з посиланням на джерело.</p>
+                </div>
+
+                <div id="courses"></div>
+            </div>
+        </section>
+
+        <!-- CTA Banner Component -->
+        <div id="cta-banner"></div>
+    </main>
+
+    <!-- Footer Component -->
+    <div id="footer"></div>
+
+    <script src="../js/components.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        initComponents('materials');
+
+        const COURSES = [
+            {
+                id: 'bbc-microbit',
+                title: 'BBC micro:bit',
+                icon: 'developer_board',
+                badge: '8 уроків · PDF',
+                description: 'Повний курс програмування мікроконтролера BBC micro:bit — від перших кроків до радіо та роботи з пінами. PDF відкривається онлайн.',
+                action: 'view',
+                lessons: [
+                    { n: 1, title: 'Знайомство з micro:bit', file: 'bbc-microbit/1_BBC micro_bit.pdf' },
+                    { n: 2, title: 'Змінні', file: 'bbc-microbit/2_BBC micro_bit_Змінні.pdf' },
+                    { n: 3, title: 'Датчики та прийняття рішень', file: 'bbc-microbit/3_BBC micro_bit_Датчики та прийняття рішень.pdf' },
+                    { n: 4, title: 'Випадкові числа', file: 'bbc-microbit/4_BBC micro_bit_Випадкові числа.pdf' },
+                    { n: 5, title: 'Цикли', file: 'bbc-microbit/5_BBC micro-bit_Цикли.pdf' },
+                    { n: 6, title: 'Масиви', file: 'bbc-microbit/6_BBC micro_bit_Массиви.pdf' },
+                    { n: 7, title: 'Радіо', file: 'bbc-microbit/7_BBC micro_bit_Radio.pdf' },
+                    { n: 8, title: 'Піни (входи/виходи)', file: 'bbc-microbit/8_BBC micro_bit_Піни.pdf' },
+                ],
+            },
+            {
+                id: 'arduino',
+                title: 'Arduino',
+                icon: 'memory',
+                badge: '10 занять · DOCX',
+                description: 'Серія практичних занять для старту гуртка з Arduino: основи, датчики, прикладні проєкти. Конспекти у форматі DOCX.',
+                action: 'download',
+                lessons: [
+                    { n: '1–2', title: 'Вступ та перші схеми', file: 'arduino/Заняття 1-2.docx' },
+                    { n: 3, title: 'Заняття 3', file: 'arduino/Заняття 3.docx' },
+                    { n: 4, title: 'Заняття 4', file: 'arduino/Заняття 4.docx' },
+                    { n: 5, title: 'Заняття 5', file: 'arduino/Заняття 5.docx' },
+                    { n: 6, title: 'Заняття 6', file: 'arduino/Заняття 6.docx' },
+                    { n: 7, title: 'Заняття 7', file: 'arduino/Заняття 7.docx' },
+                    { n: 8, title: 'Заняття 8', file: 'arduino/Заняття 8.docx' },
+                    { n: 9, title: 'Заняття 9', file: 'arduino/Заняття 9.docx' },
+                    { n: 10, title: 'Заняття 10', file: 'arduino/Заняття 10.docx' },
+                ],
+            },
+            {
+                id: '3d-modeling',
+                title: '3D-моделювання',
+                icon: 'view_in_ar',
+                badge: '6 уроків · Архів',
+                description: 'Курс 3D-моделювання з конспектами, покроковими скриншотами та прикладами моделей. Через велику кількість зображень курс зібрано в один архів.',
+                action: 'download',
+                lessons: [
+                    { n: '1–6', title: 'Повний курс (конспекти, скриншоти, приклади)', file: '3d-modeling-course.rar', size: '49 МБ' },
+                ],
+            },
+        ];
+
+        (function renderCourses() {
+            const root = document.getElementById('courses');
+            if (!root) return;
+
+            root.innerHTML = COURSES.map(course => {
+                const lessons = course.lessons.map(lesson => {
+                    const isView = course.action === 'view';
+                    const href = encodeURI(lesson.file);
+                    const meta = lesson.size || (isView ? 'PDF' : 'DOCX');
+                    const label = isView ? 'Переглянути' : 'Завантажити';
+                    const icon = isView ? 'open_in_new' : 'download';
+                    const attrs = isView
+                        ? ' target="_blank" rel="noopener"'
+                        : ' download';
+                    return `
+                    <a href="${href}" class="pd-material-card"${attrs}>
+                        <div class="pd-material-top">
+                            <div class="pd-material-icon">
+                                <span class="material-symbols-rounded icon-filled">${isView ? 'picture_as_pdf' : 'description'}</span>
+                            </div>
+                            <span class="pd-material-meta">Урок ${lesson.n} · ${meta}</span>
+                        </div>
+                        <h3>${lesson.title}</h3>
+                        <span class="pd-material-download">
+                            <span class="material-symbols-rounded m3-icon-18">${icon}</span>
+                            ${label}
+                        </span>
+                    </a>`;
+                }).join('');
+
+                return `
+                <div class="course-block" id="course-${course.id}">
+                    <div class="course-header">
+                        <div class="course-header-icon">
+                            <span class="material-symbols-rounded icon-filled">${course.icon}</span>
+                        </div>
+                        <div class="course-header-text">
+                            <div class="course-header-top">
+                                <h2>${course.title}</h2>
+                                <span class="course-badge">${course.badge}</span>
+                            </div>
+                            <p>${course.description}</p>
+                        </div>
+                    </div>
+                    <div class="pd-materials-grid">${lessons}</div>
+                </div>`;
+            }).join('');
+        })();
+    </script>
+    <script src="../js/ambient-glow.js"></script>
+</body>
+
+</html>
+

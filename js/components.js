@@ -37,6 +37,7 @@ const NAV_ITEMS = [
   { href: 'index.html', label: 'Головна', page: 'home', icon: 'home' },
   { href: 'projects/index.html', label: 'Проєкти', page: 'projects', icon: 'folder_open' },
   { href: 'events/index.html', label: 'Заходи', page: 'events', icon: 'event' },
+  { href: 'materials/index.html', label: 'Матеріали', page: 'materials', icon: 'menu_book' },
   { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
 ];
 
@@ -119,6 +120,7 @@ function renderFooter() {
           <a href="${url('index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">home</span>Головна</a>
           <a href="${url('projects/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">folder_open</span>Проєкти</a>
           <a href="${url('events/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">event</span>Заходи</a>
+          <a href="${url('materials/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">menu_book</span>Навчальні матеріали</a>
           <a href="${url('donate/index.html')}"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">favorite</span>Підтримати</a>
         </div>
       </div>
@@ -139,7 +141,7 @@ function renderFooter() {
       </div>
     </div>
     <div class="footer-bottom">
-      © 2026 ГО «Федерація робототехніки та програмування Прилуччини»
+      © ${new Date().getFullYear()} ГО «Федерація робототехніки та програмування Прилуччини»
     </div>
   </footer>
   `;

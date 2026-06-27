@@ -137,12 +137,7 @@ function initHeaderScroll() {
   if (!header) return;
 
   const mobileQuery = window.matchMedia('(max-width: 768px)');
-  let lastScroll = window.scrollY;
   let ticking = false;
-
-  function setHeaderTransform(_hidden) {
-    header.style.removeProperty('transform');
-  }
 
   function updateHeader() {
     const scrollY = window.scrollY;
@@ -151,8 +146,6 @@ function initHeaderScroll() {
     } else {
       header.classList.remove('scrolled');
     }
-    header.style.removeProperty('transform');
-    lastScroll = scrollY;
     ticking = false;
   }
 
@@ -163,7 +156,6 @@ function initHeaderScroll() {
     ticking = true;
   }, { passive: true });
 
-  observeMediaQuery(mobileQuery, () => setHeaderTransform(false));
   updateHeader();
 }
 
@@ -226,7 +218,7 @@ document.addEventListener('click', (event) => {
     document.querySelectorAll('.amount-btn').forEach((button) => button.classList.remove('selected'));
     amountButton.classList.add('selected');
 
-    const customInput = document.getElementById('customAmount') || document.getElementById('custom-amount');
+    const customInput = document.getElementById('custom-amount');
     if (customInput && amountButton.dataset.amount) {
       customInput.value = amountButton.dataset.amount;
     }
