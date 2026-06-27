@@ -71,6 +71,9 @@ function renderHeader(activePage = '') {
     <nav class="nav-links" id="nav-links">
       ${navLinks}
     </nav>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Перемкнути тему" title="Перемкнути тему">
+      <span class="material-symbols-rounded m3-icon-20" data-theme-icon>dark_mode</span>
+    </button>
   </header>
   ${supportItem ? `
   <a class="mobile-support-fab ${activePage === supportItem.page ? 'active' : ''}" href="${url(supportItem.href)}" aria-label="${supportItem.label}" title="${supportItem.label}">
@@ -136,7 +139,7 @@ function renderFooter() {
       </div>
     </div>
     <div class="footer-bottom">
-      © 2024 ГО «Федерація робототехніки та програмування Прилуччини»
+      © 2026 ГО «Федерація робототехніки та програмування Прилуччини»
     </div>
   </footer>
   `;

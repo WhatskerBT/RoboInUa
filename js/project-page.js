@@ -344,6 +344,10 @@
     }
 
     initProjectCarousels(main);
+
+    if (typeof window.markDecorativeIcons === 'function') {
+      window.markDecorativeIcons(main);
+    }
   }
 
   if (document.readyState === 'loading') {

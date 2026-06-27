@@ -3,36 +3,89 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fdf8fb" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15131a" media="(prefers-color-scheme: dark)">
     <title>Наші проєкти — Федерація робототехніки Прилуччини</title>
     <meta name="description"
-        content="Освітні, соціальні та інженерні проєкти для розвитку робототехніки та STEM-освіти в Прилуках.">
+        content="Освітні, соціальні та інженерні проєкти Федерації робототехніки Прилуччини. Звіт за 2024 рік: 9 проєктів, понад 100 учасників.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 
 <body>
+    <a href="#main" class="skip-link">Перейти до вмісту</a>
+
     <!-- Header Component -->
     <div id="header"></div>
 
-    <main>
+    <main id="main">
         <section class="page-hero">
-            <span class="section-label">Проєкти</span>
+            <span class="section-label">Проєкти 2024</span>
             <h1>Наші проєкти</h1>
-            <p>Освітні, соціальні та інженерні ініціативи для розвитку робототехніки та STEM-освіти в Прилуках</p>
+            <p>Освітні, соціальні та інженерні ініціативи для розвитку робототехніки та STEM-освіти в Прилуках. Гортайте каруселлю — кожна картка веде до повного опису.</p>
         </section>
 
-        <section class="projects-section">
+        <section class="projects-section" aria-label="Каталог проєктів">
             <div class="projects-wrapper">
-                <div class="info-box" style="margin-bottom: 40px;">
+                <div class="info-box" style="margin-bottom: 32px;">
                     <h3>Що таке проєкти Федерації</h3>
                     <p>Проєкти ГО «Федерація робототехніки та програмування Прилуччини» — це освітні, соціальні та
                         інженерні ініціативи, спрямовані на розвиток робототехніки, програмування, STEM-освіти та
                         цифрової грамотності в місті Прилуки та громаді.</p>
                 </div>
 
-                <div class="filter-bar" id="filter-bar" aria-label="Фільтр проєктів"></div>
+                <div class="projects-toolbar" role="search">
+                    <label class="projects-search" for="projects-search-input">
+                        <span class="projects-search-icon" aria-hidden="true">
+                            <span class="material-symbols-rounded m3-icon-24">search</span>
+                        </span>
+                        <input id="projects-search-input" type="search" autocomplete="off"
+                            placeholder="Пошук за назвою, темою чи партнером…" aria-label="Пошук проєктів">
+                        <button type="button" class="projects-search-clear" aria-label="Очистити пошук">
+                            <span class="material-symbols-rounded m3-icon-20">close</span>
+                        </button>
+                    </label>
+                    <div class="projects-results-count" id="projects-results-count" aria-live="polite"></div>
+                    <div class="view-toggle" id="view-toggle" role="group" aria-label="Вигляд каталогу">
+                        <button type="button" class="view-toggle-btn is-active" data-view="carousel" aria-pressed="true">
+                            <span class="material-symbols-rounded m3-icon-20">view_carousel</span>
+                            <span class="view-toggle-label">Карусель</span>
+                        </button>
+                        <button type="button" class="view-toggle-btn" data-view="grid" aria-pressed="false">
+                            <span class="material-symbols-rounded m3-icon-20">grid_view</span>
+                            <span class="view-toggle-label">Плитки</span>
+                        </button>
+                    </div>
+                </div>
 
-                <div class="projects-grid" id="projects-grid"></div>
+                <div class="filter-bar projects-chip-bar" id="filter-bar" role="group"
+                    aria-label="Категорії проєктів"></div>
+
+                <div class="projects-carousel-wrap">
+                    <button type="button" class="projects-carousel-btn prev" id="projects-prev"
+                        aria-label="Попередній проєкт">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <div class="projects-carousel" id="projects-grid" role="list"
+                        aria-label="Каталог проєктів" tabindex="0"></div>
+                    <button type="button" class="projects-carousel-btn next" id="projects-next"
+                        aria-label="Наступний проєкт">
+                        <span class="material-symbols-rounded">arrow_forward</span>
+                    </button>
+                </div>
+
+                <div class="projects-carousel-dots" id="projects-dots" role="group"
+                    aria-label="Перейти до проєкту"></div>
+
+                <div class="projects-empty" id="projects-empty" role="status" aria-live="polite">
+                    <span class="material-symbols-rounded">search_off</span>
+                    <h3>Нічого не знайдено</h3>
+                    <p>Спробуйте змінити запит або вибрати іншу категорію.</p>
+                </div>
             </div>
         </section>
 
@@ -57,9 +110,44 @@
             { id: 'соціальний', label: 'Соціальні' },
         ];
 
-        function getProjectCount(category) {
-            if (category === 'all') return PROJECTS.length;
-            return PROJECTS.filter(project => project.category === category).length;
+        const state = {
+            category: 'all',
+            query: '',
+            view: 'carousel',
+        };
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const flatMode = window.matchMedia('(max-width: 768px)');
+
+        function countMatches(category, query) {
+            const q = (query || '').trim().toLowerCase();
+            return PROJECTS.filter(project => {
+                const inCategory = category === 'all' || project.category === category;
+                if (!inCategory) return false;
+                if (!q) return true;
+                return matchesQuery(project, q);
+            }).length;
+        }
+
+        function matchesQuery(project, q) {
+            const haystacks = [
+                project.title,
+                project.excerpt,
+                project.tagLabel,
+                project.partner,
+                project.category,
+                project.status,
+                project.year,
+                project.period,
+            ].filter(Boolean).map(String).map(s => s.toLowerCase());
+            return haystacks.some(s => s.includes(q));
+        }
+
+        function projectCover(project) {
+            if (Array.isArray(project.gallery) && project.gallery.length) {
+                return `${project.id}/${project.gallery[0]}`;
+            }
+            return null;
         }
 
         (function renderFilterControls() {
@@ -77,59 +165,345 @@
                         <span class="material-symbols-rounded m3-icon-18">check</span>
                     </span>
                     <span class="filter-btn-label">${filter.label}</span>
-                    <span class="filter-btn-count">${getProjectCount(filter.id)}</span>
+                    <span class="filter-btn-count" data-filter-count="${filter.id}">${countMatches(filter.id, state.query)}</span>
                 </button>
             `).join('');
 
             bar.querySelectorAll('.filter-btn').forEach(button => {
-                button.addEventListener('click', () => filterProjectCards(button.dataset.filter, button));
+                button.addEventListener('click', () => {
+                    state.category = button.dataset.filter;
+                    applyFilters();
+                });
             });
         })();
 
-        // Render cards from data
         (function renderProjectCards() {
             const grid = document.getElementById('projects-grid');
             if (!grid) return;
-            grid.innerHTML = PROJECTS.map(p => {
+            grid.innerHTML = PROJECTS.map((p, index) => {
                 const statusClass = p.status === 'Активний' ? 'status active' : 'status';
                 const href = p.id + '/index.html';
+                const cover = projectCover(p);
+                const periodChip = p.period
+                    ? `<span class="project-card-period">
+                          <span class="material-symbols-rounded" aria-hidden="true">calendar_month</span>
+                          ${p.period}
+                       </span>`
+                    : '';
+                const media = cover
+                    ? `<img src="${cover}" alt="${p.title}" loading="${index < 2 ? 'eager' : 'lazy'}" decoding="async" width="640" height="440">`
+                    : `<div class="project-card-media-icon" aria-hidden="true">
+                          <span class="material-symbols-rounded icon-filled">${p.icon}</span>
+                       </div>`;
                 return `
-                <article class="project-card" data-category="${p.category}" data-reveal aria-hidden="false">
-                    <div class="project-tags">
-                        <span class="tag">${p.tagLabel}</span>
-                        <span class="tag ${statusClass}">${p.status}</span>
+                <a class="project-card" href="${href}" data-category="${p.category}" data-project-id="${p.id}" role="listitem">
+                    <div class="project-card-media">
+                        ${periodChip}
+                        ${media}
                     </div>
-                    <div class="project-card-icon" style="font-size:28px;margin-bottom:12px;">
-                        <span class="material-symbols-rounded icon-filled" style="color:var(--md-primary)">${p.icon}</span>
+                    <div class="project-card-body">
+                        <div class="project-tags">
+                            <span class="tag">${p.tagLabel}</span>
+                            <span class="tag ${statusClass}">${p.status}</span>
+                        </div>
+                        <h3>${p.title}</h3>
+                        <p>${p.excerpt}</p>
+                        <span class="project-link">
+                            Детальніше
+                            <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+                        </span>
                     </div>
-                    <h3>${p.title}</h3>
-                    <p>${p.excerpt}</p>
-                    <a href="${href}" class="project-link">Детальніше →</a>
-                </article>`;
+                </a>`;
             }).join('');
-
-            // Re-init scroll reveal for newly added cards
-            if (typeof initScrollReveal === 'function') initScrollReveal();
         })();
 
-        function filterProjectCards(category, button) {
+        function applyFilters() {
             const cards = document.querySelectorAll('.project-card');
             const buttons = document.querySelectorAll('.filter-btn');
+            const q = state.query.trim().toLowerCase();
 
-            buttons.forEach(item => {
-                const active = item === button;
-                item.classList.toggle('active', active);
-                item.setAttribute('aria-pressed', active ? 'true' : 'false');
+            buttons.forEach(button => {
+                const active = button.dataset.filter === state.category;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-pressed', active ? 'true' : 'false');
+                const counterEl = button.querySelector('[data-filter-count]');
+                if (counterEl) counterEl.textContent = countMatches(button.dataset.filter, state.query);
             });
 
+            let visibleCount = 0;
+            cards.forEach(card => {
+                const project = PROJECTS.find(p => p.id === card.dataset.projectId);
+                if (!project) return;
+                const inCategory = state.category === 'all' || project.category === state.category;
+                const inSearch = !q || matchesQuery(project, q);
+                const show = inCategory && inSearch;
+                card.classList.toggle('is-hidden', !show);
+                card.setAttribute('aria-hidden', show ? 'false' : 'true');
+                if (show) visibleCount++;
+            });
+
+            const empty = document.getElementById('projects-empty');
+            const wrap = document.querySelector('.projects-carousel-wrap');
+            const dots = document.getElementById('projects-dots');
+            if (empty) empty.classList.toggle('is-visible', visibleCount === 0);
+            if (wrap) wrap.style.display = visibleCount === 0 ? 'none' : '';
+            if (dots) dots.style.display = (visibleCount === 0 || state.view === 'grid') ? 'none' : '';
+
+            const counter = document.getElementById('projects-results-count');
+            if (counter) {
+                if (q || state.category !== 'all') {
+                    counter.innerHTML = `Знайдено <strong>${visibleCount}</strong> із ${PROJECTS.length}`;
+                } else {
+                    counter.innerHTML = `Усього <strong>${PROJECTS.length}</strong> проєктів`;
+                }
+            }
+
+            renderDots();
             requestAnimationFrame(() => {
-                cards.forEach(card => {
-                    const show = category === 'all' || card.dataset.category === category;
-                    card.classList.toggle('is-hidden', !show);
-                    card.setAttribute('aria-hidden', show ? 'false' : 'true');
+                const carousel = document.getElementById('projects-grid');
+                if (carousel) carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                requestAnimationFrame(() => {
+                    updateTransforms();
+                    updateCarouselControls();
                 });
             });
         }
+
+        (function initSearch() {
+            const wrap = document.querySelector('.projects-search');
+            const input = document.getElementById('projects-search-input');
+            const clearBtn = wrap ? wrap.querySelector('.projects-search-clear') : null;
+            if (!input || !wrap) return;
+
+            input.addEventListener('input', () => {
+                state.query = input.value;
+                wrap.classList.toggle('has-value', input.value.length > 0);
+                applyFilters();
+            });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    input.value = '';
+                    state.query = '';
+                    wrap.classList.remove('has-value');
+                    input.focus();
+                    applyFilters();
+                });
+            }
+
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && input.value) {
+                    input.value = '';
+                    state.query = '';
+                    wrap.classList.remove('has-value');
+                    applyFilters();
+                }
+            });
+        })();
+
+        function visibleCards() {
+            return Array.from(document.querySelectorAll('.project-card:not(.is-hidden)'));
+        }
+
+        function setFlatMode(isFlat) {
+            const carousel = document.getElementById('projects-grid');
+            if (!carousel) return;
+            carousel.classList.toggle('is-flat', isFlat);
+        }
+
+        function updateTransforms() {
+            const carousel = document.getElementById('projects-grid');
+            if (!carousel) return;
+
+            if (carousel.classList.contains('is-flat') || carousel.classList.contains('is-grid')) {
+                visibleCards().forEach(card => {
+                    card.style.transform = '';
+                    card.style.opacity = '';
+                    card.style.zIndex = '';
+                    card.classList.remove('is-active');
+                });
+                return;
+            }
+
+            const rect = carousel.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const cards = visibleCards();
+            let bestIndex = 0;
+            let bestDist = Infinity;
+
+            cards.forEach((card, index) => {
+                const cardRect = card.getBoundingClientRect();
+                const cardCenter = cardRect.left + cardRect.width / 2;
+                const rawDist = (cardCenter - centerX) / cardRect.width;
+                const dist = Math.max(-2, Math.min(2, rawDist));
+                const abs = Math.abs(dist);
+
+                const scale = Math.max(0.93, 1 - abs * 0.05);
+                const opacity = Math.max(0.82, 1 - abs * 0.12);
+
+                card.style.transform = `scale(${scale})`;
+                card.style.opacity = opacity;
+                card.style.zIndex = String(Math.round(100 - abs * 50));
+
+                if (abs < bestDist) {
+                    bestDist = abs;
+                    bestIndex = index;
+                }
+            });
+
+            cards.forEach((card, index) => {
+                card.classList.toggle('is-active', index === bestIndex && bestDist < 0.4);
+            });
+
+            updateActiveDot(bestIndex);
+        }
+
+        function updateActiveDot(activeIndex) {
+            const dots = document.querySelectorAll('.projects-carousel-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('is-active', index === activeIndex);
+                dot.setAttribute('aria-current', index === activeIndex ? 'true' : 'false');
+            });
+        }
+
+        function renderDots() {
+            const dots = document.getElementById('projects-dots');
+            if (!dots) return;
+            const cards = visibleCards();
+            dots.innerHTML = cards.map((_, index) => `
+                <button type="button" class="projects-carousel-dot${index === 0 ? ' is-active' : ''}"
+                    data-dot-index="${index}" aria-label="Перейти до проєкту ${index + 1} із ${cards.length}"></button>
+            `).join('');
+            dots.querySelectorAll('.projects-carousel-dot').forEach((dot) => {
+                dot.addEventListener('click', () => {
+                    const idx = parseInt(dot.dataset.dotIndex, 10);
+                    const target = visibleCards()[idx];
+                    if (target) target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                });
+            });
+        }
+
+        function updateCarouselControls() {
+            const carousel = document.getElementById('projects-grid');
+            const prev = document.getElementById('projects-prev');
+            const next = document.getElementById('projects-next');
+            if (!carousel || !prev || !next) return;
+
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            const overflow = maxScroll > 4;
+            const atStart = carousel.scrollLeft <= 4;
+            const atEnd = carousel.scrollLeft >= maxScroll - 4;
+
+            prev.disabled = !overflow || atStart;
+            next.disabled = !overflow || atEnd;
+            prev.setAttribute('aria-disabled', prev.disabled ? 'true' : 'false');
+            next.setAttribute('aria-disabled', next.disabled ? 'true' : 'false');
+        }
+
+        (function initCarousel() {
+            const carousel = document.getElementById('projects-grid');
+            const prev = document.getElementById('projects-prev');
+            const next = document.getElementById('projects-next');
+            if (!carousel) return;
+
+            function step() {
+                const firstCard = carousel.querySelector('.project-card:not(.is-hidden)');
+                if (!firstCard) return 0;
+                const styles = getComputedStyle(carousel);
+                const gap = parseFloat(styles.gap || styles.columnGap || '24') || 24;
+                return firstCard.getBoundingClientRect().width + gap;
+            }
+
+            function scrollByStep(direction) {
+                const distance = step();
+                if (!distance) return;
+                carousel.scrollBy({ left: direction * distance, behavior: 'smooth' });
+            }
+
+            if (prev) prev.addEventListener('click', () => scrollByStep(-1));
+            if (next) next.addEventListener('click', () => scrollByStep(1));
+
+            let ticking = false;
+            const onScroll = () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    updateTransforms();
+                    updateCarouselControls();
+                    ticking = false;
+                });
+            };
+            carousel.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+
+            carousel.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    scrollByStep(-1);
+                } else if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    scrollByStep(1);
+                }
+            });
+
+            // Set initial mode
+            const applyModes = () => {
+                const flat = flatMode.matches || reducedMotion.matches;
+                setFlatMode(flat);
+                updateTransforms();
+                updateCarouselControls();
+            };
+            applyModes();
+
+            // Listen for preference changes
+            if (typeof reducedMotion.addEventListener === 'function') {
+                reducedMotion.addEventListener('change', applyModes);
+                flatMode.addEventListener('change', applyModes);
+            } else if (typeof reducedMotion.addListener === 'function') {
+                reducedMotion.addListener(applyModes);
+                flatMode.addListener(applyModes);
+            }
+        })();
+
+        // View toggle: carousel <-> tiles (grid)
+        const VIEW_STORAGE_KEY = 'projectsView';
+
+        function applyView(view) {
+            state.view = view === 'grid' ? 'grid' : 'carousel';
+            try { localStorage.setItem(VIEW_STORAGE_KEY, state.view); } catch (e) { /* storage unavailable */ }
+
+            const carousel = document.getElementById('projects-grid');
+            const wrap = document.querySelector('.projects-carousel-wrap');
+            const dots = document.getElementById('projects-dots');
+            const isGrid = state.view === 'grid';
+
+            if (carousel) carousel.classList.toggle('is-grid', isGrid);
+            if (wrap) wrap.classList.toggle('is-gridview', isGrid);
+            if (dots) dots.style.display = isGrid ? 'none' : '';
+
+            document.querySelectorAll('#view-toggle .view-toggle-btn').forEach(btn => {
+                const active = btn.dataset.view === state.view;
+                btn.classList.toggle('is-active', active);
+                btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+
+            requestAnimationFrame(() => {
+                updateTransforms();
+                updateCarouselControls();
+            });
+        }
+
+        document.querySelectorAll('#view-toggle .view-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => applyView(btn.dataset.view));
+        });
+
+        (function initView() {
+            let stored = null;
+            try { stored = localStorage.getItem(VIEW_STORAGE_KEY); } catch (e) { /* storage unavailable */ }
+            applyView(stored === 'grid' ? 'grid' : 'carousel');
+        })();
+
+        applyFilters();
     </script>
 </body>
 

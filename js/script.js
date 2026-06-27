@@ -4,13 +4,27 @@
  */
 
 const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+const THEME_STORAGE_KEY = 'theme';
 
 function getSystemTheme() {
   return systemDarkQuery.matches ? 'dark' : 'light';
 }
 
-function updateBrowserThemeColor() {
-  const color = getSystemTheme() === 'dark' ? '#131316' : '#f8fafd';
+function getStoredTheme() {
+  try {
+    const value = localStorage.getItem(THEME_STORAGE_KEY);
+    return value === 'light' || value === 'dark' ? value : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function getEffectiveTheme() {
+  return getStoredTheme() || getSystemTheme();
+}
+
+function updateBrowserThemeColor(theme) {
+  const color = theme === 'dark' ? '#15131a' : '#fdf8fb';
   let meta = document.querySelector('meta[name="theme-color"][data-dynamic-theme]');
 
   if (!meta) {
@@ -23,9 +37,43 @@ function updateBrowserThemeColor() {
   meta.content = color;
 }
 
-function syncThemeWithSystem() {
-  document.documentElement.dataset.theme = getSystemTheme();
-  updateBrowserThemeColor();
+function updateThemeToggle(theme) {
+  const icon = document.querySelector('[data-theme-icon]');
+  if (icon) {
+    icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+  }
+
+  const button = document.getElementById('theme-toggle');
+  if (button) {
+    const label = theme === 'dark' ? 'Увімкнути світлу тему' : 'Увімкнути темну тему';
+    button.setAttribute('aria-label', label);
+    button.setAttribute('title', label);
+    button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+  }
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  updateBrowserThemeColor(theme);
+  updateThemeToggle(theme);
+}
+
+function toggleTheme() {
+  const next = getEffectiveTheme() === 'dark' ? 'light' : 'dark';
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+  } catch (error) {
+    /* storage unavailable — theme still applies for this session */
+  }
+  applyTheme(next);
+}
+
+function initThemeToggle() {
+  const button = document.getElementById('theme-toggle');
+  if (button) {
+    button.addEventListener('click', toggleTheme);
+  }
+  updateThemeToggle(getEffectiveTheme());
 }
 
 function observeMediaQuery(query, listener) {
@@ -39,8 +87,15 @@ function observeMediaQuery(query, listener) {
   }
 }
 
-syncThemeWithSystem();
-observeMediaQuery(systemDarkQuery, syncThemeWithSystem);
+// Apply as early as possible to avoid a flash of the wrong theme.
+applyTheme(getEffectiveTheme());
+
+// Follow the system only while the user hasn't picked a theme explicitly.
+observeMediaQuery(systemDarkQuery, () => {
+  if (!getStoredTheme()) {
+    applyTheme(getSystemTheme());
+  }
+});
 
 if (document.fonts && document.fonts.load) {
   document.fonts.load("24px 'Material Symbols Rounded'")
@@ -85,29 +140,18 @@ function initHeaderScroll() {
   let lastScroll = window.scrollY;
   let ticking = false;
 
-  function setHeaderTransform(hidden) {
-    if (mobileQuery.matches) {
-      header.style.removeProperty('transform');
-      return;
-    }
-
-    header.style.transform = hidden
-      ? 'translateX(-50%) translateY(-120%)'
-      : 'translateX(-50%) translateY(0)';
+  function setHeaderTransform(_hidden) {
+    header.style.removeProperty('transform');
   }
 
   function updateHeader() {
     const scrollY = window.scrollY;
-
-    if (mobileQuery.matches) {
-      header.style.removeProperty('transform');
-      lastScroll = scrollY;
-      ticking = false;
-      return;
+    if (!mobileQuery.matches) {
+      header.classList.toggle('scrolled', scrollY > 80);
+    } else {
+      header.classList.remove('scrolled');
     }
-
-    header.classList.toggle('scrolled', scrollY > 80);
-    setHeaderTransform(scrollY > lastScroll && scrollY > 200);
+    header.style.removeProperty('transform');
     lastScroll = scrollY;
     ticking = false;
   }
@@ -124,42 +168,56 @@ function initHeaderScroll() {
 }
 
 function animateCounters() {
-  const counters = document.querySelectorAll('.stat-card h3');
+  const statCounters = Array.from(document.querySelectorAll('.stat-card h3')).map((element) => {
+    const text = element.textContent;
+    const match = text.match(/^(\d+)/);
+    if (!match) return null;
+    return { element, target: parseInt(match[1], 10), suffix: text.slice(match[1].length) };
+  }).filter(Boolean);
+
+  const explicitCounters = Array.from(document.querySelectorAll('[data-counter]')).map((element) => {
+    const target = parseInt(element.dataset.counter, 10);
+    if (Number.isNaN(target)) return null;
+    return { element, target, suffix: '' };
+  }).filter(Boolean);
+
+  const counters = [...statCounters, ...explicitCounters];
   if (!counters.length) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) {
+    counters.forEach((data) => {
+      data.element.textContent = `${data.target}${data.suffix}`;
+    });
+    return;
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
 
-      const element = entry.target;
-      const text = element.textContent;
-      const match = text.match(/^(\d+)/);
-      if (!match) return;
+      const data = counters.find((c) => c.element === entry.target);
+      if (!data) return;
 
-      const target = parseInt(match[1], 10);
-      const suffix = text.slice(match[1].length);
       const duration = 900;
       const start = performance.now();
 
       function tick(now) {
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-        const current = Math.round(target * eased);
+        const current = Math.round(data.target * eased);
 
-        element.textContent = `${current}${suffix}`;
+        data.element.textContent = `${current}${data.suffix}`;
 
-        if (progress < 1) {
-          requestAnimationFrame(tick);
-        }
+        if (progress < 1) requestAnimationFrame(tick);
       }
 
       requestAnimationFrame(tick);
-
-      observer.unobserve(element);
+      observer.unobserve(entry.target);
     });
   }, { threshold: 0.5 });
 
-  counters.forEach((counter) => observer.observe(counter));
+  counters.forEach((data) => observer.observe(data.element));
 }
 
 document.addEventListener('click', (event) => {
@@ -185,11 +243,26 @@ document.addEventListener('click', (event) => {
   if (!target) return;
 
   event.preventDefault();
-  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 });
 
+/**
+ * Hide decorative Material Symbols icons from assistive tech.
+ * Any icon glyph without an explicit aria-label is decorative ligature text,
+ * so mark it aria-hidden. Safe to call repeatedly (idempotent).
+ */
+function markDecorativeIcons(root = document) {
+  root.querySelectorAll('.material-symbols-rounded:not([aria-hidden]):not([aria-label])')
+    .forEach((icon) => icon.setAttribute('aria-hidden', 'true'));
+}
+
+window.markDecorativeIcons = markDecorativeIcons;
+
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initScrollReveal();
   initHeaderScroll();
   animateCounters();
+  markDecorativeIcons();
 });

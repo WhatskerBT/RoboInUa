@@ -1,0 +1,3 @@
+# Local tooling / preview render artifacts
+.preview/
+.claude/
