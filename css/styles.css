@@ -3238,17 +3238,21 @@ footer h4 {
 @media (max-width: 768px) {
   header {
     top: auto;
+    /* Anchor BOTH sides: left margin, and right edge reserves the FAB column
+       (62px FAB + 12px gap + 10px margin = 84px). The pill then auto-sizes to
+       the gap between them, so it can never reach the support button regardless
+       of viewport width, zoom, or scrollbar — no fragile 100vw math. */
     left: calc(10px + env(safe-area-inset-left));
-    right: auto;
+    right: calc(84px + env(safe-area-inset-right));
     bottom: calc(10px + env(safe-area-inset-bottom));
     transform: none;
-    margin: 0;
+    /* max-width + auto margins cap the width on wide phones/tablets and centre
+       the pill within the available band instead of stretching edge-to-edge. */
+    width: auto;
+    max-width: 460px;
+    margin-inline: auto;
     justify-content: center;
     gap: 0;
-    /* Fill the row minus the FAB column, but cap it so the pill (and its nav
-       items) stop stretching on wide phones/tablets instead of growing endlessly. */
-    width: calc(100vw - 90px - env(safe-area-inset-left) - env(safe-area-inset-right));
-    max-width: 460px;
     min-height: 58px;
     padding: 6px 5px;
     border-radius: 999px;
@@ -3596,10 +3600,46 @@ footer h4 {
   }
 }
 
+/* Ultra-narrow phones / high browser zoom: drop the text labels and show
+   icon-only tabs so the four items always fit the pill instead of overflowing
+   onto the support button. */
 @media (max-width: 360px) {
+  .nav-links .nav-label {
+    display: none;
+  }
+
   .nav-links a {
-    width: 70px;
-    min-width: 70px;
+    padding: 8px 2px;
+    gap: 0;
+  }
+
+  .nav-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Tablet / landscape-phone zone: the desktop top-pill is shown here, but the
+   full org name in the logo pushes the pill (logo + nav + support + toggle)
+   wider than the viewport so it spills offscreen. Collapse the logo to just the
+   "R" mark and tighten spacing so everything fits. */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .logo {
+    font-size: 0;
+    gap: 0;
+  }
+
+  header {
+    gap: 14px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .nav-links a {
+    padding: 10px 14px;
+  }
+
+  .nav-links .btn-nav {
+    margin-left: 4px;
   }
 }
 
@@ -4882,7 +4922,9 @@ header.scrolled {
 [data-theme="dark"] .bento-card.medium.accent,
 [data-theme="dark"] .bento-card.small,
 [data-theme="dark"] .bento-card:nth-child(4n+3).small {
-  background: rgba(0, 0, 0, 0.08);
+  /* Opaque surface so the section's decorative z-index:-1 shapes stay BEHIND
+     the cards and don't bleed through the content on desktop (≥1025px). */
+  background: var(--md-surface-container);
   border: 1px solid rgba(255, 255, 255, 0.10);
   color: var(--md-on-surface);
 }
