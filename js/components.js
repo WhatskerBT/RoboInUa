@@ -41,6 +41,9 @@ const NAV_ITEMS = [
   { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
 ];
 
+// Inline SVG brand mark — solid two-tone "R", colours follow the theme via CSS.
+const LOGO_MARK = `<span class="logo-dot" aria-hidden="true"><svg viewBox="0 0 32 32"><rect class="logo-mark-bg" width="32" height="32" rx="8"/><text class="logo-mark-r" x="16" y="16.5" text-anchor="middle" dominant-baseline="central" font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" font-weight="700" font-size="20">R</text></svg></span>`;
+
 function renderHeader(activePage = '') {
   const header = document.getElementById('header');
   if (!header) return;
@@ -66,7 +69,7 @@ function renderHeader(activePage = '') {
   header.outerHTML = `
   <header>
     <a class="logo" href="${url('index.html')}">
-      <span class="logo-dot"></span>
+      ${LOGO_MARK}
       Федерація робототехніки Прилуччини
     </a>
     <nav class="nav-links" id="nav-links">
@@ -109,10 +112,10 @@ function renderFooter() {
     <div class="footer-grid">
       <div>
         <div class="footer-brand">
-          <span class="logo-dot"></span>
+          ${LOGO_MARK}
           Федерація робототехніки
         </div>
-        <p>ГО «Федерація робототехніки та програмування міста Прилуки та Прилуцького району». Розвиваємо STEM-освіту та допомагаємо школам запускати робототехнічні програми.</p>
+        <p>ГО «Федерація робототехніки та програмування Прилуччини». Розвиваємо STEM-освіту та допомагаємо школам запускати робототехнічні програми.</p>
       </div>
       <div>
         <h4>Навігація</h4>
@@ -168,7 +171,20 @@ function renderCtaBanner(containerId = 'cta-banner') {
   `;
 }
 
+function ensureFavicon() {
+  if (typeof document === 'undefined' || !document.head) return;
+  let link = document.querySelector('link[rel="icon"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+  }
+  link.type = 'image/svg+xml';
+  link.href = url('img/favicon.svg');
+}
+
 function initComponents(activePage = '', options = {}) {
+  ensureFavicon();
   renderHeader(activePage);
   renderFooter();
 

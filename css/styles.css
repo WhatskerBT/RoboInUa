@@ -217,29 +217,29 @@
     --md-error-container: #8c1d18;
     --md-on-error-container: #f9dedc;
 
-    --md-surface: #000000;
-    --md-surface-dim: #000000;
-    --md-surface-bright: #1c1c1c;
-    --md-surface-container-lowest: #000000;
-    --md-surface-container-low: #0a0a0a;
-    --md-surface-container: #111111;
-    --md-surface-container-high: #191919;
-    --md-surface-container-highest: #222222;
+    --md-surface: #1a1a1a;
+    --md-surface-dim: #141414;
+    --md-surface-bright: #353535;
+    --md-surface-container-lowest: #202020;
+    --md-surface-container-low: #262626;
+    --md-surface-container: #2b2b2b;
+    --md-surface-container-high: #333333;
+    --md-surface-container-highest: #3d3d3d;
     --md-on-surface: #ffffff;
-    --md-on-surface-variant: #999999;
+    --md-on-surface-variant: #a6a6a6;
 
-    --md-outline: #2e2e2e;
-    --md-outline-variant: #1a1a1a;
+    --md-outline: #404040;
+    --md-outline-variant: #2e2e2e;
 
     --md-inverse-surface: #ffffff;
     --md-inverse-on-surface: #000000;
     --md-inverse-primary: #000000;
-    --md-footer-bg: #080808;
+    --md-footer-bg: #141414;
     --md-footer-on-bg: #aaaaaa;
 
-    --md-surface-accent: #080808;
-    --md-surface-accent-strong: #101010;
-    --md-outline-soft: rgba(255, 255, 255, 0.07);
+    --md-surface-accent: #1e1e1e;
+    --md-surface-accent-strong: #272727;
+    --md-outline-soft: rgba(255, 255, 255, 0.12);
     --md-elevation-1: 0 1px 3px 1px rgba(255,255,255,0.04), 0 1px 2px 0 rgba(255,255,255,0.03);
     --md-elevation-2: 0 2px 6px 2px rgba(255,255,255,0.05), 0 1px 2px 0 rgba(255,255,255,0.03);
     --md-elevation-3: 0 4px 8px 3px rgba(255,255,255,0.05), 0 1px 3px 0 rgba(255,255,255,0.03);
@@ -268,26 +268,26 @@
   --md-on-error: #601410;
   --md-error-container: #8c1d18;
   --md-on-error-container: #f9dedc;
-  --md-surface: #000000;
-  --md-surface-dim: #000000;
-  --md-surface-bright: #1c1c1c;
-  --md-surface-container-lowest: #000000;
-  --md-surface-container-low: #0a0a0a;
-  --md-surface-container: #111111;
-  --md-surface-container-high: #191919;
-  --md-surface-container-highest: #222222;
+  --md-surface: #1a1a1a;
+  --md-surface-dim: #141414;
+  --md-surface-bright: #353535;
+  --md-surface-container-lowest: #202020;
+  --md-surface-container-low: #262626;
+  --md-surface-container: #2b2b2b;
+  --md-surface-container-high: #333333;
+  --md-surface-container-highest: #3d3d3d;
   --md-on-surface: #ffffff;
-  --md-on-surface-variant: #999999;
-  --md-outline: #2e2e2e;
-  --md-outline-variant: #1a1a1a;
+  --md-on-surface-variant: #a6a6a6;
+  --md-outline: #404040;
+  --md-outline-variant: #2e2e2e;
   --md-inverse-surface: #ffffff;
   --md-inverse-on-surface: #000000;
   --md-inverse-primary: #000000;
-  --md-footer-bg: #080808;
+  --md-footer-bg: #141414;
   --md-footer-on-bg: #aaaaaa;
-  --md-surface-accent: #080808;
-  --md-surface-accent-strong: #101010;
-  --md-outline-soft: rgba(255, 255, 255, 0.07);
+  --md-surface-accent: #1e1e1e;
+  --md-surface-accent-strong: #272727;
+  --md-outline-soft: rgba(255, 255, 255, 0.12);
   --md-elevation-1: 0 1px 3px 1px rgba(255,255,255,0.04), 0 1px 2px 0 rgba(255,255,255,0.03);
   --md-elevation-2: 0 2px 6px 2px rgba(255,255,255,0.05), 0 1px 2px 0 rgba(255,255,255,0.03);
   --md-elevation-3: 0 4px 8px 3px rgba(255,255,255,0.05), 0 1px 3px 0 rgba(255,255,255,0.03);
@@ -460,26 +460,30 @@ header:hover {
   white-space: nowrap;
 }
 
+/* Logo mark: inline two-tone SVG "R"; colours follow the theme. */
 .logo-dot {
   width: 28px;
   height: 28px;
-  background: var(--md-primary);
-  border-radius: var(--md-shape-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-shrink: 0;
   transition: transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
+}
+
+.logo-dot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-mark-bg {
+  fill: var(--md-primary);
+}
+
+.logo-mark-r {
+  fill: var(--md-on-primary);
 }
 
 .logo:hover .logo-dot {
   transform: scale(1.1) rotate(-4deg);
-}
-
-.logo-dot::after {
-  content: "R";
-  color: var(--md-on-primary);
-  font-weight: 700;
-  font-size: 14px;
 }
 
 .nav-links {
@@ -1044,11 +1048,6 @@ section {
     border-radius var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized);
 }
 
-.bento-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--md-elevation-3);
-}
-
 /* Uniform corners for a calmer, more serious grid */
 
 .bento-card.large {
@@ -1105,10 +1104,6 @@ section {
 
 .bento-card.medium .bento-icon .material-symbols-rounded {
   color: var(--md-on-primary-container);
-}
-
-.bento-card:hover .bento-icon {
-  transform: scale(1.1);
 }
 
 .bento-card.medium.accent .bento-icon {
@@ -1215,7 +1210,10 @@ section {
   align-items: center;
   gap: 12px;
   font: var(--md-typescale-body-medium);
-  padding: 8px 0;
+  padding: 12px 16px;
+  background: var(--md-surface);
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-lg);
 }
 
 .check-item::before {
@@ -1240,6 +1238,23 @@ section {
   padding: 32px;
 }
 
+/* Clickable geography badge → Google Maps */
+.geo-badge {
+  transition: transform var(--md-motion-duration-short4) var(--md-motion-easing-spring),
+    box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    filter var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.geo-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--md-elevation-2);
+  filter: brightness(1.04);
+}
+
+.geo-badge:active {
+  transform: translateY(0);
+}
+
 .about-right h3 {
   font: var(--md-typescale-title-large);
   margin-bottom: 20px;
@@ -1259,11 +1274,6 @@ section {
   padding: 12px 16px;
   border-radius: var(--md-shape-lg);
   transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
-}
-
-.target-item:hover {
-  background: var(--md-primary-container);
-  transform: translateX(4px);
 }
 
 .target-icon {
@@ -2264,12 +2274,6 @@ section {
     border-color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
 }
 
-.highlight-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--md-elevation-3);
-  border-color: color-mix(in srgb, var(--md-primary) 35%, var(--md-outline-variant));
-}
-
 .highlight-card--accent {
   background: var(--md-primary-container);
   color: var(--md-on-primary-container);
@@ -2400,12 +2404,6 @@ section {
     box-shadow var(--md-motion-duration-medium1) var(--md-motion-easing-standard);
 }
 
-.event-teaser-card:hover {
-  background: var(--md-primary-container);
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: var(--md-elevation-2);
-}
-
 .event-teaser-icon {
   display: flex;
   align-items: center;
@@ -2416,10 +2414,6 @@ section {
   border-radius: var(--md-shape-lg);
   background: transparent;
   transition: transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
-}
-
-.event-teaser-card:hover .event-teaser-icon {
-  transform: scale(1.08) rotate(-3deg);
 }
 
 .event-teaser-card h3 {
@@ -2721,11 +2715,6 @@ section {
   transition: all var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
 }
 
-.service-card:hover {
-  transform: scale(1.03);
-  box-shadow: var(--md-elevation-1);
-}
-
 .service-card:nth-child(2) {
   background: var(--md-primary-container);
 }
@@ -2781,6 +2770,8 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 64px;
+  align-items: start;
+  /* cards size to their content instead of stretching to the taller column */
 }
 
 .donate-info h2 {
@@ -2890,6 +2881,52 @@ section {
 .amount-btn span {
   font: var(--md-typescale-label-small);
   color: var(--md-on-surface-variant);
+}
+
+/* ── Donate card: QR-based giving ── */
+.donate-lead {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.donate-qr {
+  margin: 4px 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* QR keeps a white quiet-zone in both themes so it always scans */
+.donate-qr img {
+  width: 460px;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 16px;
+  border-radius: var(--md-shape-lg);
+  box-shadow: var(--md-elevation-1);
+}
+
+.donate-qr figcaption {
+  font: var(--md-typescale-label-medium);
+  color: var(--md-on-surface-variant);
+  text-align: center;
+}
+
+.donate-pay-btn {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.donate-note {
+  font: var(--md-typescale-label-medium);
+  color: var(--md-on-surface-variant);
+  text-align: center;
+  line-height: 1.5;
 }
 
 .form-group {
@@ -3070,12 +3107,6 @@ footer {
 .footer-brand .logo-dot {
   width: 24px;
   height: 24px;
-  background: var(--md-primary);
-  border-radius: var(--md-shape-xs);
-}
-
-.footer-brand .logo-dot::after {
-  font-size: 12px;
 }
 
 footer p {
@@ -3214,8 +3245,10 @@ footer h4 {
     margin: 0;
     justify-content: center;
     gap: 0;
-    width: max-content;
-    max-width: calc(100vw - 90px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    /* Fill the row minus the FAB column, but cap it so the pill (and its nav
+       items) stop stretching on wide phones/tablets instead of growing endlessly. */
+    width: calc(100vw - 90px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    max-width: 460px;
     min-height: 58px;
     padding: 6px 5px;
     border-radius: 999px;
@@ -3283,16 +3316,16 @@ footer h4 {
     border-radius: 0;
     padding: 0;
     flex-direction: row;
-    gap: 3px;
+    gap: 2px;
     box-shadow: none;
-    width: auto;
-    justify-content: center;
+    width: 100%;
+    justify-content: space-between;
   }
 
   .nav-links a {
-    width: 84px;
-    min-width: 84px;
-    padding: 4px 5px 5px;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 4px 2px 5px;
     border-radius: 999px;
     display: flex;
     flex-direction: column;
@@ -3646,7 +3679,12 @@ footer h4 {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: all var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
+  /* Only animate visual props — never position/size — so the JS-injected button
+     appears instantly at its final spot instead of sliding in (mobile flash). */
+  transition: background var(--md-motion-duration-medium1) var(--md-motion-easing-spring),
+    color var(--md-motion-duration-medium1) var(--md-motion-easing-spring),
+    box-shadow var(--md-motion-duration-medium1) var(--md-motion-easing-spring),
+    transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
 }
 
 .theme-toggle:hover {
@@ -4685,7 +4723,7 @@ header.scrolled {
    Secondary muted : #655a6f  /  text: #cfc0db  */
 
 [data-theme="dark"] html {
-  background: #000;
+  background: var(--md-surface);
 }
 
 [data-theme="dark"] body {
@@ -4738,7 +4776,7 @@ header.scrolled {
 [data-theme="dark"] .project-detail-hero {
   background:
     radial-gradient(ellipse 140% 180% at 65% 40%, rgba(107, 63, 132, 0.50) 0%, transparent 85%),
-    #000;
+    var(--md-surface);
 }
 
 [data-theme="dark"] .projects-section {
@@ -5356,8 +5394,7 @@ header.scrolled {
 [data-theme="dark"] .target-item,
 [data-theme="dark"] .service-card,
 [data-theme="dark"] .pd-goal-item,
-[data-theme="dark"] .info-box,
-[data-theme="dark"] .course-block .course-header {
+[data-theme="dark"] .info-box {
   background-image: linear-gradient(
     rgba(var(--page-amb-r, 107), var(--page-amb-g, 63), var(--page-amb-b, 132), 0.09),
     rgba(var(--page-amb-r, 107), var(--page-amb-g, 63), var(--page-amb-b, 132), 0.09)
@@ -5486,14 +5523,8 @@ body,
 }
 
 /* ---- Cards: soft chromatic glow on hover (glow at the forefront) ---- */
-.bento-card:hover,
-.highlight-card:hover,
-.event-teaser-card:hover,
-.service-card:hover,
 .project-card:hover,
-.featured-card:hover,
-.stat-card:hover,
-.target-item:hover {
+.featured-card:hover {
   box-shadow: var(--ne-glow);
 }
 
@@ -5534,10 +5565,6 @@ body,
   -webkit-backdrop-filter: none;
   background: var(--md-surface-container);
 }
-[data-theme="dark"] .bento-card:hover,
-[data-theme="dark"] .highlight-card:hover,
-[data-theme="dark"] .event-teaser-card:hover,
-[data-theme="dark"] .service-card:hover,
 [data-theme="dark"] .project-card:hover {
   background: var(--md-surface-container-high);
   border-color: var(--ne-ring);

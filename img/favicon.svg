@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Логотип Федерації робототехніки Прилуччини">
+  <style>
+    /* Default = light browser UI (light tab bar): dark icon */
+    .bg { fill: #000; }
+    .fg { fill: #fff; }
+    /* Dark browser UI (dark tab bar): inverted */
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #fff; }
+      .fg { fill: #000; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="8"/>
+  <text class="fg" x="16" y="16.5" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" font-weight="700" font-size="20">R</text>
+</svg>
