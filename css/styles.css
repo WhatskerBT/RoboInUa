@@ -752,7 +752,22 @@ header:hover {
      backdrop-filter on stat-cards from sampling the image inside. */
 }
 
+/* Image host — sized exactly to the photo so the ambient glow
+   (box-shadow + ::before haze) tracks the image, not the wider wrap. */
+.hero-stats-imgwrap {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  margin-right: -48px;
+  margin-left: -20px;
+  border-radius: var(--md-shape-2xl);
+  box-shadow: var(--md-elevation-4);
+  line-height: 0;
+  animation: fade-up var(--md-motion-duration-long2) var(--md-motion-easing-emphasized-decelerate) 0.15s both;
+}
+
 .hero-stats-img {
+  display: block;
   width: auto;
   max-width: none;
   /* override global img { max-width: 100% } */
@@ -760,13 +775,6 @@ header:hover {
   object-fit: contain;
   /* show full image, no cropping at all */
   border-radius: var(--md-shape-2xl);
-  flex-shrink: 0;
-  box-shadow: var(--md-elevation-4);
-  position: relative;
-  z-index: 1;
-  margin-right: -48px;
-  margin-left: -20px;
-  animation: fade-up var(--md-motion-duration-long2) var(--md-motion-easing-emphasized-decelerate) 0.15s both;
 }
 
 .hero-stats {
@@ -3405,13 +3413,18 @@ footer h4 {
     align-items: stretch;
   }
 
+  .hero-stats-imgwrap {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    border-radius: var(--md-shape-xl);
+  }
+
   .hero-stats-img {
     width: 100%;
     height: 240px;
     object-fit: cover;
     border-radius: var(--md-shape-xl);
-    margin-right: 0;
-    margin-left: 0;
   }
 
   .hero-stats {
@@ -5258,7 +5271,7 @@ header.scrolled {
 /* ── Glow host containers ── */
 [data-theme="dark"] .project-card,
 [data-theme="dark"] .featured-card,
-[data-theme="dark"] .hero-stats-wrap,
+[data-theme="dark"] .hero-stats-imgwrap,
 [data-theme="dark"] [data-project-carousel] {
   position: relative;
   z-index: 0;        /* stacking context: ::before z:-1 stays local */
@@ -5291,7 +5304,7 @@ header.scrolled {
 /* Blurred ::before — the ambient haze */
 [data-theme="dark"] .project-card::before,
 [data-theme="dark"] .featured-card::before,
-[data-theme="dark"] .hero-stats-wrap::before,
+[data-theme="dark"] .hero-stats-imgwrap::before,
 [data-theme="dark"] [data-project-carousel]::before {
   content: '';
   position: absolute;
@@ -5315,7 +5328,7 @@ header.scrolled {
 /* Activate once JS sets --glow-src */
 [data-theme="dark"] .project-card[style*="--glow-src"]::before,
 [data-theme="dark"] .featured-card[style*="--glow-src"]::before,
-[data-theme="dark"] .hero-stats-wrap[style*="--glow-src"]::before,
+[data-theme="dark"] .hero-stats-imgwrap[style*="--glow-src"]::before,
 [data-theme="dark"] [data-project-carousel][style*="--glow-src"]::before {
   opacity: 0.62;
 }
@@ -5323,7 +5336,7 @@ header.scrolled {
 /* Smooth box-shadow transition (canvas colour bonus) */
 .project-card,
 .featured-card,
-.hero-stats-wrap,
+.hero-stats-imgwrap,
 [data-project-carousel] {
   will-change: transform;
   transition:

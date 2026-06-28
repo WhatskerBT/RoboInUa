@@ -19,7 +19,7 @@
   const CONTAINER_SELECTORS = [
     '.project-card',
     '.featured-card',
-    '.hero-stats-wrap',
+    '.hero-stats-imgwrap',
     '.pd-carousel-stage',
     'figure',
   ].join(', ');
