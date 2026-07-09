@@ -130,7 +130,11 @@ function renderFooter() {
       <div>
         <h4>Контакти</h4>
         <div class="footer-links">
-          <span><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">mail</span>robofederation.pryluky@gmail.com</span>
+          <button type="button" class="footer-copy" data-copy="nstekh@gmail.com" data-copied="Пошту скопійовано!" title="Скопіювати пошту">
+            <span class="material-symbols-rounded m3-icon-16 m3-icon-inline">mail</span>
+            <span class="copy-label">nstekh@gmail.com</span>
+            <span class="material-symbols-rounded copy-icon footer-copy-ic">content_copy</span>
+          </button>
           <a href="https://facebook.com/roboinua" target="_blank" rel="noopener"><span class="material-symbols-rounded m3-icon-16 m3-icon-inline">public</span>Facebook</a>
         </div>
       </div>

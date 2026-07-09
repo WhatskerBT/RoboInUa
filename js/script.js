@@ -237,6 +237,11 @@ document.addEventListener('click', (event) => {
   event.preventDefault();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+
+  // Keep the URL hash in sync so :target styling applies without a second jump.
+  if (window.history && typeof history.replaceState === 'function') {
+    history.replaceState(null, '', `#${hash}`);
+  }
 });
 
 /**
@@ -250,6 +255,80 @@ function markDecorativeIcons(root = document) {
 }
 
 window.markDecorativeIcons = markDecorativeIcons;
+
+/**
+ * Copy-to-clipboard buttons ([data-copy]). Delegated on document so it also
+ * covers the footer email button that components.js injects on every page.
+ * Uses the async Clipboard API on secure origins, with an execCommand fallback
+ * for file:// / http, and a manual prompt as a last resort.
+ */
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
+
+  return new Promise((resolve, reject) => {
+    try {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.top = '-1000px';
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(area);
+      if (ok) resolve(); else reject(new Error('copy command rejected'));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+function flashCopied(button) {
+  const label = button.querySelector('.copy-label');
+  const icon = button.querySelector('.copy-icon');
+  const copiedText = button.getAttribute('data-copied') || 'Скопійовано!';
+
+  if (button._copyTimer) {
+    clearTimeout(button._copyTimer);
+  } else {
+    button._origLabel = label ? label.textContent : '';
+    button._origIcon = icon ? icon.textContent : '';
+  }
+
+  if (label) label.textContent = copiedText;
+  if (icon) icon.textContent = 'check';
+  button.classList.add('is-copied');
+
+  button._copyTimer = setTimeout(() => {
+    if (label) label.textContent = button._origLabel;
+    if (icon) icon.textContent = button._origIcon;
+    button.classList.remove('is-copied');
+    button._copyTimer = null;
+  }, 1800);
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-copy]');
+  if (!button) return;
+  event.preventDefault();
+
+  const text = button.getAttribute('data-copy');
+  copyToClipboard(text)
+    .then(() => flashCopied(button))
+    .catch(() => {
+      // Clipboard unavailable — select the visible address so the user can copy it manually.
+      const label = button.querySelector('.copy-label');
+      if (label && window.getSelection && document.createRange) {
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
