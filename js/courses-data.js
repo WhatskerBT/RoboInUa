@@ -279,7 +279,7 @@ const COURSES = [
     {
       "n": "1–2",
       "title": "Вступ до Arduino. Цифрові входи та виходи",
-      "images": [ { "src": "img/lesson1-2-1.png", "caption": "Що таке світлодіод (LED): будова та принцип роботи" } ],
+      "images": [ { "src": "img/lesson1-2-1.webp", "caption": "Що таке світлодіод (LED): будова та принцип роботи" } ],
       "subtitle": "Знайомство з платформою, Tinkercad, портами плати та логікою електричного ланцюга",
       "difficulty": "easy",
       "source": { "file": "Заняття 1-2.docx", "type": "docx" },
@@ -308,7 +308,7 @@ const COURSES = [
     {
       "n": "3",
       "title": "Аналогові входи",
-      "images": [ { "src": "img/lesson3-1.png", "caption": "Схема підключення потенціометра до аналогового входу Arduino" } ],
+      "images": [ { "src": "img/lesson3-1.webp", "caption": "Схема підключення потенціометра до аналогового входу Arduino" } ],
       "subtitle": "Потенціометр, фоторезистор, терморезистор і зчитування аналогових сигналів через АЦП",
       "difficulty": "easy",
       "source": { "file": "Заняття 3.docx", "type": "docx" },
@@ -332,7 +332,7 @@ const COURSES = [
     {
       "n": "4",
       "title": "ШІМ та керування двигунами",
-      "images": [ { "src": "img/lesson4-1.png", "caption": "Схема керування двигунами постійного струму через драйвер L293D" } ],
+      "images": [ { "src": "img/lesson4-1.webp", "caption": "Схема керування двигунами постійного струму через драйвер L293D" } ],
       "subtitle": "Широтно-імпульсна модуляція, регулювання яскравості й швидкості, драйвер L293D",
       "difficulty": "med",
       "source": { "file": "Заняття 4.docx", "type": "docx" },
@@ -365,7 +365,7 @@ const COURSES = [
     {
       "n": "5",
       "title": "Робота з сервомоторами",
-      "images": [ { "src": "img/lesson5-1.png", "caption": "Схема підключення сервоприводу до Arduino" } ],
+      "images": [ { "src": "img/lesson5-1.webp", "caption": "Схема підключення сервоприводу до Arduino" } ],
       "subtitle": "Принцип зворотного зв'язку, керування кутом через бібліотеку Servo, прості механізми",
       "difficulty": "med",
       "source": { "file": "Заняття 5.docx", "type": "docx" },
@@ -384,7 +384,7 @@ const COURSES = [
     {
       "n": "6",
       "title": "Робота з датчиками",
-      "images": [ { "src": "img/lesson6-1.png", "caption": "Схема підключення датчика температури зі світлодіодною індикацією" } ],
+      "images": [ { "src": "img/lesson6-1.webp", "caption": "Схема підключення датчика температури зі світлодіодною індикацією" } ],
       "subtitle": "Датчик руху PIR, температури (LM35, DS18B20), ультразвуковий HC-SR04 та обробка сигналів",
       "difficulty": "med",
       "source": { "file": "Заняття 6.docx", "type": "docx" },
@@ -405,7 +405,7 @@ const COURSES = [
     {
       "n": "7",
       "title": "Виведення даних на дисплей",
-      "images": [ { "src": "img/lesson7-1.png", "caption": "Підключення LCD-дисплея 16x2 по шині I2C до Arduino" } ],
+      "images": [ { "src": "img/lesson7-1.webp", "caption": "Підключення LCD-дисплея 16x2 по шині I2C до Arduino" } ],
       "subtitle": "LCD-дисплей 16x2, бібліотека LiquidCrystal, семисегментні індикатори та світлодіодна матриця",
       "difficulty": "med",
       "source": { "file": "Заняття 7.docx", "type": "docx" },
@@ -437,7 +437,7 @@ const COURSES = [
     {
       "n": "8",
       "title": "Звукові сигнали та мелодії",
-      "images": [ { "src": "img/lesson8-1.png", "caption": "Схема дверного дзвінка: кнопка та п'єзодинамік на макетній платі" } ],
+      "images": [ { "src": "img/lesson8-1.webp", "caption": "Схема дверного дзвінка: кнопка та п'єзодинамік на макетній платі" } ],
       "subtitle": "П'єзо-динамік, функції tone() і noTone(), створення сигналів і простих мелодій",
       "difficulty": "med",
       "source": { "file": "Заняття 8.docx", "type": "docx" },
@@ -462,7 +462,7 @@ const COURSES = [
     {
       "n": "9",
       "title": "Інтерактивні пристрої",
-      "images": [ { "src": "img/lesson9-1.png", "caption": "Схема пристрою: датчик, світлодіоди та п'єзодинамік" } ],
+      "images": [ { "src": "img/lesson9-1.webp", "caption": "Схема пристрою: датчик, світлодіоди та п'єзодинамік" } ],
       "subtitle": "Комбінування датчиків, світлодіодів і динаміка; реакція системи на середовище",
       "difficulty": "hard",
       "source": { "file": "Заняття 9.docx", "type": "docx" },
@@ -518,7 +518,7 @@ const COURSES = [
     {
       "n": "1",
       "title": "Знайомство з програмами для 3D-моделювання",
-      "images": [ { "src": "img/lesson1-1.png", "caption": "Іконки популярних програм для 3D-моделювання (SketchUp, КОМПАС, Blender, Cura, SolidWorks)" } ],
+      "images": [ { "src": "img/lesson1-1.webp", "caption": "Іконки популярних програм для 3D-моделювання (SketchUp, КОМПАС, Blender, Cura, SolidWorks)" } ],
       "subtitle": "Огляд напрямів моделювання та вибір Tinkercad",
       "difficulty": "easy",
       "source": { "file": "../3d-modeling-course.rar", "type": "archive" },
@@ -538,7 +538,7 @@ const COURSES = [
     {
       "n": "2",
       "title": "Знайомство з Tinkercad і перші моделі",
-      "images": [ { "src": "img/lesson2-1.png", "caption": "Готова модель яблука з хвостиком і листком у Tinkercad" }, { "src": "img/lesson2-2.png", "caption": "Створення листка інструментом Scribble" } ],
+      "images": [ { "src": "img/lesson2-1.webp", "caption": "Готова модель яблука з хвостиком і листком у Tinkercad" }, { "src": "img/lesson2-2.webp", "caption": "Створення листка інструментом Scribble" } ],
       "subtitle": "Фігури, редагування розмірів, вирівнювання, групування",
       "difficulty": "easy",
       "source": { "file": "../3d-modeling-course.rar", "type": "archive" },
@@ -559,7 +559,7 @@ const COURSES = [
     {
       "n": "3",
       "title": "Створення будинку",
-      "images": [ { "src": "img/lesson3-1.png", "caption": "Готова модель цегляного будинку з дахом, дверима, вікном і димарем" } ],
+      "images": [ { "src": "img/lesson3-1.webp", "caption": "Готова модель цегляного будинку з дахом, дверима, вікном і димарем" } ],
       "subtitle": "Фундамент, стіни, дах, двері та вікна",
       "difficulty": "med",
       "source": { "file": "../3d-modeling-course.rar", "type": "archive" },
@@ -580,7 +580,7 @@ const COURSES = [
     {
       "n": "4",
       "title": "Розробка власного чохла для телефону",
-      "images": [ { "src": "img/lesson4-1.png", "caption": "Готовий чохол для телефона з вирізами під камеру, кнопки та роз'єми" } ],
+      "images": [ { "src": "img/lesson4-1.webp", "caption": "Готовий чохол для телефона з вирізами під камеру, кнопки та роз'єми" } ],
       "subtitle": "Основа-оболонка та вирізи під камеру, кнопки й порти",
       "difficulty": "med",
       "source": { "file": "../3d-modeling-course.rar", "type": "archive" },
@@ -600,7 +600,7 @@ const COURSES = [
     {
       "n": "5",
       "title": "Знайомство з 3D-друком",
-      "images": [ { "src": "img/lesson5-1.png", "caption": "Нарізана модель у UltiMaker Cura з видимими шарами та заповненням" }, { "src": "img/lesson5-2.png", "caption": "Налаштування друку: щільність заповнення, товщина стінок і підпори" } ],
+      "images": [ { "src": "img/lesson5-1.webp", "caption": "Нарізана модель у UltiMaker Cura з видимими шарами та заповненням" }, { "src": "img/lesson5-2.webp", "caption": "Налаштування друку: щільність заповнення, товщина стінок і підпори" } ],
       "subtitle": "Нарізка моделі в UltiMaker Cura",
       "difficulty": "med",
       "source": { "file": "../3d-modeling-course.rar", "type": "archive" },
@@ -621,7 +621,7 @@ const COURSES = [
     {
       "n": "6",
       "title": "Створення персонажа (Plants vs Zombies)",
-      "images": [ { "src": "img/lesson6-1.png", "caption": "Готова сцена з персонажами Peashooter із Plants vs Zombies" }, { "src": "img/lesson6-2.png", "caption": "Моделювання голови Peashooter — очі та рот-дуло" } ],
+      "images": [ { "src": "img/lesson6-1.webp", "caption": "Готова сцена з персонажами Peashooter із Plants vs Zombies" }, { "src": "img/lesson6-2.webp", "caption": "Моделювання голови Peashooter — очі та рот-дуло" } ],
       "subtitle": "Моделювання горохостріла з базових фігур",
       "difficulty": "hard",
       "source": { "file": "../3d-modeling-course.rar", "type": "archive" },

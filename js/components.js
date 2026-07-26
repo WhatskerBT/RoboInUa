@@ -41,8 +41,8 @@ const NAV_ITEMS = [
   { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
 ];
 
-// Inline SVG brand mark — solid two-tone "R", colours follow the theme via CSS.
-const LOGO_MARK = `<span class="logo-dot" aria-hidden="true"><svg viewBox="0 0 32 32"><rect class="logo-mark-bg" width="32" height="32" rx="8"/><text class="logo-mark-r" x="16" y="16.5" text-anchor="middle" dominant-baseline="central" font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" font-weight="700" font-size="20">R</text></svg></span>`;
+// Brand mark — squircle badge with the Material Symbols robot; colours follow the theme via CSS.
+const LOGO_MARK = `<span class="logo-dot" aria-hidden="true"><span class="material-symbols-rounded icon-filled logo-mark-icon">smart_toy</span></span>`;
 
 function renderHeader(activePage = '') {
   const header = document.getElementById('header');

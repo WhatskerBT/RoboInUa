@@ -8,58 +8,60 @@
    <link> in each page's <head> so they download in parallel with this stylesheet. */
 
 /* ============ M3 EXPRESSIVE DESIGN TOKENS ============ */
-/* Expressive palette:
-   Primary  — deep plum (cultural / sophisticated)
-   Tertiary — dusty coral (warm, human accent)
-   Surfaces — cream with subtle violet undertone */
+/* Expressive palette — light is the mirror image of dark:
+   both themes run a NEUTRAL core (surfaces / text / outlines carry no hue) and
+   let the Neural gradient (blue → violet → coral, defined near the bottom of
+   this file) supply every accent. Dark inverts around #ffffff, light around
+   #14161a. Colour therefore lives in the ambient background, the gradient CTAs
+   and the tinted icon chips — never in the chrome. */
 :root {
-  --md-primary: #6b3f84;
+  --md-primary: #16181d;
   --md-on-primary: #ffffff;
-  --md-primary-container: #edd9f8;
-  --md-on-primary-container: #28104a;
-  --md-primary-fixed: #edd9f8;
-  --md-on-primary-fixed: #28104a;
+  --md-primary-container: #ffffff;
+  --md-on-primary-container: #14161a;
+  --md-primary-fixed: #eef1f5;
+  --md-on-primary-fixed: #14161a;
 
-  --md-secondary: #695a6f;
+  --md-secondary: #5a6371;
   --md-on-secondary: #ffffff;
-  --md-secondary-container: #efddf5;
-  --md-on-secondary-container: #221729;
+  --md-secondary-container: #f4f6f9;
+  --md-on-secondary-container: #14161a;
 
-  --md-tertiary: #b95469;
+  --md-tertiary: #4a515c;
   --md-on-tertiary: #ffffff;
-  --md-tertiary-container: #ffd9de;
-  --md-on-tertiary-container: #3f0815;
+  --md-tertiary-container: #f4f6f9;
+  --md-on-tertiary-container: #22262d;
 
-  --md-error: #b3261e;
+  --md-error: #ba1a1a;
   --md-on-error: #ffffff;
-  --md-error-container: #f9dedc;
-  --md-on-error-container: #410e0b;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #410002;
 
-  --md-surface: #fdf8fb;
-  --md-surface-dim: #ddd6df;
+  --md-surface: #f7f9fb;
+  --md-surface-dim: #e6eaef;
   --md-surface-bright: #ffffff;
   --md-surface-container-lowest: #ffffff;
-  --md-surface-container-low: #f7f0f5;
-  --md-surface-container: #f2ebf0;
-  --md-surface-container-high: #ece4ea;
-  --md-surface-container-highest: #e6dee4;
-  --md-on-surface: #1d1a1d;
-  --md-on-surface-variant: #4b454c;
+  --md-surface-container-low: #fafbfd;
+  --md-surface-container: #f2f4f7;
+  --md-surface-container-high: #eaedf1;
+  --md-surface-container-highest: #e2e6ec;
+  --md-on-surface: #14161a;
+  --md-on-surface-variant: #545b66;
 
-  --md-outline: #7f7884;
-  --md-outline-variant: #d0c7d2;
+  --md-outline: #aab2bd;
+  --md-outline-variant: #dde2e9;
 
-  --md-inverse-surface: #322e35;
-  --md-inverse-on-surface: #f4eef4;
-  --md-inverse-primary: #d9b9e8;
-  --md-footer-bg: #ede4ec;
-  --md-footer-on-bg: #1d1a1d;
+  --md-inverse-surface: #292c31;
+  --md-inverse-on-surface: #f2f4f7;
+  --md-inverse-primary: #ffffff;
+  --md-footer-bg: #eef1f5;
+  --md-footer-on-bg: #14161a;
 
   --md-scrim: #000000;
-  --md-shadow: #000000;
-  --md-surface-accent: color-mix(in srgb, var(--md-primary-container) 28%, var(--md-surface-container-lowest));
-  --md-surface-accent-strong: color-mix(in srgb, var(--md-primary-container) 52%, var(--md-surface-container-low));
-  --md-outline-soft: color-mix(in srgb, var(--md-outline-variant) 78%, transparent);
+  --md-shadow: #0d1017;
+  --md-surface-accent: #ffffff;
+  --md-surface-accent-strong: #f3f5fa;
+  --md-outline-soft: rgba(20, 24, 34, 0.10);
 
   /* === M3 Expressive Shape Tokens === */
   --md-shape-none: 0px;
@@ -76,12 +78,14 @@
   --md-tracking-display: -0.02em;
   --md-tracking-headline: -0.01em;
 
-  /* === M3 Expressive Elevation (using shadow) === */
-  --md-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-  --md-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-  --md-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  --md-elevation-4: 0 6px 10px 4px rgba(0, 0, 0, 0.08), 0 2px 3px 0 rgba(0, 0, 0, 0.1);
-  --md-elevation-5: 0 8px 12px 6px rgba(0, 0, 0, 0.08), 0 4px 4px 0 rgba(0, 0, 0, 0.1);
+  /* === M3 Expressive Elevation (using shadow) ===
+     Cool neutral ink instead of pure black, and a wider/softer spread — the
+     modern "lifted" look that reads correctly against near-white surfaces. */
+  --md-elevation-1: 0 1px 2px rgba(20, 24, 34, 0.06), 0 1px 3px rgba(20, 24, 34, 0.05);
+  --md-elevation-2: 0 2px 6px rgba(20, 24, 34, 0.07), 0 1px 2px rgba(20, 24, 34, 0.05);
+  --md-elevation-3: 0 6px 16px rgba(20, 24, 34, 0.08), 0 2px 4px rgba(20, 24, 34, 0.05);
+  --md-elevation-4: 0 12px 28px rgba(20, 24, 34, 0.10), 0 4px 8px rgba(20, 24, 34, 0.05);
+  --md-elevation-5: 0 20px 44px rgba(20, 24, 34, 0.12), 0 6px 12px rgba(20, 24, 34, 0.06);
 
   /* === M3 Expressive Motion Tokens === */
   --md-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
@@ -392,9 +396,21 @@ body {
   transition: color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 }
 
-:where(.about-section, .bento-section, .projects-section, .events-teaser-section, .timeline-section, .donate-section, .cta-section, .pd-body, .pd-nav) {
+/* Skip rendering off-screen sections — but the placeholder size MUST be honest.
+   A flat 900px guess is wildly wrong for the tall ones (the projects catalog is
+   ~6500px), so the document height jumped by thousands of pixels the moment the
+   section scrolled in: the scrollbar resized mid-scroll and the whole section
+   painted in a single frame. `auto` makes the browser remember each element's
+   last rendered size and reuse it, so the guess is exact after the first paint;
+   the length is only the first-ever fallback.
+
+   .projects-section is deliberately NOT in this list. It is the whole point of
+   the projects/materials catalogs — it gets scrolled through every visit, so
+   skipping it saves nothing while its 6500px of content guarantees the one jump
+   `auto` cannot prevent (the first render, before any size is remembered). */
+:where(.about-section, .bento-section, .events-teaser-section, .timeline-section, .donate-section, .cta-section, .pd-body, .pd-nav) {
   content-visibility: auto;
-  contain-intrinsic-size: 1px 900px;
+  contain-intrinsic-size: auto 900px;
 }
 
 a {
@@ -441,8 +457,8 @@ header {
   transform: translateX(-50%);
   z-index: 100;
   background: color-mix(in srgb, var(--md-surface-container-lowest) 40%, transparent);
-  backdrop-filter: var(--glass-filter);
-  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--chrome-glass);
+  -webkit-backdrop-filter: var(--chrome-glass);
   padding: 6px 8px 6px 20px;
   display: flex;
   align-items: center;
@@ -467,26 +483,24 @@ header:hover {
   white-space: nowrap;
 }
 
-/* Logo mark: inline two-tone SVG "R"; colours follow the theme. */
+/* Logo mark: squircle badge with the Material Symbols robot; colours follow the theme.
+   The icon font is already loaded on every page, so no extra request — and the
+   .icons-ready guard hides only the glyph, never the badge itself. */
 .logo-dot {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--md-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform var(--md-motion-duration-medium1) var(--md-motion-easing-spring);
 }
 
-.logo-dot svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.logo-mark-bg {
-  fill: var(--md-primary);
-}
-
-.logo-mark-r {
-  fill: var(--md-on-primary);
+.logo-mark-icon {
+  font-size: 19px;
+  color: var(--md-on-primary);
 }
 
 .logo:hover .logo-dot {
@@ -598,8 +612,8 @@ header:hover {
     height: 48px;
     z-index: 120;
     background: color-mix(in srgb, var(--md-surface-container-lowest) 40%, transparent);
-    backdrop-filter: var(--glass-filter);
-    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--chrome-glass);
+    -webkit-backdrop-filter: var(--chrome-glass);
     box-shadow: var(--md-elevation-2);
     border: 1px solid var(--md-outline-variant);
     color: var(--md-on-surface);
@@ -650,18 +664,14 @@ header:hover {
   animation: float-shape-alt 10s var(--md-motion-easing-standard) infinite alternate;
 }
 
-/* Decorative shapes are intentionally static for a calmer, more serious look. */
-@keyframes float-shape {
-  0%, 100% {
-    transform: none;
-  }
-}
-
-@keyframes float-shape-alt {
-  0%, 100% {
-    transform: rotate(12deg);
-  }
-}
+/* Decorative shapes are intentionally static for a calmer, more serious look.
+   The float-shape / float-shape-alt / spin-gentle keyframes were already no-ops
+   (identical start/end frames). They are removed entirely: an `animation-name`
+   with no matching @keyframes runs nothing AND is not promoted to its own
+   compositor layer — keeping them running only fragmented the page into dozens
+   of tiny layers, which Firefox scrolls less smoothly. The `animation:` shorthands
+   left on the shapes are now inert dangling names (zero cost).
+   Base `transform` on each shape provides its static resting rotation. */
 
 .hero .float-el {
   display: none;
@@ -871,6 +881,11 @@ header:hover {
   font: var(--md-typescale-title-large);
   color: var(--md-on-surface);
   line-height: 1.1;
+}
+
+/* Картки-напрями (без цифри): один рядок тексту поруч з іконкою. */
+.stat-card--topic h3 {
+  font: var(--md-typescale-title-medium);
 }
 
 .stat-card p {
@@ -2566,7 +2581,7 @@ section {
   background: linear-gradient(180deg, var(--md-surface-container-low) 0%, var(--md-surface-container) 100%);
   border: 1px solid var(--md-outline-soft);
   content-visibility: auto;
-  contain-intrinsic-size: 88px;
+  contain-intrinsic-size: auto 88px;
 }
 
 .filter-btn {
@@ -2708,6 +2723,35 @@ section {
 .timeline-item h3 {
   font: var(--md-typescale-title-small);
   margin-bottom: 4px;
+}
+
+/* Кожен пункт хронології веде на сторінку відповідного проєкту. */
+.timeline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+/* Стрілка видима завжди — інакше по заголовку не видно, що він клікабельний. */
+.timeline-link-ic {
+  color: var(--md-primary);
+  opacity: 0.5;
+  transition: opacity var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-short4) var(--md-motion-easing-spring);
+}
+
+.timeline-link:hover,
+.timeline-link:focus-visible {
+  color: var(--md-primary);
+}
+
+.timeline-link:hover .timeline-link-ic,
+.timeline-link:focus-visible .timeline-link-ic {
+  opacity: 1;
+  transform: translateX(3px);
 }
 
 .timeline-item p {
@@ -3180,6 +3224,11 @@ footer {
 .footer-brand .logo-dot {
   width: 24px;
   height: 24px;
+  border-radius: 7px;
+}
+
+.footer-brand .logo-mark-icon {
+  font-size: 16px;
 }
 
 footer p {
@@ -3376,8 +3425,8 @@ footer h4 {
     inset: 0;
     border-radius: inherit;
     background: color-mix(in srgb, var(--md-surface-container-lowest) 40%, transparent);
-    backdrop-filter: var(--glass-filter);
-    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--chrome-glass);
+    -webkit-backdrop-filter: var(--chrome-glass);
     z-index: -1;
     pointer-events: none;
   }
@@ -3395,8 +3444,8 @@ footer h4 {
     padding: 4px;
     border-radius: 999px;
     background: color-mix(in srgb, var(--md-surface-container-lowest) 40%, transparent);
-    backdrop-filter: var(--glass-filter);
-    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--chrome-glass);
+    -webkit-backdrop-filter: var(--chrome-glass);
     box-shadow: var(--md-elevation-2);
     border: 1px solid var(--md-outline-variant);
     z-index: 120;
@@ -3503,8 +3552,8 @@ footer h4 {
     justify-content: center;
     color: color-mix(in srgb, var(--md-on-surface-variant) 92%, transparent);
     background: color-mix(in srgb, var(--md-surface-container-lowest) 40%, transparent);
-    backdrop-filter: var(--glass-filter);
-    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--chrome-glass);
+    -webkit-backdrop-filter: var(--chrome-glass);
     box-shadow: var(--md-elevation-3);
     border: 1px solid var(--md-outline-variant);
     z-index: 115;
@@ -3728,7 +3777,7 @@ footer h4 {
 /* Tablet / landscape-phone zone: the desktop top-pill is shown here, but the
    full org name in the logo pushes the pill (logo + nav + support + toggle)
    wider than the viewport so it spills offscreen. Collapse the logo to just the
-   "R" mark and tighten spacing so everything fits. */
+   robot mark and tighten spacing so everything fits. */
 @media (min-width: 769px) and (max-width: 1023px) {
   .logo {
     font-size: 0;
@@ -3791,12 +3840,6 @@ footer h4 {
   transform: rotate(45deg);
   border-radius: var(--md-shape-md);
   animation: spin-gentle 20s linear infinite;
-}
-
-@keyframes spin-gentle {
-  from, to {
-    transform: rotate(45deg);
-  }
 }
 
 /* ============ SCROLL REVEAL ANIMATIONS ============ */
@@ -3994,8 +4037,8 @@ header {
 
 header.scrolled {
   background: color-mix(in srgb, var(--md-surface-container-lowest) 40%, transparent);
-  backdrop-filter: var(--glass-filter);
-  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--chrome-glass);
+  -webkit-backdrop-filter: var(--chrome-glass);
   box-shadow: var(--md-elevation-3);
 }
 
@@ -5262,8 +5305,8 @@ header.scrolled {
 @media (max-width: 768px) {
   [data-theme="dark"] header::before {
     background: rgba(0, 0, 0, 0.10);
-    backdrop-filter: var(--glass-filter);
-    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--chrome-glass);
+    -webkit-backdrop-filter: var(--chrome-glass);
   }
 
   [data-theme="dark"] header {
@@ -5318,8 +5361,8 @@ header.scrolled {
 @media (min-width: 769px) {
   [data-theme="dark"] header {
     background: rgba(0, 0, 0, 0.10);
-    backdrop-filter: var(--glass-filter);
-    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--chrome-glass);
+    -webkit-backdrop-filter: var(--chrome-glass);
     border: 1px solid rgba(255, 255, 255, 0.10);
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
@@ -5327,8 +5370,8 @@ header.scrolled {
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) header {
       background: rgba(0, 0, 0, 0.10);
-      backdrop-filter: var(--glass-filter);
-      -webkit-backdrop-filter: var(--glass-filter);
+      backdrop-filter: var(--chrome-glass);
+      -webkit-backdrop-filter: var(--chrome-glass);
       border: 1px solid rgba(255, 255, 255, 0.10);
       box-shadow: 0 4px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
     }
@@ -5424,9 +5467,10 @@ header.scrolled {
    Canvas box-shadow is applied on top when available (served site).
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Glow host containers ── */
-[data-theme="dark"] .project-card,
-[data-theme="dark"] .featured-card,
+/* ── Glow host containers ──
+   Grid cards (project/featured) are intentionally excluded: the per-card
+   blurred-image haze was the dominant dark-mode scroll cost. Glow now lives
+   only on the hero and the project-detail gallery. */
 [data-theme="dark"] .hero-stats-imgwrap,
 [data-theme="dark"] [data-project-carousel] {
   position: relative;
@@ -5457,9 +5501,7 @@ header.scrolled {
   z-index: 1;
 }
 
-/* Blurred ::before — the ambient haze */
-[data-theme="dark"] .project-card::before,
-[data-theme="dark"] .featured-card::before,
+/* Blurred ::before — the ambient haze (hero + project-detail gallery only) */
 [data-theme="dark"] .hero-stats-imgwrap::before,
 [data-theme="dark"] [data-project-carousel]::before {
   content: '';
@@ -5472,18 +5514,19 @@ header.scrolled {
   background-image: var(--glow-src, none);
   background-size: cover;
   background-position: center;
-  filter: blur(80px) saturate(1.8) brightness(0.38);
+  /* PERF: blur cost grows ~with radius²; 45→30px on this 2.4×-scaled bitmap is
+     ~55% cheaper and still reads as a soft colour haze (opacity 0.62). This ::before
+     can't be GPU-composited without breaking the stat-card glass, so radius is the
+     lever. Shared by the hero and the project-gallery carousel. */
+  filter: blur(30px) saturate(1.8) brightness(0.38);
   opacity: 0;
   z-index: -1;
   pointer-events: none;
   border-radius: 50%;
-  will-change: opacity;
   transition: opacity 0.45s ease;
 }
 
 /* Activate once JS sets --glow-src */
-[data-theme="dark"] .project-card[style*="--glow-src"]::before,
-[data-theme="dark"] .featured-card[style*="--glow-src"]::before,
 [data-theme="dark"] .hero-stats-imgwrap[style*="--glow-src"]::before,
 [data-theme="dark"] [data-project-carousel][style*="--glow-src"]::before {
   opacity: 0.62;
@@ -5494,7 +5537,9 @@ header.scrolled {
 .featured-card,
 .hero-stats-imgwrap,
 [data-project-carousel] {
-  will-change: transform;
+  /* No permanent will-change: promoting every card to its own compositor
+     layer explodes layer count and memory, which itself stutters scrolling
+     (Firefox especially). The transitions below composite fine on demand. */
   transition:
     box-shadow 0.45s ease,
     transform  0.25s ease;
@@ -5543,11 +5588,19 @@ header.scrolled {
 /* ================================================================
    NEURAL EXPRESSIVE LAYER  — Google I/O 2026 design language
    Vibrant Gemini gradient (blue -> plum -> coral), glow, pill, expressive type.
-   Glass: removed in light (--glass-filter:none), reduced in dark (blur 5px),
-   and dropped from the numerous in-grid cards in dark to cut compositor cost.
+   Glass: live in BOTH themes on the same short list of signature surfaces
+   (header, hero stat-cards, cta, about, geo-badge, mobile chrome). The
+   numerous in-grid cards stay solid in both themes to cap compositor cost.
    ================================================================ */
 :root {
-  --glass-filter: none;
+  /* Blur RADIUS is the expensive knob — cost grows ~with radius² and the fixed
+     header re-blurs on every scroll frame. saturate() is a cheap per-pixel pass,
+     so light buys its frosted look with saturation rather than radius, and
+     stays on the same blur budget as dark. */
+  --glass-filter: blur(3px) saturate(1.35);
+  /* Blur reserved for fixed/floating chrome (header, controls) that sits over
+     scrolling content. Cards use --glass-filter so they can drop it cheaply. */
+  --chrome-glass: blur(7px) saturate(1.5);
 
   --ne-blue: #4285f4;
   --ne-violet: #8a5cd0;
@@ -5558,14 +5611,22 @@ header.scrolled {
   --ne-glow-strong: 0 10px 40px rgba(138, 92, 208, 0.42);
   --ne-ring: rgba(138, 92, 208, 0.42);
 
+  /* Stronger than before: with the core palette now neutral, this ambient wash
+     IS the light theme's colour — and it is also what the glass panes blur. */
   --ne-body-bg:
-    radial-gradient(ellipse 50% 22% at 78% 16%, rgba(66,133,244,0.10) 0%, transparent 70%),
-    radial-gradient(ellipse 52% 24% at 18% 50%, rgba(138,92,208,0.10) 0%, transparent 70%),
-    radial-gradient(ellipse 46% 22% at 82% 84%, rgba(217,101,112,0.09) 0%, transparent 70%);
+    radial-gradient(ellipse 50% 22% at 78% 16%, rgba(66,133,244,0.20) 0%, transparent 70%),
+    radial-gradient(ellipse 52% 24% at 18% 50%, rgba(138,92,208,0.19) 0%, transparent 70%),
+    radial-gradient(ellipse 46% 22% at 82% 84%, rgba(217,101,112,0.17) 0%, transparent 70%);
 }
 
 [data-theme="dark"] {
-  --glass-filter: blur(5px) saturate(1.15);
+  /* Glass blur is the signature look — kept on cards. backdrop-filter is
+     recomputed every scroll frame (Firefox especially) and its cost scales with
+     the blur RADIUS, so cards use a modest 3px (still clearly frosted) while the
+     few chrome elements, which sit over scrolling content, keep a stronger blur.
+     saturate() is a cheap per-pixel pass, kept for vibrancy. */
+  --glass-filter: blur(3px) saturate(1.15);
+  --chrome-glass: blur(6px) saturate(1.1);
 
   --ne-blue: #7aa7ff;
   --ne-violet: #c79bff;
@@ -5584,7 +5645,8 @@ header.scrolled {
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --glass-filter: blur(5px) saturate(1.15);
+    --glass-filter: blur(3px) saturate(1.15);
+    --chrome-glass: blur(6px) saturate(1.1);
     --ne-blue: #7aa7ff;
     --ne-violet: #c79bff;
     --ne-coral: #ff8a94;
@@ -5646,26 +5708,227 @@ body,
   box-shadow: var(--ne-glow);
 }
 
-/* ================= LIGHT THEME: glass removed -> opaque chrome ================= */
+/* ================= LIGHT THEME: frosted glass ================= */
+/* Mirror of the dark treatment on the SAME short list of signature surfaces,
+   with the tint flipped: dark frosts with rgba(0,0,0,.08) + a white hairline,
+   light frosts with rgba(255,255,255,.55) + an ink hairline and a white inset
+   "lip" along the top edge. Every section is transparent in light too, so the
+   tri-colour ambient wash on <body> is always there for the blur to sample. */
+
 :root:not([data-theme="dark"]) header,
 :root:not([data-theme="dark"]) header.scrolled {
-  background: var(--md-surface-container-low);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(20, 24, 34, 0.07);
+  box-shadow:
+    0 8px 30px rgba(20, 24, 34, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
+
+/* Hero stat-cards sit over the hero photo — the one place the blur is most
+   visible. Tinted with the Neural trio so the row keeps its three-beat rhythm
+   now that the primary/tertiary/secondary roles are neutral. */
 :root:not([data-theme="dark"]) .stat-card {
-  background: var(--md-primary-container);
+  background: color-mix(in srgb, var(--ne-blue) 9%, rgba(255, 255, 255, 0.58));
+  border: 1px solid rgba(20, 24, 34, 0.07);
+  box-shadow:
+    0 6px 24px rgba(20, 24, 34, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 :root:not([data-theme="dark"]) .stat-card:nth-child(2) {
-  background: var(--md-tertiary-container);
+  background: color-mix(in srgb, var(--ne-coral) 9%, rgba(255, 255, 255, 0.58));
+  border-color: rgba(20, 24, 34, 0.07);
+  box-shadow:
+    0 6px 24px rgba(20, 24, 34, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 :root:not([data-theme="dark"]) .stat-card:nth-child(3) {
-  background: var(--md-secondary-container);
+  background: color-mix(in srgb, var(--ne-violet) 9%, rgba(255, 255, 255, 0.58));
+  border-color: rgba(20, 24, 34, 0.07);
+  box-shadow:
+    0 6px 24px rgba(20, 24, 34, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
+
+/* Icon chips — the light counterpart of the dark theme's glowing tints. */
+:root:not([data-theme="dark"]) .stat-card:nth-child(1) .stat-icon {
+  background: color-mix(in srgb, var(--ne-blue) 16%, #ffffff);
+}
+:root:not([data-theme="dark"]) .stat-card:nth-child(2) .stat-icon {
+  background: color-mix(in srgb, var(--ne-coral) 16%, #ffffff);
+}
+:root:not([data-theme="dark"]) .stat-card:nth-child(3) .stat-icon {
+  background: color-mix(in srgb, var(--ne-violet) 16%, #ffffff);
+}
+:root:not([data-theme="dark"]) .stat-card:nth-child(1) .stat-icon .material-symbols-rounded {
+  color: #1b57c4;
+}
+:root:not([data-theme="dark"]) .stat-card:nth-child(2) .stat-icon .material-symbols-rounded {
+  color: #b0414f;
+}
+:root:not([data-theme="dark"]) .stat-card:nth-child(3) .stat-icon .material-symbols-rounded {
+  color: #6d3fb0;
+}
+
+/* CTA banner: was a solid primary slab; now the same glass pane as in dark,
+   with the gradient moved onto the button so the call to action still leads. */
+:root:not([data-theme="dark"]) .cta-banner {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(20, 24, 34, 0.07);
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+  color: var(--md-on-surface);
+  box-shadow:
+    0 10px 34px rgba(20, 24, 34, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+:root:not([data-theme="dark"]) .cta-banner::before {
+  background: rgba(66, 133, 244, 0.10);
+}
+:root:not([data-theme="dark"]) .cta-banner::after {
+  background: rgba(217, 101, 112, 0.10);
+}
+:root:not([data-theme="dark"]) .cta-banner .btn {
+  background: var(--ne-gradient);
+  color: #ffffff;
+  border: none;
+}
+:root:not([data-theme="dark"]) .cta-banner .btn:hover {
+  box-shadow: var(--ne-glow-strong);
+}
+
+:root:not([data-theme="dark"]) .about-right {
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(20, 24, 34, 0.07);
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+  box-shadow:
+    0 6px 24px rgba(20, 24, 34, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* !important mirrors the dark rule — the badge carries an inline background. */
+:root:not([data-theme="dark"]) .geo-badge {
+  background: color-mix(in srgb, var(--ne-violet) 10%, rgba(255, 255, 255, 0.6)) !important;
+  border: 1px solid rgba(20, 24, 34, 0.07) !important;
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+}
+
+/* Mobile chrome — nav pill, floating controls, theme toggle, support FAB. */
 @media (max-width: 768px) {
   :root:not([data-theme="dark"]) header::before,
+  :root:not([data-theme="dark"]) .header-controls,
   :root:not([data-theme="dark"]) .mobile-support-fab,
   :root:not([data-theme="dark"]) .theme-toggle {
-    background: var(--md-surface-container-low);
+    background: rgba(255, 255, 255, 0.58);
+    border-color: rgba(20, 24, 34, 0.07);
   }
+
+  :root:not([data-theme="dark"]) header {
+    box-shadow:
+      0 12px 30px rgba(20, 24, 34, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* Decorative shapes retinted to the Neural trio (the M3 roles they used to
+   derive from are neutral now, which would have rendered them as grey blobs). */
+:root:not([data-theme="dark"]) .hero-shape--circle {
+  background: radial-gradient(circle, rgba(66, 133, 244, 0.55) 0%, transparent 70%);
+}
+:root:not([data-theme="dark"]) .hero-shape--squircle {
+  background: rgba(217, 101, 112, 0.40);
+}
+:root:not([data-theme="dark"]) .hero-shape--diamond {
+  background: rgba(138, 92, 208, 0.38);
+}
+:root:not([data-theme="dark"]) .about-section::before {
+  background: radial-gradient(circle, rgba(66, 133, 244, 0.60) 0%, transparent 70%);
+}
+:root:not([data-theme="dark"]) .about-section::after {
+  background: rgba(217, 101, 112, 0.50);
+}
+:root:not([data-theme="dark"]) .bento-section::before {
+  border-color: rgba(217, 101, 112, 0.55);
+}
+:root:not([data-theme="dark"]) .bento-section::after {
+  background: rgba(66, 133, 244, 0.50);
+}
+:root:not([data-theme="dark"]) .events-teaser-section::before {
+  background: radial-gradient(circle, rgba(138, 92, 208, 0.55) 0%, transparent 65%);
+}
+:root:not([data-theme="dark"]) .events-teaser-section::after {
+  background: rgba(217, 101, 112, 0.50);
+}
+:root:not([data-theme="dark"]) .cta-section::before {
+  border-color: rgba(138, 92, 208, 0.55);
+}
+:root:not([data-theme="dark"]) .cta-section::after {
+  border-color: rgba(66, 133, 244, 0.50);
+}
+
+/* ── Light theme: accent tints ──
+   The M3 *-container roles are neutral now, so every component that relied on
+   them to signal "this one is special" (active nav pill, highlight cards, tags,
+   badges) would read as plain grey. These re-derive that signal from the Neural
+   trio — the same job the plum / coral / muted tints do in the dark theme. */
+
+:root:not([data-theme="dark"]) .nav-links a.active {
+  background: color-mix(in srgb, var(--ne-violet) 16%, transparent);
+  color: var(--md-on-surface);
+}
+
+:root:not([data-theme="dark"]) .btn-secondary:hover {
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+  border-color: rgba(20, 24, 34, 0.14);
+}
+
+:root:not([data-theme="dark"]) .highlight-card--accent {
+  background: color-mix(in srgb, var(--ne-blue) 13%, #ffffff);
+}
+:root:not([data-theme="dark"]) .highlight-card--tertiary {
+  background: color-mix(in srgb, var(--ne-coral) 13%, #ffffff);
+}
+
+/* Accent bento slab is inverse-surface (dark ink) — its icon chip has to flip
+   to a translucent-white chip, or the glyph disappears into the slab. */
+:root:not([data-theme="dark"]) .bento-card.medium.accent .bento-icon {
+  background: rgba(255, 255, 255, 0.14);
+}
+:root:not([data-theme="dark"]) .bento-card.medium.accent .bento-icon .material-symbols-rounded {
+  color: #ffffff;
+}
+
+:root:not([data-theme="dark"]) .check-item::before {
+  background: color-mix(in srgb, var(--ne-blue) 16%, #ffffff);
+  color: #1b57c4;
+}
+
+:root:not([data-theme="dark"]) .tag.status {
+  background: color-mix(in srgb, var(--ne-coral) 15%, #ffffff);
+  color: #8d3341;
+}
+
+:root:not([data-theme="dark"]) .filter-btn.active {
+  background: color-mix(in srgb, var(--ne-violet) 14%, #ffffff);
+  border-color: color-mix(in srgb, var(--ne-violet) 40%, transparent);
+}
+
+:root:not([data-theme="dark"]) .timeline-date {
+  color: #6d3fb0;
+}
+
+/* Event teaser glyphs — same 1/4 · 2 · 3 mapping the dark theme uses. */
+:root:not([data-theme="dark"]) .event-teaser-card:nth-child(1) .event-teaser-icon > span,
+:root:not([data-theme="dark"]) .event-teaser-card:nth-child(4) .event-teaser-icon > span {
+  color: #1b57c4 !important;
+}
+:root:not([data-theme="dark"]) .event-teaser-card:nth-child(2) .event-teaser-icon > span {
+  color: #b0414f !important;
+}
+:root:not([data-theme="dark"]) .event-teaser-card:nth-child(3) .event-teaser-icon > span {
+  color: #6d3fb0 !important;
 }
 
 /* ================= DARK THEME: reduce glass QUANTITY ================= */
@@ -5699,4 +5962,154 @@ body,
   .highlights-section::before, .highlights-section::after {
     display: none;
   }
+}
+
+/* ================================================================
+   PERF — keep the glass, run it on the GPU like Windows Acrylic
+   ----------------------------------------------------------------
+   Acrylic is instant because the OS blurs already-cached window
+   textures on the GPU. CSS backdrop-filter stutters when the browser
+   re-rasterizes the blurred surface on the MAIN THREAD every scroll
+   frame instead. Promoting each glass surface to its own compositor
+   layer (will-change: transform) moves the blur onto the GPU
+   compositor — the same fast path — with zero change to the look.
+
+   This is safe now: the numerous in-grid cards were already made
+   solid, so only a handful of surfaces keep real glass — no layer
+   explosion. (The floating header already pairs transform with
+   backdrop-filter, so the hint changes nothing visually.)
+   ================================================================ */
+[data-theme="dark"] header::before,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .cta-banner,
+[data-theme="dark"] .about-right,
+[data-theme="dark"] .geo-badge,
+[data-theme="dark"] .header-controls,
+[data-theme="dark"] .theme-toggle,
+[data-theme="dark"] .mobile-support-fab,
+[data-theme="dark"] [data-project-carousel],
+:root:not([data-theme="dark"]) header::before,
+:root:not([data-theme="dark"]) .stat-card,
+:root:not([data-theme="dark"]) .cta-banner,
+:root:not([data-theme="dark"]) .about-right,
+:root:not([data-theme="dark"]) .geo-badge,
+:root:not([data-theme="dark"]) .header-controls,
+:root:not([data-theme="dark"]) .theme-toggle,
+:root:not([data-theme="dark"]) .mobile-support-fab {
+  will-change: transform;
+}
+
+/* Header promotion is DESKTOP-ONLY. On mobile the <header> holds the fixed
+   .theme-toggle as a child; will-change:transform would turn the header into the
+   containing block for that fixed child and knock it out of place (it was fine in
+   light only because light never sets will-change). On desktop the header already
+   has transform: translateX(-50%) and no fixed children, so promotion is safe.
+   Light now carries live glass too, so it gets the same desktop-only promotion
+   — and the same mobile exclusion, for exactly the same reason. */
+@media (min-width: 769px) {
+  [data-theme="dark"] header,
+  :root:not([data-theme="dark"]) header {
+    will-change: transform;
+  }
+}
+
+/* NOTE: .hero-stats-imgwrap is deliberately NOT promoted here — giving it its
+   own compositor layer stops the stat-cards' backdrop-filter from sampling the
+   photo inside it (documented at .hero-stats-wrap). Its heavy dark-only ambient
+   glow (::before blur + JS glow-shadow) is therefore optimized separately. */
+
+/* ================================================================
+   PERF — drop live blur from the NUMEROUS project cards
+   ----------------------------------------------------------------
+   The projects catalog (several large featured cards) and the
+   project-detail pages (many result cards) stacked enough live
+   backdrop-filters to stutter even in Chromium. These cards are
+   translucent but sit over the smooth ambient background, where the
+   blur is all but invisible — so removing it costs nothing visually
+   while cutting the dominant per-frame work on those pages. The
+   signature glass (header, hero stat-cards, cta, about) is untouched.
+   ================================================================ */
+[data-theme="dark"] .featured-card,
+[data-theme="dark"] .pd-result-card,
+[data-theme="dark"] .pd-info-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ================================================================
+   Firefox — static frosted glass (no live blur)
+   ----------------------------------------------------------------
+   Firefox rasterizes backdrop-filter on the CPU, so live blur cannot
+   scroll smoothly no matter how it is promoted. In Firefox ONLY we
+   drop the live blur and render a STATIC frost using the site's own
+   surface colour (never a blue tint). Chromium keeps the real glass.
+   Flag set in js/script.js from navigator.userAgent → html.is-firefox.
+   ================================================================ */
+.is-firefox[data-theme="dark"] header,
+.is-firefox[data-theme="dark"] header::before,
+.is-firefox[data-theme="dark"] .stat-card,
+.is-firefox[data-theme="dark"] .cta-banner,
+.is-firefox[data-theme="dark"] .about-right,
+.is-firefox[data-theme="dark"] .geo-badge,
+.is-firefox[data-theme="dark"] .header-controls,
+.is-firefox[data-theme="dark"] .theme-toggle,
+.is-firefox[data-theme="dark"] .mobile-support-fab {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  will-change: auto;
+}
+
+/* Opaque frosted surfaces (site colour) so nothing bleeds without blur. */
+.is-firefox[data-theme="dark"] header,
+.is-firefox[data-theme="dark"] header::before,
+.is-firefox[data-theme="dark"] .header-controls,
+.is-firefox[data-theme="dark"] .theme-toggle,
+.is-firefox[data-theme="dark"] .mobile-support-fab {
+  background-color: var(--md-surface-container);
+}
+.is-firefox[data-theme="dark"] .stat-card,
+.is-firefox[data-theme="dark"] .cta-banner,
+.is-firefox[data-theme="dark"] .about-right {
+  background-color: color-mix(in srgb, var(--md-surface-container) 88%, transparent);
+}
+
+/* Same treatment for light, now that it carries live glass as well. */
+.is-firefox:not([data-theme="dark"]) header,
+.is-firefox:not([data-theme="dark"]) header::before,
+.is-firefox:not([data-theme="dark"]) .stat-card,
+.is-firefox:not([data-theme="dark"]) .cta-banner,
+.is-firefox:not([data-theme="dark"]) .about-right,
+.is-firefox:not([data-theme="dark"]) .geo-badge,
+.is-firefox:not([data-theme="dark"]) .header-controls,
+.is-firefox:not([data-theme="dark"]) .theme-toggle,
+.is-firefox:not([data-theme="dark"]) .mobile-support-fab {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  will-change: auto;
+}
+
+.is-firefox:not([data-theme="dark"]) header,
+.is-firefox:not([data-theme="dark"]) header::before,
+.is-firefox:not([data-theme="dark"]) .header-controls,
+.is-firefox:not([data-theme="dark"]) .theme-toggle,
+.is-firefox:not([data-theme="dark"]) .mobile-support-fab {
+  background-color: var(--md-surface-container-low);
+}
+
+/* Keep the Neural tint, drop the transparency: the frost is baked in instead. */
+.is-firefox:not([data-theme="dark"]) .stat-card {
+  background: color-mix(in srgb, var(--ne-blue) 8%, #ffffff);
+}
+.is-firefox:not([data-theme="dark"]) .stat-card:nth-child(2) {
+  background: color-mix(in srgb, var(--ne-coral) 8%, #ffffff);
+}
+.is-firefox:not([data-theme="dark"]) .stat-card:nth-child(3) {
+  background: color-mix(in srgb, var(--ne-violet) 8%, #ffffff);
+}
+.is-firefox:not([data-theme="dark"]) .cta-banner,
+.is-firefox:not([data-theme="dark"]) .about-right {
+  background-color: var(--md-surface-container-low);
+}
+.is-firefox:not([data-theme="dark"]) .geo-badge {
+  background: color-mix(in srgb, var(--ne-violet) 8%, #ffffff) !important;
 }

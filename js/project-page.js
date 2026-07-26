@@ -17,6 +17,15 @@
     return parts[parts.length - 2] || null;
   }
 
+  /* Стрічка мініатюр показує картинку ~90x67, тож повнорозмірне фото тут —
+     ×17.8 зайвих пікселів на кожну. Поряд з кожним фото лежить -tn.webp
+     320x240, зроблений tools\make-thumbs.ps1. Якщо для нового фото мініатюру
+     ще не згенерували, onerror нижче підставить оригінал — сторінка не
+     зламається, просто та одна картинка знову буде важкою. */
+  function thumbSrc(src) {
+    return src.replace(/\.(jpe?g|png|webp)$/i, '-tn.webp');
+  }
+
   function initProjectCarousels(root = document) {
     root.querySelectorAll('[data-project-carousel]').forEach((carousel) => {
       const track = carousel.querySelector('[data-carousel-track]');
@@ -31,8 +40,24 @@
       let currentIndex = 0;
       let touchStartX = 0;
 
+      /* Slides past the first carry data-src, not src. The track is a flex row
+         shifted with translateX, so every slide's layout box still sits inside
+         the viewport — loading="lazy" sees them all as visible and downloads the
+         whole gallery at once. Hydrate the current slide and its two neighbours
+         instead, so a swipe never waits on a fetch but idle photos stay unloaded. */
+      function hydrate(index) {
+        const slide = slides[(index + slides.length) % slides.length];
+        const img = slide && slide.querySelector('img[data-src]');
+        if (!img) return;
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      }
+
       function setSlide(nextIndex) {
         currentIndex = (nextIndex + slides.length) % slides.length;
+        hydrate(currentIndex);
+        hydrate(currentIndex - 1);
+        hydrate(currentIndex + 1);
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
 
         slides.forEach((slide, index) => {
@@ -55,6 +80,12 @@
 
       thumbs.forEach((thumb, index) => {
         thumb.addEventListener('click', () => setSlide(index));
+
+        // Мініатюри ще немає (щойно додане фото) — показуємо оригінал.
+        const img = thumb.querySelector('img[data-full]');
+        if (img) {
+          img.addEventListener('error', () => { img.src = img.dataset.full; }, { once: true });
+        }
       });
 
       carousel.addEventListener('keydown', (event) => {
@@ -183,7 +214,7 @@
             <div class="pd-carousel-track" data-carousel-track>
               ${project.gallery.map((src, index) => `
                 <figure class="pd-carousel-slide" data-carousel-slide>
-                  <img src="${src}" alt="${project.title}: фото ${index + 1}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async">
+                  <img ${index === 0 ? `src="${src}"` : `data-src="${src}"`} alt="${project.title}: фото ${index + 1}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async">
                 </figure>
               `).join('')}
             </div>
@@ -204,7 +235,7 @@
             <div class="pd-carousel-thumbs">
               ${project.gallery.map((src, index) => `
                 <button type="button" class="pd-carousel-thumb" data-carousel-thumb aria-label="Показати фото ${index + 1}">
-                  <img src="${src}" alt="" loading="lazy" decoding="async">
+                  <img src="${thumbSrc(src)}" data-full="${src}" alt="" loading="lazy" decoding="async" width="320" height="240">
                 </button>
               `).join('')}
             </div>

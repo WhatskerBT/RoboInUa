@@ -16,16 +16,15 @@
     return document.documentElement.dataset.theme === 'dark';
   }
 
-  const CONTAINER_SELECTORS = [
-    '.project-card',
-    '.featured-card',
-    '.hero-stats-imgwrap',
-    '.pd-carousel-stage',
-    'figure',
-  ].join(', ');
+  // Glow is deliberately limited to the hero image only (the project-detail
+  // gallery is handled by its own block below). Grid cards — project/featured —
+  // and every other image get NO glow: a blurred full-image bitmap layer behind
+  // each of dozens of cards was the dominant dark-mode scroll cost. Returning
+  // null here makes attach() bail for anything outside the hero.
+  const CONTAINER_SELECTORS = '.hero-stats-imgwrap';
 
   function bestContainer(img) {
-    return img.closest(CONTAINER_SELECTORS) || img.parentElement;
+    return img.closest(CONTAINER_SELECTORS);
   }
 
   /* ── optional canvas colour for box-shadow boost ──────────── */
@@ -79,9 +78,13 @@
       container.style.setProperty('--amb-r', r);
       container.style.setProperty('--amb-g', g);
       container.style.setProperty('--amb-b', b);
+      // Kept modest on purpose: very large blur/spread shadows enlarge the
+      // hero's paint-invalidation rect, which costs paint as it scrolls (Firefox
+      // especially). Tightened (was 46/10 + 104/32) since the wrap can't be
+      // GPU-composited. Pairs with the CSS ::before haze.
       container.style.boxShadow =
-        `0 0 70px 16px rgba(${r},${g},${b},0.55),` +
-        `0 0 160px 55px rgba(${r},${g},${b},0.24)`;
+        `0 0 36px 8px rgba(${r},${g},${b},0.50),` +
+        `0 0 72px 18px rgba(${r},${g},${b},0.20)`;
     }
   }
 

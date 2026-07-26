@@ -24,7 +24,7 @@ function getEffectiveTheme() {
 }
 
 function updateBrowserThemeColor(theme) {
-  const color = theme === 'dark' ? '#15131a' : '#fdf8fb';
+  const color = theme === 'dark' ? '#15131a' : '#f7f9fb';
   let meta = document.querySelector('meta[name="theme-color"][data-dynamic-theme]');
 
   if (!meta) {
@@ -89,6 +89,13 @@ function observeMediaQuery(query, listener) {
 
 // Apply as early as possible to avoid a flash of the wrong theme.
 applyTheme(getEffectiveTheme());
+
+// Firefox rasterizes backdrop-filter on the CPU, so live blur can't scroll
+// smoothly. Flag it so the CSS swaps the live glass for a static frosted look
+// in Firefox only — Chromium keeps the real blur.
+if (/firefox/i.test(navigator.userAgent)) {
+  document.documentElement.classList.add('is-firefox');
+}
 
 // Follow the system only while the user hasn't picked a theme explicitly.
 observeMediaQuery(systemDarkQuery, () => {

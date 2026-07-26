@@ -59,13 +59,13 @@ const PROJECTS = [
             { label: 'Сайт RepRapUA', url: 'https://reprap.org.ua', icon: 'open_in_new' },
         ],
         gallery: [
-            'FB_IMG_1727192382753.jpg',
-            'IMG_20240921_090525.jpg',
-            'IMG_20240921_110337.jpg',
-            'IMG_20240921_110607.jpg',
-            'IMG_20240921_110608_1.jpg',
-            'IMG_20240921_134123.jpg',
-            'IMG_20240921_150406.jpg',
+            'FB_IMG_1727192382753.webp',
+            'IMG_20240921_090525.webp',
+            'IMG_20240921_110337.webp',
+            'IMG_20240921_110607.webp',
+            'IMG_20240921_110608_1.webp',
+            'IMG_20240921_134123.webp',
+            'IMG_20240921_150406.webp',
         ],
     },
 
@@ -99,12 +99,12 @@ const PROJECTS = [
             { icon: 'calendar_month', value: '6', label: 'Місяців роботи' },
         ],
         gallery: [
-            'IMG_20241012_173023.jpg',
-            'IMG_20241012_180715.jpg',
-            'IMG_20241023_161500.jpg',
-            'IMG_20241023_161612.jpg',
-            'IMG_20241030_182159.jpg',
-            'IMG_20241106_185851.jpg',
+            'IMG_20241012_173023.webp',
+            'IMG_20241012_180715.webp',
+            'IMG_20241023_161500.webp',
+            'IMG_20241023_161612.webp',
+            'IMG_20241030_182159.webp',
+            'IMG_20241106_185851.webp',
         ],
     },
 
@@ -138,9 +138,9 @@ const PROJECTS = [
             { icon: 'science', value: '1', label: 'Лабораторна робота з трафіком' },
         ],
         gallery: [
-            'IMG_20240907_173831.jpg',
-            'IMG_20240914_173231.jpg',
-            'IMG_20240928_181021.jpg',
+            'IMG_20240907_173831.webp',
+            'IMG_20240914_173231.webp',
+            'IMG_20240928_181021.webp',
         ],
     },
 
@@ -174,11 +174,11 @@ const PROJECTS = [
             { icon: 'school', value: 'Ліцей №5', label: 'Бенефіціар проєкту' },
         ],
         gallery: [
-            'IMG_20240615_105316.jpg',
-            'IMG_20240823_191928.jpg',
-            'IMG_20240911_125021.jpg',
-            'IMG_20241002_091712.jpg',
-            'IMG_20241022_144408.jpg',
+            'IMG_20240615_105316.webp',
+            'IMG_20240823_191928.webp',
+            'IMG_20240911_125021.webp',
+            'IMG_20241002_091712.webp',
+            'IMG_20241022_144408.webp',
         ],
     },
 
@@ -210,6 +210,9 @@ const PROJECTS = [
             { icon: 'how_to_reg', value: '32', label: 'Зареєстрованих слухачів' },
             { icon: 'play_circle', value: '5', label: 'Активно завершили' },
             { icon: 'smart_display', value: '6', label: 'Занять у відкритому доступі' },
+        ],
+        gallery: [
+            'robotics-online-01.webp',
         ],
     },
 
@@ -270,6 +273,11 @@ const PROJECTS = [
                 icon: 'developer_board',
             },
         ],
+        gallery: [
+            'IMG_9265.webp',
+            'IMG_9269.webp',
+            'IMG_9273.webp',
+        ],
     },
 
     {
@@ -302,6 +310,9 @@ const PROJECTS = [
         ],
         links: [
             { label: 'Допис на Facebook', url: 'https://www.facebook.com/roboinua/posts/pfbid02vrzwux3eMPY6ohCKFGAfRJPJXPC79ivU8eMw59yAZP8AJhmz5CAG7QxFwrvyAmTjl', icon: 'open_in_new' },
+        ],
+        gallery: [
+            'IMG_20240302_165743.webp',
         ],
     },
 
@@ -337,41 +348,11 @@ const PROJECTS = [
             { label: 'Допис на Facebook', url: 'https://www.facebook.com/roboinua/posts/pfbid02y1HE7MJ4zcajavropngjE2BCuzSUQBeUB5iqoUmFfUBpGoSN44jSeivJna9r63PPl', icon: 'open_in_new' },
         ],
         gallery: [
-            'IMG_20220614_135711.jpg',
-            'IMG_20220705_153144.jpg',
+            'IMG_20220614_135711.webp',
+            'IMG_20220705_153144.webp',
         ],
     },
 
-    {
-        id: 'heroes-children',
-        title: 'Навчання дітей загиблих військових',
-        category: 'соціальний',
-        status: 'Активний',
-        tagLabel: 'Соціальний проєкт',
-        excerpt: 'Пілотний проєкт безкоштовного навчання 3D-моделюванню та паянню для дітей, які втратили одного з батьків на війні.',
-        year: '2023–2024',
-        period: '2023–2024 навчальний рік',
-        partner: null,
-        icon: 'volunteer_activism',
-        heroColor: 'var(--md-tertiary-container)',
-
-        description: [
-            'Пілотна соціальна програма Федерації — безкоштовне навчання дітей, які втратили одного з батьків під час бойових дій. У 2023–2024 навчальному році на базі місцевої школи програмування було запрошено 6 учнів із різних шкіл міста.',
-            'Із них 4 учні пройшли повний курс із 3D-моделювання та друку. Заняття проводилися у малих групах з індивідуальним підходом — це особливо важливо у роботі з дітьми, які пережили втрату.',
-            'Дехто з учнів і досі відвідує гурток у вільний час, виконуючи дрібну роботу з паяння — зокрема, допомагаючи у збірці павербанків для військових. Це повертає сенс через корисну справу.',
-        ],
-        goals: [
-            'Підтримати дітей загиблих Захисників через творчу та технічну діяльність',
-            'Дати безкоштовний доступ до якісної STEM-освіти',
-            'Сформувати відчуття приналежності до спільноти однолітків',
-            'Залучити учнів до волонтерства через паяння для військових',
-        ],
-        results: [
-            { icon: 'child_care', value: '6', label: 'Дітей запрошено' },
-            { icon: 'check_circle', value: '4', label: 'Пройшли повний курс' },
-            { icon: 'autorenew', value: 'Тривають', label: 'Заняття у вільний час' },
-        ],
-    },
 ];
 
 /**

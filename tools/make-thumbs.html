@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Генератор мініатюр галереї</title>
+  <style>
+    body { font: 14px/1.5 monospace; background: #111; color: #ddd; padding: 20px; }
+    .ok { color: #6ee787; }
+    .skip { color: #888; }
+    .err { color: #ff7b72; }
+    h1 { font: 600 18px monospace; }
+  </style>
+</head>
+
+<body>
+  <h1>Генератор мініатюр галереї</h1>
+  <p>Запускається через <code>tools\make-thumbs.ps1</code>. Сам нічого не записує на диск —
+    складає всі мініатюри в один JSON і віддає його одним завантаженням, а файли розкладає скрипт.</p>
+  <pre id="log"></pre>
+
+  <script src="../js/projects-data.js"></script>
+  <script>
+    /* Мініатюри стрічки галереї.
+       .pd-carousel-thumb має aspect-ratio 4/3 і object-fit:cover, тож ми
+       наперед обрізаємо по центру так само, як це робить cover — картинка
+       виглядає ідентично, але декодується 0.08 MP замість 1.4 MP. */
+    const TN_W = 320;
+    const TN_H = 240;
+    const QUALITY = 0.78;
+    const SUFFIX = '-tn.webp';
+
+    const log = document.getElementById('log');
+    function say(text, cls) {
+      const line = document.createElement('span');
+      line.className = cls || '';
+      line.textContent = text + '\n';
+      log.appendChild(line);
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('not found: ' + src));
+        img.src = src;
+      });
+    }
+
+    /* Чи вже є мініатюра? Через file:// fetch недоступний, тому перевіряємо
+       спробою завантажити — так повторний запуск робить лише те, чого бракує. */
+    function exists(src) {
+      return loadImage(src).then(() => true, () => false);
+    }
+
+    function toBase64(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(',')[1]);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function renderThumb(img) {
+      const canvas = document.createElement('canvas');
+      canvas.width = TN_W;
+      canvas.height = TN_H;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      // Центральний кроп під 4:3 — те саме, що робить object-fit: cover.
+      const scale = Math.max(TN_W / img.naturalWidth, TN_H / img.naturalHeight);
+      const sw = TN_W / scale;
+      const sh = TN_H / scale;
+      const sx = (img.naturalWidth - sw) / 2;
+      const sy = (img.naturalHeight - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, TN_W, TN_H);
+
+      return new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', QUALITY));
+    }
+
+    async function run() {
+      if (typeof PROJECTS === 'undefined') {
+        say('PROJECTS не завантажився — перевір ../js/projects-data.js', 'err');
+        return;
+      }
+
+      const payload = {};
+      let made = 0, skipped = 0, failed = 0;
+
+      for (const project of PROJECTS) {
+        if (!Array.isArray(project.gallery) || !project.gallery.length) continue;
+
+        for (const file of project.gallery) {
+          const rel = project.id + '/' + file;
+          const src = '../projects/' + rel;
+          const tnRel = rel.replace(/\.(jpe?g|png|webp)$/i, SUFFIX);
+
+          if (await exists('../projects/' + tnRel)) {
+            say('skip  ' + tnRel, 'skip');
+            skipped++;
+            continue;
+          }
+
+          try {
+            const img = await loadImage(src);
+            const blob = await renderThumb(img);
+            payload[tnRel] = await toBase64(blob);
+            say('make  ' + tnRel + '  (' + img.naturalWidth + 'x' + img.naturalHeight +
+              ' -> ' + TN_W + 'x' + TN_H + ', ' + Math.round(blob.size / 1024) + ' KB)', 'ok');
+            made++;
+          } catch (error) {
+            say('FAIL  ' + rel + '  — ' + error.message, 'err');
+            failed++;
+          }
+        }
+      }
+
+      say('');
+      say('готово: створено ' + made + ', пропущено ' + skipped + ', помилок ' + failed);
+
+      // Один-єдиний файл на завантаження: кілька підряд Chrome блокує без дозволу.
+      // Лог їде в тому ж файлі, щоб скрипт міг показати його при збої.
+      const result = { files: payload, log: log.textContent, made, skipped, failed };
+      const blob = new Blob([JSON.stringify(result)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'roboinua-thumbs.json';
+      document.body.appendChild(a);
+      a.click();
+
+      document.title = 'THUMBS_DONE made=' + made + ' skipped=' + skipped + ' failed=' + failed;
+    }
+
+    run().catch((error) => {
+      say('');
+      say('ЗБІЙ: ' + (error && error.message ? error.message : error), 'err');
+      const blob = new Blob([JSON.stringify({ files: {}, log: log.textContent, made: 0, skipped: 0, failed: -1 })],
+        { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'roboinua-thumbs.json';
+      document.body.appendChild(a);
+      a.click();
+    });
+  </script>
+</body>
+
+</html>
