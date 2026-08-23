@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>PNG/JPG → WebP</title>
+  <style>
+    body { font: 15px/1.5 monospace; padding: 20px; }
+    #log { white-space: pre-wrap; }
+  </style>
+</head>
+
+<!--
+  Конвертує растрові файли в WebP. Запускається з tools\to-webp.ps1, який
+  формує список файлів і забирає результат. Кодує сам Chrome через canvas —
+  стороннього софту на цій машині немає.
+
+  Шляхи у списку — відносні від теки tools\, тому сторінка має лежати саме тут.
+-->
+
+<body>
+  <div id="log">Готую…</div>
+  <script src="to-webp-list.js"></script>
+  <script>
+    const MAX_WIDTH = 1400;   // ширина колонки уроку з запасом під retina
+    const QUALITY = 0.88;     // скриншоти редакторів лишаються читабельними
+
+    const log = document.getElementById('log');
+    const lines = [];
+    const out = {};
+    let failed = 0;
+
+    function say(text) {
+      lines.push(text);
+      log.textContent = lines.join('\n');
+    }
+
+    function convert(path) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, MAX_WIDTH / img.naturalWidth);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.naturalWidth * scale);
+          canvas.height = Math.round(img.naturalHeight * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingQuality = 'high';
+          // Білий фон: прозорі PNG інакше стають чорними прямокутниками.
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob((blob) => {
+            if (!blob) { failed++; say(`  ЗБІЙ  ${path}`); return resolve(); }
+            const reader = new FileReader();
+            reader.onload = () => {
+              out[path] = reader.result.split(',')[1];
+              say(`  ok    ${path}  ${canvas.width}x${canvas.height}  ${Math.round(blob.size / 1024)} КБ`);
+              resolve();
+            };
+            reader.readAsDataURL(blob);
+          }, 'image/webp', QUALITY);
+        };
+        img.onerror = () => { failed++; say(`  НЕМАЄ ${path}`); resolve(); };
+        img.src = path;
+      });
+    }
+
+    (async function run() {
+      if (typeof TO_WEBP_LIST === 'undefined') {
+        say('Немає списку файлів (to-webp-list.js). Запускайте через tools\\to-webp.ps1.');
+        return;
+      }
+
+      say(`Конвертую ${TO_WEBP_LIST.length} файлів…`);
+      for (const path of TO_WEBP_LIST) {
+        await convert(path);
+      }
+
+      const payload = JSON.stringify({ failed, files: out, log: lines.join('\n') });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([payload], { type: 'application/json' }));
+      link.download = 'to-webp-result.json';
+      document.body.appendChild(link);
+      link.click();
+      say(failed ? `Готово з помилками: ${failed}` : 'Готово.');
+    })();
+  </script>
+</body>
+</html>

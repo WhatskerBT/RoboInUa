@@ -1,0 +1,1337 @@
+/* ================================================================
+   КАБІНЕТ ВЧИТЕЛЯ — акаунт, класи, прогрес, режим уроку
+   Продовження тієї самої M3 Expressive системи, що й styles.css:
+   ті самі токени, те саме скло. Префікс .tc- (teacher cabinet).
+   ================================================================ */
+
+.tc-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ============ ВЕРХНЯ ПАНЕЛЬ КАБІНЕТУ ============ */
+
+.tc-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  border-radius: var(--md-shape-xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  box-shadow: var(--md-elevation-1);
+}
+
+.tc-bar-avatar {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-full);
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--md-typescale-title-medium);
+}
+
+.tc-bar-id {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.tc-bar-id h1 {
+  font: var(--md-typescale-headline-small);
+  letter-spacing: var(--md-tracking-headline);
+  color: var(--md-on-surface);
+  margin: 0;
+}
+
+.tc-bar-id p {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  margin: 2px 0 0;
+}
+
+.tc-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* ============ КНОПКИ Й ПОЛЯ ============ */
+
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--md-shape-full);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container);
+  color: var(--md-on-surface);
+  font: var(--md-typescale-label-large);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    border-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-short4) var(--md-motion-easing-emphasized);
+}
+
+.tc-btn:hover {
+  background: var(--md-surface-container-high);
+  transform: translateY(-1px);
+}
+
+.tc-btn:active {
+  transform: scale(0.98);
+}
+
+.tc-btn--quiet {
+  background: transparent;
+}
+
+.tc-btn--danger {
+  color: var(--md-error);
+  border-color: color-mix(in srgb, var(--md-error) 40%, transparent);
+}
+
+.tc-btn--danger:hover {
+  background: var(--md-error-container);
+  color: var(--md-on-error-container);
+}
+
+.tc-btn[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.tc-field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.tc-field > span {
+  display: block;
+  font: var(--md-typescale-label-large);
+  color: var(--md-on-surface-variant);
+  margin-bottom: 6px;
+}
+
+.tc-field input,
+.tc-field textarea,
+.tc-field select {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--md-shape-md);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-lowest);
+  color: var(--md-on-surface);
+  font: var(--md-typescale-body-large);
+  transition: border-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.tc-field input:focus,
+.tc-field textarea:focus,
+.tc-field select:focus {
+  outline: none;
+  border-color: var(--md-on-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-on-surface) 12%, transparent);
+}
+
+.tc-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.tc-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+/* ============ ПОВІДОМЛЕННЯ ============ */
+
+.tc-msg {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--md-shape-md);
+  font: var(--md-typescale-body-medium);
+  margin-bottom: 16px;
+}
+
+.tc-msg.is-visible {
+  display: flex;
+}
+
+.tc-msg--error {
+  background: var(--md-error-container);
+  color: var(--md-on-error-container);
+}
+
+.tc-msg--ok {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+.tc-msg--info {
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+}
+
+.tc-msg .material-symbols-rounded {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ============ ЕКРАН ВХОДУ ============ */
+
+/* Двоколонковий розклад — той самий прийом, що й .about-split на головній:
+   ліворуч пояснення, праворуч дія. */
+.tc-auth-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+  gap: 48px;
+  align-items: start;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.tc-auth-intro h2 {
+  font: var(--md-typescale-headline-medium);
+  letter-spacing: var(--md-tracking-headline);
+  color: var(--md-on-surface);
+  margin: 12px 0 28px;
+}
+
+.tc-benefit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.tc-benefit {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.tc-benefit-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-md);
+  background: var(--md-tertiary-container);
+  color: var(--md-on-tertiary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tc-benefit-icon .material-symbols-rounded {
+  font-size: 24px;
+}
+
+.tc-benefit h3 {
+  font: var(--md-typescale-title-medium);
+  color: var(--md-on-surface);
+  margin: 0 0 4px;
+}
+
+.tc-benefit p {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  margin: 0;
+}
+
+.tc-auth {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px;
+  border-radius: var(--md-shape-2xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  box-shadow: var(--md-elevation-3);
+}
+
+/* ---- Захист від спаму ---- */
+
+/* Приманка. Саме зсув за екран, а не display:none: частина ботів пропускає
+   приховані поля, але майже ніхто не рахує координати. */
+.tc-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.tc-challenge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 16px;
+  border-radius: var(--md-shape-md);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container);
+}
+
+.tc-challenge-q {
+  flex: 1;
+  min-width: 0;
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface);
+}
+
+.tc-challenge input {
+  width: 82px;
+  flex-shrink: 0;
+  text-align: center;
+  padding: 9px 10px;
+}
+
+/* .tc-icon-btn нижче за текстом ховає себе до наведення (кнопки в списку
+   учнів), тож тут потрібен селектор специфічніший за один клас. */
+.tc-challenge-row .tc-challenge-refresh {
+  opacity: 1;
+  background: var(--md-surface-container-lowest);
+  border: 1px solid var(--md-outline-variant);
+}
+
+/* ---- Надійність пароля ---- */
+
+.tc-strength {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.tc-strength .tc-track {
+  flex: 1;
+  height: 5px;
+}
+
+.tc-strength-label {
+  font: var(--md-typescale-label-medium);
+  color: var(--md-on-surface-variant);
+  min-width: 92px;
+  text-align: right;
+}
+
+.tc-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 24px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+}
+
+.tc-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  font: var(--md-typescale-label-large);
+  cursor: pointer;
+  transition: background var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.tc-tab.is-active {
+  background: var(--md-surface-container-lowest);
+  color: var(--md-on-surface);
+  box-shadow: var(--md-elevation-1);
+}
+
+.tc-auth-form {
+  display: none;
+}
+
+.tc-auth-form.is-active {
+  display: block;
+}
+
+.tc-auth .btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* ============ КАРТКИ КЛАСІВ ============ */
+
+.tc-section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 40px 0 20px;
+}
+
+.tc-section-head h2 {
+  font: var(--md-typescale-headline-small);
+  letter-spacing: var(--md-tracking-headline);
+  color: var(--md-on-surface);
+  margin: 0;
+}
+
+.tc-section-head .tc-btn {
+  margin-left: auto;
+}
+
+.tc-class-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.tc-class-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border-radius: var(--md-shape-xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  box-shadow: var(--md-elevation-1);
+  transition: box-shadow var(--md-motion-duration-medium1) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-medium1) var(--md-motion-easing-emphasized);
+}
+
+.tc-class-card:hover {
+  box-shadow: var(--md-elevation-3);
+  transform: translateY(-2px);
+}
+
+.tc-class-card.is-archived {
+  opacity: 0.62;
+}
+
+.tc-class-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.tc-class-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-tertiary-container);
+  color: var(--md-on-tertiary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tc-class-icon .material-symbols-rounded {
+  font-size: 24px;
+}
+
+.tc-class-card h3 {
+  font: var(--md-typescale-title-large);
+  color: var(--md-on-surface);
+  margin: 0;
+}
+
+.tc-class-meta {
+  font: var(--md-typescale-body-small);
+  color: var(--md-on-surface-variant);
+  margin-top: 2px;
+}
+
+.tc-class-note {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+}
+
+.tc-class-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* ============ СМУЖКИ ПРОГРЕСУ ============ */
+
+.tc-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: var(--md-typescale-body-small);
+  color: var(--md-on-surface-variant);
+}
+
+.tc-progress-row .tc-track {
+  flex: 1;
+}
+
+.tc-track {
+  height: 8px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-highest);
+  overflow: hidden;
+}
+
+.tc-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4285f4, #8a63d2 55%, #ea6a5e);
+  transition: width var(--md-motion-duration-long2) var(--md-motion-easing-emphasized);
+}
+
+/* ============ ПОРОЖНІ СТАНИ ============ */
+
+.tc-empty {
+  padding: 48px 24px;
+  text-align: center;
+  border-radius: var(--md-shape-xl);
+  border: 1px dashed var(--md-outline);
+  color: var(--md-on-surface-variant);
+}
+
+.tc-empty .material-symbols-rounded {
+  font-size: 44px;
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+.tc-empty h3 {
+  font: var(--md-typescale-title-large);
+  color: var(--md-on-surface);
+  margin-bottom: 6px;
+}
+
+.tc-empty p {
+  font: var(--md-typescale-body-medium);
+  max-width: 460px;
+  margin: 0 auto 18px;
+}
+
+/* ============ ДІАЛОГ ============ */
+
+.tc-dialog {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: 520px;
+  width: calc(100% - 32px);
+}
+
+.tc-dialog::backdrop {
+  background: color-mix(in srgb, var(--md-scrim) 45%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.tc-dialog-body {
+  padding: 28px;
+  border-radius: var(--md-shape-2xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  box-shadow: var(--md-elevation-5);
+}
+
+.tc-dialog-body h2 {
+  font: var(--md-typescale-headline-small);
+  letter-spacing: var(--md-tracking-headline);
+  margin-bottom: 18px;
+  color: var(--md-on-surface);
+}
+
+.tc-dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ============ СПИСОК УЧНІВ ============ */
+
+.tc-split {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.tc-panel {
+  padding: 24px;
+  border-radius: var(--md-shape-xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  box-shadow: var(--md-elevation-1);
+}
+
+.tc-panel h2 {
+  font: var(--md-typescale-title-large);
+  color: var(--md-on-surface);
+  margin: 0 0 16px;
+}
+
+.tc-student-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.tc-student {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--md-shape-md);
+  transition: background var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.tc-student:hover {
+  background: var(--md-surface-container-high);
+}
+
+.tc-student-avatar {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-highest);
+  color: var(--md-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--md-typescale-label-medium);
+}
+
+.tc-student-name {
+  flex: 1;
+  min-width: 0;
+  font: var(--md-typescale-body-large);
+  color: var(--md-on-surface);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tc-icon-btn {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  opacity: 0;
+  transition: background var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    opacity var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.tc-student:hover .tc-icon-btn,
+.tc-icon-btn:focus-visible {
+  opacity: 1;
+}
+
+.tc-icon-btn:hover {
+  background: var(--md-surface-container-highest);
+  color: var(--md-on-surface);
+}
+
+.tc-icon-btn .material-symbols-rounded {
+  font-size: 19px;
+}
+
+/* Сенсорні пристрої не мають hover — кнопки мають бути видимі одразу. */
+@media (hover: none) {
+  .tc-icon-btn {
+    opacity: 1;
+  }
+}
+
+/* ============ КУРСИ Й УРОКИ КЛАСУ ============ */
+
+.tc-course {
+  padding: 22px;
+  border-radius: var(--md-shape-xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  box-shadow: var(--md-elevation-1);
+  margin-bottom: 20px;
+}
+
+.tc-course-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.tc-course-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--md-shape-md);
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tc-course-head h3 {
+  font: var(--md-typescale-title-large);
+  color: var(--md-on-surface);
+  margin: 0;
+}
+
+.tc-course-head .tc-progress-row {
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.tc-lessons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.tc-lesson {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--md-shape-lg);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-lowest);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    background var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-short4) var(--md-motion-easing-emphasized);
+}
+
+.tc-lesson:hover {
+  transform: translateY(-1px);
+  border-color: var(--md-outline);
+}
+
+/* Плитка уроку робить дві різні речі, тож усередині два окремі елементи:
+   посилання (відкрити режим уроку) і кнопка статусу (пройдено / триває). */
+.tc-lesson-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tc-lesson-state {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  transition: background var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.tc-lesson-state:hover {
+  background: var(--md-surface-container-highest);
+  color: var(--md-on-surface);
+}
+
+.tc-lesson-num {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-highest);
+  color: var(--md-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--md-typescale-label-medium);
+}
+
+.tc-lesson-title {
+  flex: 1;
+  min-width: 0;
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tc-lesson-state {
+  flex-shrink: 0;
+  color: var(--md-on-surface-variant);
+}
+
+.tc-lesson-state .material-symbols-rounded {
+  font-size: 20px;
+}
+
+.tc-lesson.is-active {
+  border-color: color-mix(in srgb, #4285f4 60%, transparent);
+  background: color-mix(in srgb, #4285f4 10%, var(--md-surface-container-lowest));
+}
+
+.tc-lesson.is-active .tc-lesson-num {
+  background: #4285f4;
+  color: #fff;
+}
+
+.tc-lesson.is-done {
+  border-color: color-mix(in srgb, #1f9254 55%, transparent);
+  background: color-mix(in srgb, #1f9254 10%, var(--md-surface-container-lowest));
+}
+
+.tc-lesson.is-done .tc-lesson-num {
+  background: #1f9254;
+  color: #fff;
+}
+
+.tc-lesson.is-done .tc-lesson-state {
+  color: #1f9254;
+}
+
+.tc-hint {
+  font: var(--md-typescale-body-small);
+  color: var(--md-on-surface-variant);
+  margin-top: 12px;
+}
+
+/* ============ МАТРИЦЯ УЧНІ × УРОКИ ============ */
+
+.tc-matrix-wrap {
+  overflow-x: auto;
+  border-radius: var(--md-shape-lg);
+  border: 1px solid var(--md-outline-variant);
+}
+
+.tc-matrix {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 520px;
+  font: var(--md-typescale-body-medium);
+}
+
+.tc-matrix th,
+.tc-matrix td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.tc-matrix thead th {
+  position: sticky;
+  top: 0;
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  font: var(--md-typescale-label-medium);
+  z-index: 1;
+}
+
+.tc-matrix th.tc-matrix-name,
+.tc-matrix td.tc-matrix-name {
+  text-align: left;
+  min-width: 180px;
+  position: sticky;
+  left: 0;
+  background: var(--md-surface-container-lowest);
+  color: var(--md-on-surface);
+  z-index: 2;
+}
+
+.tc-matrix thead th.tc-matrix-name {
+  background: var(--md-surface-container-high);
+  z-index: 3;
+}
+
+.tc-matrix tbody tr:last-child th,
+.tc-matrix tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tc-check {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--md-shape-sm);
+  border: 1.5px solid var(--md-outline);
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--md-motion-duration-short3) var(--md-motion-easing-standard),
+    border-color var(--md-motion-duration-short3) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-short3) var(--md-motion-easing-spring);
+}
+
+.tc-check:hover {
+  border-color: var(--md-on-surface);
+}
+
+.tc-check .material-symbols-rounded {
+  font-size: 18px;
+}
+
+.tc-check.is-on {
+  background: #1f9254;
+  border-color: #1f9254;
+  color: #fff;
+}
+
+.tc-check.is-on:active {
+  transform: scale(0.9);
+}
+
+/* ============ ЖУРНАЛ ============ */
+
+.tc-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tc-log-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-surface-container);
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface);
+}
+
+.tc-log-date {
+  font: var(--md-typescale-label-medium);
+  color: var(--md-on-surface-variant);
+  white-space: nowrap;
+}
+
+/* ============ РЕЖИМ УРОКУ (ПРОЄКТОР) ============ */
+
+.lesson-mode {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.lesson-mode.is-panel-hidden {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.lesson-mode.is-panel-hidden .lm-panel {
+  display: none;
+}
+
+.lm-stage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 28px 40px 40px;
+}
+
+.lm-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.lm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  font: var(--md-typescale-label-large);
+}
+
+.lm-chip .material-symbols-rounded {
+  font-size: 18px;
+}
+
+.lm-top-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* Сцена слайда. Розміри тексту масштабуються від ширини екрана, бо той самий
+   екран буває і ноутбуком, і проєктором на всю стіну. */
+.lm-slide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.lm-slide h1 {
+  font: 700 clamp(30px, 3.6vw, 56px) / 1.12 'Google Sans', sans-serif;
+  letter-spacing: var(--md-tracking-display);
+  color: var(--md-on-surface);
+  margin-bottom: 14px;
+}
+
+.lm-slide h2 {
+  font: 600 clamp(24px, 2.6vw, 40px) / 1.2 'Google Sans', sans-serif;
+  letter-spacing: var(--md-tracking-headline);
+  color: var(--md-on-surface);
+  margin-bottom: 20px;
+}
+
+.lm-slide p,
+.lm-slide li {
+  font: 400 clamp(17px, 1.5vw, 24px) / 1.55 'Google Sans Text', sans-serif;
+  color: var(--md-on-surface);
+}
+
+.lm-slide p {
+  margin-bottom: 16px;
+}
+
+.lm-slide ul,
+.lm-slide ol {
+  margin: 0 0 16px;
+  padding-left: 1.4em;
+}
+
+.lm-slide li {
+  margin-bottom: 10px;
+}
+
+.lm-slide strong {
+  font-weight: 600;
+}
+
+.lm-slide code {
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.92em;
+  padding: 2px 7px;
+  border-radius: var(--md-shape-xs);
+  background: var(--md-surface-container-high);
+}
+
+.lm-slide pre {
+  margin: 0 0 18px;
+  padding: 20px 22px;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-inverse-surface);
+  color: var(--md-inverse-on-surface);
+  overflow-x: auto;
+}
+
+.lm-slide pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: clamp(14px, 1.15vw, 19px);
+  line-height: 1.55;
+}
+
+.lm-slide figure {
+  margin: 0 0 18px;
+}
+
+.lm-slide img {
+  max-width: 100%;
+  max-height: 46vh;
+  border-radius: var(--md-shape-lg);
+  border: 1px solid var(--md-outline-variant);
+}
+
+.lm-slide figcaption {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  margin-top: 8px;
+}
+
+.lm-note {
+  display: flex;
+  gap: 14px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-surface-container);
+  border-left: 4px solid var(--md-outline);
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.5;
+  color: var(--md-on-surface);
+}
+
+.lm-note .material-symbols-rounded {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.lm-note--tip {
+  border-left-color: #1f9254;
+}
+
+.lm-note--warn {
+  border-left-color: #e0932f;
+}
+
+.lm-note--info {
+  border-left-color: #4285f4;
+}
+
+/* Нижня панель навігації слайдами */
+.lm-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--md-outline-variant);
+}
+
+.lm-dots {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.lm-dot {
+  width: 26px;
+  height: 6px;
+  border: none;
+  padding: 0;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-highest);
+  cursor: pointer;
+  transition: background var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+    transform var(--md-motion-duration-short4) var(--md-motion-easing-spring);
+}
+
+.lm-dot:hover {
+  transform: scaleY(1.6);
+}
+
+.lm-dot.is-active {
+  background: var(--md-on-surface);
+}
+
+.lm-dot.is-seen {
+  background: var(--md-outline);
+}
+
+.lm-counter {
+  font: var(--md-typescale-label-large);
+  color: var(--md-on-surface-variant);
+  white-space: nowrap;
+}
+
+/* ---- Бічна панель учителя ---- */
+
+.lm-panel {
+  border-left: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-low);
+  padding: 24px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+}
+
+.lm-panel h2 {
+  font: var(--md-typescale-title-medium);
+  color: var(--md-on-surface);
+  margin: 0;
+}
+
+.lm-panel-sub {
+  font: var(--md-typescale-body-small);
+  color: var(--md-on-surface-variant);
+  margin-top: -12px;
+}
+
+.lm-roster {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Рядок учня — велика мішень, бо натискати доводиться швидко під час уроку. */
+.lm-student {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--md-shape-md);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-lowest);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface);
+  transition: background var(--md-motion-duration-short3) var(--md-motion-easing-standard),
+    border-color var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+}
+
+.lm-student:hover {
+  background: var(--md-surface-container-high);
+}
+
+.lm-student-box {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-sm);
+  border: 1.5px solid var(--md-outline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+}
+
+.lm-student-box .material-symbols-rounded {
+  font-size: 17px;
+}
+
+.lm-student.is-done {
+  border-color: color-mix(in srgb, #1f9254 55%, transparent);
+  background: color-mix(in srgb, #1f9254 10%, var(--md-surface-container-lowest));
+}
+
+.lm-student.is-done .lm-student-box {
+  background: #1f9254;
+  border-color: #1f9254;
+  color: #fff;
+}
+
+.lm-panel-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lm-panel-foot .tc-btn {
+  width: 100%;
+}
+
+/* Кнопка показу панелі, коли її сховали */
+.lm-panel-show {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  display: none;
+}
+
+.lesson-mode.is-panel-hidden .lm-panel-show {
+  display: inline-flex;
+}
+
+/* ============ АДАПТИВ ============ */
+
+@media (max-width: 1024px) {
+  .tc-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tc-auth-split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    max-width: 560px;
+  }
+
+  .lesson-mode {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lm-panel {
+    position: static;
+    max-height: none;
+    border-left: none;
+    border-top: 1px solid var(--md-outline-variant);
+  }
+}
+
+@media (max-width: 768px) {
+  .tc-page {
+    padding: 0 16px 96px;
+  }
+
+  .tc-bar {
+    padding: 16px;
+  }
+
+  .tc-bar-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .tc-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .lm-stage {
+    padding: 20px 18px 32px;
+  }
+
+  .lm-slide {
+    justify-content: flex-start;
+  }
+}
+
+/* Друк — роздрукований план уроку без панелі й навігації. */
+@media print {
+  .lm-panel,
+  .lm-nav,
+  .lm-top-actions,
+  .lm-panel-show {
+    display: none !important;
+  }
+
+  .lesson-mode,
+  .lm-stage {
+    display: block;
+    min-height: 0;
+    padding: 0;
+  }
+}

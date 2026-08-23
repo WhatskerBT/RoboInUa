@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Генератор обкладинок курсів</title>
+  <style>
+    body { font: 14px/1.5 monospace; background: #111; color: #ddd; padding: 20px; }
+    .ok { color: #6ee787; }
+    .skip { color: #888; }
+    .err { color: #ff7b72; }
+    h1 { font: 600 18px monospace; }
+  </style>
+</head>
+
+<body>
+  <h1>Генератор обкладинок курсів</h1>
+  <p>Запускається через <code>tools\make-course-covers.ps1</code>. Сам нічого не записує на диск —
+    складає всі обкладинки в один JSON і віддає його одним завантаженням, а файли розкладає скрипт.</p>
+  <pre id="log"></pre>
+
+  <script>
+    /* ОБКЛАДИНКИ КАТАЛОГУ КУРСІВ.
+       Картка каталогу показує медіа 16:9 шириною ~320–420 px, а раніше туди
+       вантажилась повнорозмірна ілюстрація уроку (до 1400x875). Десять таких
+       картинок — це ~24 МБ декодованого растру в пам'яті заради ~1 МП корисних.
+       Тут ми наперед робимо той самий центральний кроп, який робить
+       object-fit: cover, — вигляд не змінюється, вага падає вдесятеро.
+
+       ДЖЕРЕЛА. Обкладинка кожного курсу — це ілюстрація одного з його уроків.
+       Таблиця нижче — єдиний запис про те, з чого зроблено кожен cover.webp:
+       у js\courses\<id>.js поле cover уже вказує на готовий кроп, тож
+       перегенерувати без цієї таблиці було б нізвідки. */
+    const COVER_W = 640;
+    const COVER_H = 360;
+    const QUALITY = 0.82;
+    const OUT = 'img/cover.webp';
+
+    const SOURCES = [
+      { id: 'arduino',         from: 'img/lesson1-2-1.webp' },
+      { id: 'arduino-sensors', from: 'img/lesson1-1.webp' },
+      { id: 'pico-intro',      from: 'img/lesson1-1.webp' },
+      { id: '3d-modeling',     from: 'img/lesson6-1.webp' },
+      { id: 'blender-intro',   from: 'img/lesson1-1.webp' },
+      { id: 'scratch-intro',   from: 'img/lesson1-1.webp' },
+      { id: 'scratch-more',    from: 'img/lesson1-1.webp' },
+      { id: 'python-intro',    from: 'img/lesson6-1.webp' },
+      { id: 'web-intro',       from: 'img/lesson3-1.webp' },
+      { id: 'web-more',        from: 'img/lesson1-1.webp' },
+    ];
+
+    const log = document.getElementById('log');
+    function say(text, cls) {
+      const line = document.createElement('span');
+      line.className = cls || '';
+      line.textContent = text + '\n';
+      log.appendChild(line);
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('not found: ' + src));
+        img.src = src;
+      });
+    }
+
+    function toBase64(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(',')[1]);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function renderCover(img) {
+      const canvas = document.createElement('canvas');
+      canvas.width = COVER_W;
+      canvas.height = COVER_H;
+      const ctx = canvas.getContext('2d');
+      // Під прозорий PNG/WebP — білий фон, інакше кроп ляже на чорне.
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, COVER_W, COVER_H);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      // Центральний кроп під 16:9 — те саме, що робить object-fit: cover.
+      const scale = Math.max(COVER_W / img.naturalWidth, COVER_H / img.naturalHeight);
+      const sw = COVER_W / scale;
+      const sh = COVER_H / scale;
+      const sx = (img.naturalWidth - sw) / 2;
+      const sy = (img.naturalHeight - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, COVER_W, COVER_H);
+
+      return new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', QUALITY));
+    }
+
+    async function run() {
+      const payload = {};
+      let made = 0, failed = 0;
+
+      for (const item of SOURCES) {
+        const rel = item.id + '/' + item.from;
+        const outRel = item.id + '/' + OUT;
+
+        try {
+          const img = await loadImage('../materials/' + rel);
+          const blob = await renderCover(img);
+          payload[outRel] = await toBase64(blob);
+          say('make  ' + outRel + '  (' + img.naturalWidth + 'x' + img.naturalHeight +
+            ' -> ' + COVER_W + 'x' + COVER_H + ', ' + Math.round(blob.size / 1024) + ' KB)', 'ok');
+          made++;
+        } catch (error) {
+          say('FAIL  ' + rel + '  — ' + error.message, 'err');
+          failed++;
+        }
+      }
+
+      say('');
+      say('готово: створено ' + made + ', помилок ' + failed);
+
+      // Один-єдиний файл на завантаження: кілька підряд Chrome блокує без дозволу.
+      const result = { files: payload, log: log.textContent, made, skipped: 0, failed };
+      const blob = new Blob([JSON.stringify(result)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'roboinua-covers.json';
+      document.body.appendChild(a);
+      a.click();
+
+      document.title = 'COVERS_DONE made=' + made + ' failed=' + failed;
+    }
+
+    run().catch((error) => {
+      say('');
+      say('ЗБІЙ: ' + (error && error.message ? error.message : error), 'err');
+      const blob = new Blob([JSON.stringify({ files: {}, log: log.textContent, made: 0, skipped: 0, failed: -1 })],
+        { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'roboinua-covers.json';
+      document.body.appendChild(a);
+      a.click();
+    });
+  </script>
+</body>
+
+</html>

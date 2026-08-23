@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Перевірка захисту від спаму</title>
+  <style>
+    body { font: 15px/1.45 monospace; padding: 20px; max-width: 900px; }
+    #out { white-space: pre-wrap; font-size: 15px; }
+    .pass { color: #0a7d32; }
+    .fail { color: #b00020; font-weight: bold; }
+    .warn { border: 2px solid #b00020; padding: 16px; border-radius: 10px; margin-bottom: 18px; }
+    button { font: inherit; padding: 10px 18px; cursor: pointer; }
+  </style>
+</head>
+
+<!--
+  Перевірка правил захисту від спаму в js/store.js: приманка для ботів,
+  контроль часу заповнення, контрольне питання, ліміти реєстрацій і
+  блокування після невдалих входів.
+
+  УВАГА: тест СТИРАЄ localStorage цього браузера — разом із класами та
+  журналом, якщо вони тут є. Тому просто так він не запускається: потрібен
+  або клік по кнопці, або ?run=1 в адресі.
+
+  Автоматичний прогін (результат приходить файлом, бо PBKDF2 рахується
+  довше, ніж headless Chrome чекає перед знімком):
+    powershell -ExecutionPolicy Bypass -File tools\run-guard-test.ps1
+-->
+
+<body>
+  <div class="warn" id="gate">
+    <strong>Цей тест стирає локальні дані кабінету в цьому браузері.</strong>
+    <p>Класи, учні та відмітки прогресу будуть видалені. Запускайте лише там, де цих даних не шкода,
+       або зробіть резервну копію в кабінеті.</p>
+    <button type="button" id="run">Усе одно запустити тест</button>
+  </div>
+  <div id="out"></div>
+  <script src="../js/session.js"></script>
+  <script src="../js/store.js"></script>
+  <script>
+    const lines = [];
+    let failed = 0;
+
+    function check(name, ok, detail) {
+      if (!ok) failed++;
+      lines.push((ok ? '  PASS  ' : '  FAIL  ') + name + (detail ? '  → ' + detail : ''));
+    }
+
+    async function expectError(name, fn, fragment) {
+      try {
+        await fn();
+        check(name, false, 'помилки не було');
+      } catch (e) {
+        check(name, fragment ? e.message.includes(fragment) : true, e.message);
+      }
+    }
+
+    async function run() {
+      localStorage.clear();
+
+      const base = { name: 'Тест Тестенко', school: 'Школа', password: 'parol123' };
+
+      // 1. приманка для ботів
+      let ch = await RoboStore.newChallenge();
+      await expectError('honeypot відхиляє', () => RoboStore.register(Object.assign({}, base, {
+        email: 'bot@test.ua',
+        guard: { honeypot: 'http://spam', elapsedMs: 9000, challengeId: ch.id, challengeAnswer: '999' },
+      })), 'Не вдалося створити акаунт');
+
+      // 2. занадто швидке заповнення
+      ch = await RoboStore.newChallenge();
+      await expectError('швидке заповнення відхиляє', () => RoboStore.register(Object.assign({}, base, {
+        email: 'fast@test.ua',
+        guard: { honeypot: '', elapsedMs: 400, challengeId: ch.id, challengeAnswer: '5' },
+      })), 'надто швидко');
+
+      // 3. невірна відповідь
+      ch = await RoboStore.newChallenge();
+      await expectError('невірна відповідь відхиляє', () => RoboStore.register(Object.assign({}, base, {
+        email: 'wrong@test.ua',
+        guard: { honeypot: '', elapsedMs: 9000, challengeId: ch.id, challengeAnswer: '-42' },
+      })), 'Невірна відповідь');
+
+      // 4. питання видається у форматі {id, question} і не містить відповіді
+      ch = await RoboStore.newChallenge();
+      check('питання без відповіді в payload',
+        typeof ch.id === 'string' && typeof ch.question === 'string' && ch.answer === undefined,
+        JSON.stringify(ch));
+
+      // Правильну відповідь дістаємо так само, як її дістав би сервер, —
+      // з власного сховища перевірок, а не з того, що бачила сторінка.
+      const answerFor = (id) => JSON.parse(localStorage.getItem('roboinua_guard_v1'))
+        .challenges.find((c) => c.id === id).answer;
+
+      // 5. валідна реєстрація проходить
+      let ok = false;
+      try {
+        await RoboStore.register(Object.assign({}, base, {
+          email: 'good@test.ua',
+          guard: { honeypot: '', elapsedMs: 9000, challengeId: ch.id, challengeAnswer: String(answerFor(ch.id)) },
+        }));
+        ok = true;
+      } catch (e) { lines.push('    (' + e.message + ')'); }
+      check('валідна реєстрація проходить', ok);
+
+      // 6. пауза між реєстраціями (спрацьовує раніше за перевірку питання)
+      const chFresh = await RoboStore.newChallenge();
+      await expectError('пауза між реєстраціями', () => RoboStore.register(Object.assign({}, base, {
+        email: 'second@test.ua',
+        guard: { honeypot: '', elapsedMs: 9000, challengeId: chFresh.id, challengeAnswer: String(answerFor(chFresh.id)) },
+      })), 'Зачекайте');
+
+      // 7. те саме питання вдруге не приймається. Паузу прибираємо, щоб
+      //    дійти саме до перевірки питання, а не спіткнутися об ліміт.
+      const clearGap = () => {
+        const guard = JSON.parse(localStorage.getItem('roboinua_guard_v1'));
+        guard.signups = [];
+        localStorage.setItem('roboinua_guard_v1', JSON.stringify(guard));
+      };
+      clearGap();
+      await expectError('питання одноразове', () => RoboStore.register(Object.assign({}, base, {
+        email: 'reuse@test.ua',
+        guard: { honeypot: '', elapsedMs: 9000, challengeId: ch.id, challengeAnswer: '7' },
+      })), 'Термін дії');
+
+      // 8. добовий ліміт: підробляємо історію реєстрацій
+      const g = JSON.parse(localStorage.getItem('roboinua_guard_v1'));
+      const hourAgo = Date.now() - 60 * 60 * 1000;
+      g.signups = [hourAgo, hourAgo + 1000, hourAgo + 2000];
+      localStorage.setItem('roboinua_guard_v1', JSON.stringify(g));
+      ch = await RoboStore.newChallenge();
+      await expectError('добовий ліміт спрацьовує', () => RoboStore.register(Object.assign({}, base, {
+        email: 'limit@test.ua',
+        guard: { honeypot: '', elapsedMs: 9000, challengeId: ch.id, challengeAnswer: String(answerFor(ch.id)) },
+      })), 'за добу');
+
+      // 9. блокування після серії невдалих входів
+      for (let i = 0; i < 5; i++) {
+        try { await RoboStore.login({ email: 'good@test.ua', password: 'nepravylny' }); } catch (e) { /* очікувано */ }
+      }
+      await expectError('вхід блокується після 5 невдач',
+        () => RoboStore.login({ email: 'good@test.ua', password: 'nepravylny' }), 'Забагато невдалих спроб');
+
+      // 10. блокування діє й на правильний пароль
+      await expectError('блокування діє й на правильний пароль',
+        () => RoboStore.login({ email: 'good@test.ua', password: 'parol123' }), 'Забагато невдалих спроб');
+
+      // 11. після зняття блокування правильний пароль працює і лічильник скидається
+      const g2 = JSON.parse(localStorage.getItem('roboinua_guard_v1'));
+      g2.logins['good@test.ua'].lockedUntil = 0;
+      localStorage.setItem('roboinua_guard_v1', JSON.stringify(g2));
+      let loggedIn = false;
+      try {
+        const t = await RoboStore.login({ email: 'good@test.ua', password: 'parol123' });
+        loggedIn = !!t && t.name === 'Тест Тестенко';
+      } catch (e) { lines.push('    (' + e.message + ')'); }
+      check('правильний пароль після розблокування', loggedIn);
+
+      const g3 = JSON.parse(localStorage.getItem('roboinua_guard_v1'));
+      check('лічильник невдач скинуто після входу', !g3.logins['good@test.ua']);
+
+      // 12. session.js бачить того самого вчителя
+      const peeked = RoboSession.peek();
+      check('RoboSession.peek() бачить сесію', !!peeked && peeked.email === 'good@test.ua',
+        peeked ? peeked.name : 'null');
+
+      localStorage.clear();
+      report((failed ? 'ПРОВАЛЕНО ТЕСТІВ: ' + failed : 'УСІ ТЕСТИ ПРОЙДЕНО') + '\n\n' + lines.join('\n'), failed);
+    }
+
+    // PBKDF2 на 150k ітерацій рахується довше, ніж headless Chrome чекає перед
+    // знімком, тож результат віддаємо файлом — PowerShell його дочекається.
+    function report(text, bad) {
+      const out = document.getElementById('out');
+      out.className = bad ? 'fail' : 'pass';
+      out.textContent = text;
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      link.download = 'guard-result.txt';
+      document.body.appendChild(link);
+      link.click();
+    }
+
+    function start() {
+      document.getElementById('gate').remove();
+      document.getElementById('out').textContent = 'Виконується…';
+      run().catch((e) => {
+        report('ТЕСТ ВПАВ: ' + e.message + '\n' + e.stack + '\n\n' + lines.join('\n'), true);
+      });
+    }
+
+    document.getElementById('run').addEventListener('click', start);
+    if (new URLSearchParams(location.search).get('run') === '1') start();
+
+    window.addEventListener('error', (e) => {
+      document.getElementById('out').textContent = 'JS ERROR: ' + e.message + ' @ ' + e.filename + ':' + e.lineno;
+    });
+  </script>
+</body>
+</html>

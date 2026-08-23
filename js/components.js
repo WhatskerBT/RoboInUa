@@ -41,15 +41,30 @@ const NAV_ITEMS = [
   { href: 'donate/index.html', label: 'Підтримати', page: 'donate', icon: 'favorite', isButton: true },
 ];
 
+/* Пункт навігації, який з'являється ЛИШЕ для вчителя, що увійшов. Публічне
+   меню сайту від цього не змінюється: відвідувач ніколи його не бачить. */
+const TEACHER_NAV_ITEM = {
+  href: 'teacher/index.html', label: 'Кабінет', page: 'teacher', icon: 'school',
+};
+
+let currentPage = '';
+
+function session() {
+  return (typeof RoboSession !== 'undefined') ? RoboSession.peek() : null;
+}
+
 // Brand mark — squircle badge with the Material Symbols robot; colours follow the theme via CSS.
 const LOGO_MARK = `<span class="logo-dot" aria-hidden="true"><span class="material-symbols-rounded icon-filled logo-mark-icon">smart_toy</span></span>`;
 
-function renderHeader(activePage = '') {
-  const header = document.getElementById('header');
-  if (!header) return;
+function navMarkup(activePage) {
+  const teacher = session();
+  const items = NAV_ITEMS.slice();
+  if (teacher) {
+    // Перед кнопкою «Підтримати», щоб вона лишалася останньою.
+    items.splice(items.length - 1, 0, TEACHER_NAV_ITEM);
+  }
 
-  const supportItem = NAV_ITEMS.find((item) => item.isButton);
-  const navLinks = NAV_ITEMS.map((item) => {
+  return items.map((item) => {
     const href = url(item.href);
     const isActive = activePage === item.page;
 
@@ -65,6 +80,71 @@ function renderHeader(activePage = '') {
       <span class="nav-label">${item.label}</span>
     </a>`;
   }).join('\n      ');
+}
+
+/* Кнопка акаунта + випадне меню. Розмітка будується синхронно з
+   RoboSession.peek(), тож шапка одразу малюється у правильному стані —
+   без блимання «увійти» перед ініціалами вчителя. */
+function accountMarkup() {
+  const teacher = session();
+
+  const menu = teacher
+    ? `
+      <div class="account-menu-id">
+        <span class="account-menu-avatar">${initials(teacher.name)}</span>
+        <div>
+          <strong>${teacher.name}</strong>
+          <small>${teacher.school || teacher.email}</small>
+        </div>
+      </div>
+      <a role="menuitem" href="${url('teacher/index.html')}">
+        <span class="material-symbols-rounded m3-icon-18">school</span>
+        Кабінет вчителя
+      </a>
+      <a role="menuitem" href="${url('materials/index.html')}">
+        <span class="material-symbols-rounded m3-icon-18">menu_book</span>
+        Навчальні матеріали
+      </a>
+      <button type="button" role="menuitem" data-account-signout>
+        <span class="material-symbols-rounded m3-icon-18">logout</span>
+        Вийти
+      </button>`
+    : `
+      <div class="account-menu-id account-menu-id--guest">
+        <span class="account-menu-avatar"><span class="material-symbols-rounded m3-icon-20">account_circle</span></span>
+        <div>
+          <strong>Кабінет вчителя</strong>
+          <small>Класи, прогрес і урок на екран</small>
+        </div>
+      </div>
+      <a role="menuitem" href="${url('teacher/index.html')}">
+        <span class="material-symbols-rounded m3-icon-18">login</span>
+        Увійти
+      </a>
+      <a role="menuitem" href="${url('teacher/index.html')}?tab=register">
+        <span class="material-symbols-rounded m3-icon-18">person_add</span>
+        Створити акаунт
+      </a>`;
+
+  const label = teacher ? `${teacher.name} — меню акаунта` : 'Кабінет вчителя';
+
+  return `
+    <div class="account-wrap">
+      <button type="button" class="account-btn ${teacher ? 'is-signed' : ''}" id="account-btn"
+        aria-haspopup="true" aria-expanded="false" aria-controls="account-menu"
+        aria-label="${label}" title="${label}">
+        <span class="material-symbols-rounded m3-icon-24">account_circle</span>
+        <span class="account-initials" aria-hidden="true">${teacher ? initials(teacher.name) : ''}</span>
+      </button>
+      <div class="account-menu" id="account-menu" role="menu" aria-label="Меню акаунта">${menu}</div>
+    </div>`;
+}
+
+function renderHeader(activePage = '') {
+  const header = document.getElementById('header');
+  if (!header) return;
+
+  const supportItem = NAV_ITEMS.find((item) => item.isButton);
 
   header.outerHTML = `
   <header>
@@ -73,11 +153,14 @@ function renderHeader(activePage = '') {
       Федерація робототехніки Прилуччини
     </a>
     <nav class="nav-links" id="nav-links">
-      ${navLinks}
+      ${navMarkup(activePage)}
     </nav>
-    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Перемкнути тему" title="Перемкнути тему">
-      <span class="material-symbols-rounded m3-icon-20" data-theme-icon>dark_mode</span>
-    </button>
+    <div class="chrome-actions">
+      ${accountMarkup()}
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Перемкнути тему" title="Перемкнути тему">
+        <span class="material-symbols-rounded m3-icon-20" data-theme-icon>dark_mode</span>
+      </button>
+    </div>
   </header>
   ${supportItem ? `
   <a class="mobile-support-fab ${activePage === supportItem.page ? 'active' : ''}" href="${url(supportItem.href)}" aria-label="${supportItem.label}" title="${supportItem.label}">
@@ -85,6 +168,54 @@ function renderHeader(activePage = '') {
   </a>
   ` : ''}
   `;
+
+  wireAccountMenu();
+}
+
+let accountDocumentWired = false;
+
+function closeAccountMenu() {
+  const wrap = document.querySelector('.account-wrap.is-open');
+  if (!wrap) return;
+  wrap.classList.remove('is-open');
+  const button = wrap.querySelector('.account-btn');
+  if (button) button.setAttribute('aria-expanded', 'false');
+}
+
+/* Обробники самої кнопки вішаються заново на кожне перемальовування (кнопка
+   щоразу нова), а «клік поза меню» і Escape — рівно один раз за сторінку:
+   вони шукають меню в момент події, тож переживають перемальовування. */
+function wireAccountMenu() {
+  const button = document.getElementById('account-btn');
+  const wrap = button ? button.closest('.account-wrap') : null;
+  if (!button || !wrap) return;
+
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const open = wrap.classList.toggle('is-open');
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  if (!accountDocumentWired) {
+    accountDocumentWired = true;
+    document.addEventListener('click', (event) => {
+      const openWrap = document.querySelector('.account-wrap.is-open');
+      if (openWrap && !openWrap.contains(event.target)) closeAccountMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeAccountMenu();
+    });
+  }
+
+  const signOut = wrap.querySelector('[data-account-signout]');
+  if (signOut) {
+    signOut.addEventListener('click', () => {
+      if (typeof RoboSession !== 'undefined') RoboSession.signOut();
+      // Перезавантаження, а не редирект: на сторінках кабінету охорона сама
+      // відправить на екран входу, а на публічних просто оновиться шапка.
+      window.location.reload();
+    });
+  }
 }
 
 function renderBreadcrumbs(items) {
@@ -187,7 +318,35 @@ function ensureFavicon() {
   link.href = url('img/favicon.svg');
 }
 
+function initials(name) {
+  return String(name || '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join('') || '·';
+}
+
+/**
+ * Перемалювати те, що залежить від стану акаунта: пункт «Кабінет» у
+ * навігації та кнопку з меню. Потрібне після входу чи виходу без
+ * перезавантаження сторінки — саме так працює екран кабінету.
+ */
+function syncAccountButton() {
+  const nav = document.getElementById('nav-links');
+  if (nav) nav.innerHTML = navMarkup(currentPage);
+
+  const wrap = document.querySelector('.account-wrap');
+  if (wrap) {
+    wrap.outerHTML = accountMarkup();
+    wireAccountMenu();
+  }
+
+  if (typeof window.markDecorativeIcons === 'function') window.markDecorativeIcons();
+}
+
 function initComponents(activePage = '', options = {}) {
+  currentPage = activePage;
   ensureFavicon();
   renderHeader(activePage);
   renderFooter();

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Оптимізація зображень</title>
+  <style>
+    body { font: 14px/1.5 monospace; padding: 20px; }
+    #log { white-space: pre-wrap; }
+  </style>
+</head>
+
+<!--
+  Перестискає зображення у WebP: за потреби зменшує до заданої ширини
+  й перекодовує з заданою якістю. Кодує сам Chrome через canvas —
+  ffmpeg/cwebp/ImageMagick на цій машині немає.
+
+  Запускається з tools\optimize-images.ps1, який формує список файлів,
+  вирішує, чи варто замінювати оригінал, і забирає результат.
+  Шляхи у списку — відносні від теки tools\, тож сторінка має лежати тут.
+-->
+
+<body>
+  <div id="log">Готую…</div>
+  <script src="optimize-list.js"></script>
+  <script>
+    const log = document.getElementById('log');
+    const lines = [];
+    const out = {};
+    let failed = 0;
+
+    function say(text) {
+      lines.push(text);
+      log.textContent = lines.join('\n');
+    }
+
+    function encode(canvas, quality) {
+      return new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', quality));
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function load(path) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('не завантажилось'));
+        img.src = path;
+      });
+    }
+
+    async function processOne(item) {
+      let img;
+      try {
+        img = await load(item.path);
+      } catch (error) {
+        failed++;
+        say(`  ЗБІЙ   ${item.path} — ${error.message}`);
+        return;
+      }
+
+      // SVG без внутрішніх розмірів дає naturalWidth 0 — тоді беремо
+      // ширину із завдання, інакше малювати нема з чого.
+      const nativeW = img.naturalWidth || item.forceWidth || 0;
+      const nativeH = img.naturalHeight || item.forceWidth || 0;
+      if (!nativeW || !nativeH) {
+        failed++;
+        say(`  ЗБІЙ   ${item.path} — невідомі розміри`);
+        return;
+      }
+
+      const target = item.maxWidth || OPTIMIZE_SETTINGS.maxWidth;
+      const scale = Math.min(1, target / nativeW);
+      const width = Math.round(nativeW * scale);
+      const height = Math.round(nativeH * scale);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      // Білий фон: прозорі PNG інакше стають чорними прямокутниками.
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const quality = item.quality || OPTIMIZE_SETTINGS.quality;
+      const blob = await encode(canvas, quality);
+      if (!blob) {
+        failed++;
+        say(`  ЗБІЙ   ${item.path} — кодувальник не віддав дані`);
+        return;
+      }
+
+      out[item.path] = {
+        data: await blobToBase64(blob),
+        newSize: blob.size,
+        width,
+        height,
+        nativeW,
+        nativeH
+      };
+
+      const delta = item.size ? Math.round((1 - blob.size / item.size) * 100) : 0;
+      say(`  ${String(delta).padStart(4)}%  ${item.path}  ${nativeW}x${nativeH}` +
+          (scale < 1 ? ` → ${width}x${height}` : '') +
+          `  ${Math.round((item.size || 0) / 1024)} → ${Math.round(blob.size / 1024)} КБ`);
+    }
+
+    (async function run() {
+      if (typeof OPTIMIZE_LIST === 'undefined') {
+        say('Немає списку файлів. Запускайте через tools\\optimize-images.ps1.');
+        return;
+      }
+
+      // Підстраховка на випадок, коли список прийшов одним об'єктом, а не
+      // масивом: без неї цикл нічого не робить, а скрипт чекає результату.
+      const items = Array.isArray(OPTIMIZE_LIST) ? OPTIMIZE_LIST : [OPTIMIZE_LIST];
+
+      say(`Обробляю ${items.length} файлів ` +
+          `(ширина ≤ ${OPTIMIZE_SETTINGS.maxWidth}, якість ${OPTIMIZE_SETTINGS.quality})…`);
+
+      for (const item of items) {
+        await processOne(item);
+      }
+
+      const payload = JSON.stringify({ failed, files: out, log: lines.join('\n') });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([payload], { type: 'application/json' }));
+      link.download = 'optimize-result.json';
+      document.body.appendChild(link);
+      link.click();
+      say(failed ? `Готово з помилками: ${failed}` : 'Готово.');
+    })();
+  </script>
+</body>
+</html>

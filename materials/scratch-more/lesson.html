@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f9fb" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15131a" media="(prefers-color-scheme: dark)">
+    <title>Урок курсу «Scratch: далі» — Федерація робототехніки Прилуччини</title>
+    <meta name="description" content="Шість ігор і застосунків: повідомлення, змінні, списки, клони та власні блоки. Кожен урок курсу «Scratch: далі» — окрема сторінка з власним посиланням.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_circle,add,apartment,archive,arrow_back,arrow_forward,assignment,autorenew,build,business,cable,calendar_month,campaign,celebration,check,check_circle,checklist,chevron_right,child_care,close,cloud_off,computer,content_copy,corporate_fare,dark_mode,delete,deployed_code,desktop_windows,developer_board,devices,domain,done_all,download,edit,electrical_services,emoji_events,event,extension,face,favorite,festival,flag,folder_open,front_hand,fullscreen,grid_view,group_add,group_work,groups,handshake,hardware,history,home,how_to_reg,html,info,javascript,label,light_mode,lightbulb,list_alt,live_tv,location_city,location_on,login,logout,mail,memory,menu_book,monitor_heart,open_in_new,payments,person_add,person_book,play_arrow,play_circle,precision_manufacturing,public,radio_button_unchecked,rocket_launch,school,science,search,search_off,security,sensors,smart_display,smart_toy,terminal,tips_and_updates,trending_up,unarchive,upload,view_in_ar,visibility,visibility_off,volunteer_activism,warning,workspace_premium&display=swap">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/course.css">
+</head>
+
+<body>
+    <a href="#main" class="skip-link">Перейти до вмісту</a>
+    <div id="header"></div>
+    <main id="main"></main>
+    <div id="footer"></div>
+
+    <script src="../../js/session.js"></script>
+    <script src="../../js/courses-index.js"></script>
+    <script src="../../js/course-library.js"></script>
+    <script src="../../js/course-render.js"></script>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        initComponents('materials');
+    </script>
+    <script src="../../js/course-lesson.js"></script>
+    <!-- ambient-glow.js тут НЕ підключаємо: на сторінках курсу немає ані героя з
+         фото (.hero-stats-imgwrap), ані каруселі проєкту, тож світитися нема чому,
+         а скрипт вішав MutationObserver на всю сторінку й читав кожну ілюстрацію
+         уроку через canvas. Класів, що беруть --page-amb-*, тут теж немає. --></body>
+
+</html>

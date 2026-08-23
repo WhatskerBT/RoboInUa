@@ -284,7 +284,7 @@
         <div class="pd-hero-inner">
           <a href="../index.html" class="pd-back-link">
             <span class="material-symbols-rounded m3-icon-18">arrow_back</span>
-            Всі проєкти
+            Усі проєкти
           </a>
           <div class="pd-hero-icon">
             <span class="material-symbols-rounded icon-filled">${project.icon}</span>
@@ -353,7 +353,7 @@
 
           <a href="../index.html" class="btn btn-secondary" style="text-align:center;justify-content:center">
             <span class="material-symbols-rounded m3-icon-20">grid_view</span>
-            Всі проєкти
+            Усі проєкти
           </a>
         </aside>
       </div>
@@ -363,7 +363,7 @@
           ${prevButton}
           <a href="../index.html" class="pd-nav-all">
             <span class="material-symbols-rounded m3-icon-18">grid_view</span>
-            Всі проєкти
+            Усі проєкти
           </a>
           ${nextButton}
         </div>

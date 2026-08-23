@@ -10,20 +10,24 @@
   padding: 0 20px 40px;
 }
 
-/* ─────────── Catalog cards (materials index) ─────────── */
+/* ─────────── Каталог курсів (сторінка «Матеріали») ───────────
+   Картка складається з медіа-області та тіла. У медіа лежить або
+   обкладинка курсу, або кольорова панель з іконкою — так курси з
+   ілюстраціями й без них виглядають однією системою. */
+
 .course-catalog {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 22px;
 }
 
 .course-card {
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  border-radius: var(--md-shape-lg);
+  border-radius: var(--md-shape-xl);
   border: 1px solid var(--md-outline-variant);
   background: var(--md-surface-container-lowest);
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
   transition: transform .25s var(--md-motion-easing-emphasized, ease), border-color .25s, box-shadow .25s;
@@ -31,53 +35,135 @@
 
 .course-card:hover {
   transform: translateY(-4px);
-  border-color: var(--md-primary);
-  box-shadow: var(--md-elevation-2, 0 4px 12px rgba(0, 0, 0, .14));
+  border-color: var(--md-outline);
+  box-shadow: var(--md-elevation-3, 0 6px 16px rgba(0, 0, 0, .12));
 }
 
-.course-card-top {
+/* Фільтр каталогу ховає картки класом, а не перебудовою розмітки —
+   див. коментар угорі js/course-catalog.js. */
+.course-card.is-hidden,
+.course-catalog.is-hidden {
+  display: none;
+}
+
+/* ---- медіа ---- */
+/* Палітра сайту навмисно нейтральна, тож градієнт із -container-токенів
+   вийшов би майже білим. Для панелі без фото беремо фірмові кольори
+   Neural-градієнта, приглушені підмішуванням поверхні. */
+.course-card-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background:
+    linear-gradient(140deg,
+      color-mix(in srgb, #4285f4 20%, var(--md-surface-container)),
+      color-mix(in srgb, #8a63d2 18%, var(--md-surface-container)) 55%,
+      color-mix(in srgb, #ea6a5e 16%, var(--md-surface-container)));
+}
+
+/* Без hover-масштабування: наближення обкладинки змушувало браузер
+   перерастеризувати картинку всередині overflow:hidden на кожному кадрі.
+   Підйом самої картки лишається — він композитний і безкоштовний. */
+.course-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.course-card-media-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--md-on-surface);
+}
+
+.course-card-media-icon .material-symbols-rounded {
+  font-size: 68px;
+  opacity: .82;
+}
+
+/* Плашки поверх фото. Темна напівпрозора підкладка читається на будь-якому
+   зображенні — світлі плашки на світлому фото зникали б.
+   ЖИВОГО РОЗМИТТЯ ТУТ НЕМАЄ НАВМИСНО: плашок 2–3 на картку, тобто до трьох
+   десятків backdrop-filter на екрані — саме вони підвішували цю сторінку
+   (кожен — окремий прохід розмиття, який браузер переробляє на скролі).
+   Підкладку зробили щільнішою, щоб текст читався без розмиття. */
+.course-card-chips {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.course-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--md-shape-full);
+  background: rgba(12, 16, 24, .76);
+  color: #fff;
+  font: var(--md-typescale-label-medium);
+}
+
+.course-card-done {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: var(--md-shape-full);
+  background: #1f9254;
+  color: #fff;
+  font: var(--md-typescale-label-medium);
+}
+
+/* ---- тіло ---- */
+.course-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px 20px;
+  flex: 1;
+}
+
+.course-card-head {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
+  gap: 12px;
 }
 
 .course-card-icon {
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--md-shape-md);
   display: grid;
   place-items: center;
-  background: var(--md-primary-container);
-  color: var(--md-on-primary-container);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
 }
 
 .course-card-icon .material-symbols-rounded {
-  font-size: 30px;
+  font-size: 22px;
 }
 
 .course-card h3 {
   font: var(--md-typescale-title-large);
   color: var(--md-on-surface);
-  margin: 0 0 4px;
-}
-
-.course-card-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font: var(--md-typescale-label-medium);
-  color: var(--md-on-tertiary-container);
-  background: var(--md-tertiary-container);
-  padding: 3px 10px;
-  border-radius: var(--md-shape-full);
+  margin: 0;
 }
 
 .course-card p {
   font: var(--md-typescale-body-medium);
   color: var(--md-on-surface-variant);
-  margin: 0 0 20px;
+  margin: 0;
   flex: 1;
 }
 
@@ -87,6 +173,7 @@
   gap: 6px;
   font: var(--md-typescale-label-large);
   color: var(--md-primary);
+  margin-top: 4px;
 }
 
 .course-card:hover .course-card-cta .material-symbols-rounded {
@@ -98,10 +185,140 @@
   transition: transform .25s var(--md-motion-easing-emphasized, ease);
 }
 
+/* ─────────── «Продовжити навчання» ───────────
+   Смуга з'являється лише тоді, коли є розпочаті курси, і веде одразу
+   на потрібний урок, а не на початок курсу. */
+
+.resume-strip {
+  margin-bottom: 28px;
+  padding: 20px 22px;
+  border-radius: var(--md-shape-xl);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+}
+
+.resume-strip h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: var(--md-typescale-title-medium);
+  color: var(--md-on-surface);
+  margin: 0 0 14px;
+}
+
+.resume-strip h2 .material-symbols-rounded {
+  color: var(--md-primary);
+}
+
+.resume-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.resume-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-surface-container-lowest);
+  border: 1px solid var(--md-outline-variant);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .2s, box-shadow .25s, transform .25s var(--md-motion-easing-emphasized, ease);
+}
+
+.resume-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-outline);
+  box-shadow: var(--md-elevation-2);
+}
+
+.resume-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--md-shape-md);
+  display: grid;
+  place-items: center;
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+.resume-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.resume-body strong {
+  display: block;
+  font: var(--md-typescale-title-small);
+  color: var(--md-on-surface);
+}
+
+.resume-body small {
+  display: block;
+  font: var(--md-typescale-body-small);
+  color: var(--md-on-surface-variant);
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resume-track {
+  display: block;
+  height: 5px;
+  border-radius: var(--md-shape-full);
+  background: color-mix(in srgb, var(--md-on-surface) 14%, transparent);
+  overflow: hidden;
+}
+
+.resume-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--md-primary), var(--md-tertiary));
+}
+
+.resume-go {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--md-shape-full);
+  display: grid;
+  place-items: center;
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+  transition: background .2s, color .2s;
+}
+
+.resume-card:hover .resume-go {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+/* Панель пошуку й чипів каталогу повністю успадковує вигляд із каталогу
+   проєктів (styles.css → .filter-bar.projects-chip-bar). Власних правил тут
+   немає навмисно: те, що стояло раніше, перебивалося вищою специфічністю
+   і нічого не робило. */
+
 /* ─────────── Hero ─────────── */
+/* Відступ під плаваючу шапку тримає ПЕРШИЙ елемент сторінки. Раніше це був
+   .course-hero, але перед ним стоять хлібні крихти — і вони опинялися під
+   шапкою. Тепер відступ на крихтах, а герой підтягується до них. */
+.course-page > .breadcrumbs {
+  padding-top: 124px;
+}
+
 .course-hero {
   padding-top: 132px;
   margin-bottom: 8px;
+}
+
+.course-page > .breadcrumbs + .course-hero {
+  padding-top: 12px;
 }
 
 .course-hero-head {
@@ -679,6 +896,14 @@
     padding-top: 108px;
   }
 
+  .course-page > .breadcrumbs {
+    padding-top: 96px;
+  }
+
+  .course-page > .breadcrumbs + .course-hero {
+    padding-top: 8px;
+  }
+
   .course-hero h1 {
     font: var(--md-typescale-headline-medium);
   }
@@ -711,4 +936,391 @@
   .lesson-diff {
     order: 3;
   }
+}
+
+/* ================================================================
+   РОЗДІЛЕННЯ НА УРОКИ
+   Курс тепер має сторінку огляду (перелік уроків картками) і окрему
+   сторінку на кожен урок. Стилі нижче обслуговують обидві.
+   ================================================================ */
+
+/* align-items: flex-start, бо рядок «для кого» буває у два-три рядки —
+   при center іконка зависала посеред абзацу. Ширина — як у summary вище. */
+.course-audience {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  margin: 14px 0 0;
+  max-width: 72ch;
+}
+
+.course-audience .material-symbols-rounded {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ---- Прогрес на картці каталогу ---- */
+.course-card-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font: var(--md-typescale-label-medium);
+  color: var(--md-on-surface-variant);
+}
+
+.course-card-progress .cp-track {
+  height: 6px;
+}
+
+/* ---- Перелік уроків на сторінці курсу ---- */
+.lesson-list {
+  margin-top: 16px;
+}
+
+.lesson-list-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: var(--md-typescale-title-large);
+  color: var(--md-on-surface);
+  margin: 0 0 6px;
+}
+
+.lesson-list-hint {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  margin: 0 0 20px;
+}
+
+.lesson-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.lesson-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: var(--md-shape-lg);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-lowest);
+  text-decoration: none;
+  transition: border-color .2s, box-shadow .25s, transform .25s var(--md-motion-easing-emphasized, ease);
+}
+
+.lesson-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-outline);
+  box-shadow: var(--md-elevation-2);
+}
+
+.lesson-card-num {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--md-shape-md);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--md-typescale-title-medium);
+}
+
+.lesson-card.is-done .lesson-card-num {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.lesson-card.is-done {
+  border-color: color-mix(in srgb, var(--md-primary) 40%, var(--md-outline-variant));
+}
+
+.lesson-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.lesson-card-body h3 {
+  font: var(--md-typescale-title-medium);
+  color: var(--md-on-surface);
+  margin: 0 0 3px;
+}
+
+.lesson-card-body p {
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  margin: 0;
+}
+
+.lesson-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.lesson-card-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: var(--md-typescale-label-medium);
+  color: var(--md-primary);
+}
+
+.lesson-card-go {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, color .2s, transform .2s;
+}
+
+.lesson-card:hover .lesson-card-go {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  transform: translateX(2px);
+}
+
+/* ---- Шапка сторінки уроку ---- */
+.lesson-hero {
+  padding-top: 12px;
+  margin-bottom: 20px;
+}
+
+.lesson-hero-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+/* Без uppercase: «Урок 2 З 6» — велика З у цьому шрифті читається як цифра 3. */
+.lesson-hero-step {
+  font: var(--md-typescale-label-large);
+  letter-spacing: .02em;
+  color: var(--md-on-surface-variant);
+}
+
+.lesson-hero h1 {
+  font: var(--md-typescale-headline-large);
+  letter-spacing: var(--md-tracking-headline);
+  color: var(--md-on-surface);
+  margin: 0 0 8px;
+}
+
+.lesson-hero-sub {
+  font: var(--md-typescale-body-large);
+  color: var(--md-on-surface-variant);
+  margin: 0 0 18px;
+}
+
+.lesson-hero-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-low);
+  border: 1px solid var(--md-outline-variant);
+  font: var(--md-typescale-label-medium);
+  color: var(--md-on-surface-variant);
+}
+
+.lesson-hero-progress .cp-track {
+  min-width: 120px;
+}
+
+.lesson-hero-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--md-on-surface);
+  text-decoration: none;
+  font: var(--md-typescale-label-large);
+  white-space: nowrap;
+}
+
+.lesson-hero-all:hover {
+  text-decoration: underline;
+}
+
+/* Один урок на сторінці — рамка навколо нього вже зайва. */
+.lesson--single {
+  border: none;
+  background: transparent;
+  margin: 0;
+  overflow: visible;
+}
+
+.lesson--single .lesson-body {
+  padding: 0;
+}
+
+/* ---- Навігація між уроками ---- */
+.lesson-nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 12px;
+  margin: 36px 0 12px;
+}
+
+.lesson-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--md-shape-lg);
+  border: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-lowest);
+  color: var(--md-on-surface);
+  text-decoration: none;
+  transition: border-color .2s, box-shadow .25s;
+}
+
+.lesson-nav-btn:hover {
+  border-color: var(--md-outline);
+  box-shadow: var(--md-elevation-1);
+}
+
+.lesson-nav-btn--next {
+  flex-direction: row;
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.lesson-nav-btn span small {
+  display: block;
+  font: var(--md-typescale-label-small);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--md-on-surface-variant);
+  margin-bottom: 2px;
+}
+
+.lesson-nav-btn > span:not(.material-symbols-rounded) {
+  font: var(--md-typescale-title-small);
+  min-width: 0;
+}
+
+.lesson-nav-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+  text-decoration: none;
+  font: var(--md-typescale-label-large);
+  white-space: nowrap;
+}
+
+.lesson-nav-all:hover {
+  background: var(--md-surface-container-highest);
+}
+
+/* ---- Атрибуція запозичених матеріалів ---- */
+.course-credit {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 28px 0 8px;
+  padding: 16px 20px;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-surface-container);
+  color: var(--md-on-surface-variant);
+}
+
+.course-credit p {
+  font: var(--md-typescale-body-medium);
+  margin: 0;
+}
+
+.course-credit a {
+  color: var(--md-on-surface);
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .lesson-hero h1 {
+    font: var(--md-typescale-headline-medium);
+  }
+
+  .lesson-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-nav-all {
+    order: 3;
+    justify-content: center;
+  }
+
+  .lesson-card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .lesson-card-go {
+    display: none;
+  }
+}
+/* Курс-продовження: помітна плашка в каталозі та рядок на сторінці курсу.
+   Синій мусить бути темним і майже непрозорим: при .82 білий текст на ньому
+   давав контраст 3.55:1 — нижче за норму 4.5:1, і на синіх обкладинках
+   (python-intro, web-intro) плашка ще й зливалася з фоном. */
+.course-chip--next {
+  background: rgba(21, 74, 168, .92);
+}
+
+.course-prereq {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 0;
+  padding: 10px 16px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container);
+  font: var(--md-typescale-body-medium);
+  color: var(--md-on-surface-variant);
+  width: fit-content;
+}
+
+.course-prereq a {
+  color: var(--md-on-surface);
+  font-weight: 600;
+}
+
+/* Пояснення до курсів, повний матеріал яких лежить в архіві: без нього
+   стислі уроки на сайті читалися б як недороблені. Стоїть під кнопкою
+   завантаження, тому вирівняне по верху — текст буває у два рядки. */
+.course-archive-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 0;
+  font: var(--md-typescale-body-small);
+  color: var(--md-on-surface-variant);
+  /* 78ch дрібним кеглем дає приблизно ту саму ширину колонки, що й
+     68ch у .course-hero-summary вище — блоки вирівнюються по правому краю. */
+  max-width: 78ch;
+}
+
+.course-archive-note .material-symbols-rounded {
+  flex-shrink: 0;
+  margin-top: 1px;
 }
